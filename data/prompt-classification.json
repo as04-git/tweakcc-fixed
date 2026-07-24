@@ -22221,5 +22221,655 @@
     "id": "tool-result-artifact-supporting-file-carries-review-machinery",
     "name": "Tool Result: Supporting File Carries Review Machinery",
     "desc": "ArtifactInputError returned when a supporting file embeds artifact-pr-review machinery; review pages publish as a single file through the publish-time guard."
-  }
+  },
+  "01861cdbfdad66a15b3a9dc9bf58331bcdf9b60d": { "facing": "ui" },
+  "035b6f70983e1fbae034589eb2f9a65beafb0036": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-verifier-event-handler-attribute",
+    "name": "Workshop Verifier: Inline Event Handler",
+    "desc": "Verifier violation hint returned to the model when a workshop page carries an on* inline event-handler attribute."
+  },
+  "037529618353ef2be217c5340de491209b89609c": {
+    "facing": "model",
+    "id": "data-workshop-page-html-template",
+    "name": "Data: Workshop page HTML template",
+    "desc": "Blessed template for DIRECT-HTML *.workshop.html workshops that the model copies, fills, and publishes"
+  },
+  "047bc46eddc5fd50a8c0d830e65ff7451a199390": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-verifier-meta-behavior",
+    "name": "Workshop Verifier: Behavior Meta",
+    "desc": "Verifier violation hint returned when a workshop page carries a referrer or origin-trial meta tag."
+  },
+  "04f7af96c4364dae70de218d59cdaed985363b5e": { "facing": "ui" },
+  "07a27edcdb8af4eb672bf1bfec090a0bb03e6433": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-verifier-forged-decision-item",
+    "name": "Workshop Verifier: Forged Decision Item",
+    "desc": "Verifier violation hint returned when a decision item has no matching ws-decisions island entry."
+  },
+  "07c3cee0046fec1f76d001b9bdbee669ae7fbf9c": {
+    "facing": "model",
+    "id": "tool-result-artifact-pr-review-no-target-resolved",
+    "name": "Tool Result: PR review target never resolved",
+    "desc": "Artifact publish refusal when a pr_review payload names a PR but no review target resolved at invocation"
+  },
+  "09df011f36e7e9a0ca0e15b254e4638f653b2614": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-verifier-island-no-open-tag-location",
+    "name": "Workshop Verifier: Island Missing Open-Tag Location",
+    "desc": "Verifier violation hint returned when the ws-decisions island element has no open-tag source location to spell-check."
+  },
+  "0e0c2d6b2f1530863be755268c9730e5f61fd7e0": { "facing": "ui" },
+  "11c652ea05934b731fc50b3e615aba0c840b3189": { "facing": "ui" },
+  "13933510602057902ead60cccf4b8b290ee8afb6": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-script-not-blessed",
+    "name": "Tool Result: Workshop inline script not blessed",
+    "desc": "Verifier violation returned when a workshop page has an inline script that is not a byte-identical template copy"
+  },
+  "1548b3200d5157dd5e2aa31bfa323560c520ec60": { "facing": "internal" },
+  "17fa0be00367163f6af9608258cfca7f775bace7": { "facing": "internal" },
+  "1904349d1b9fc31a884d74a3720ec966c24b2904": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-verifier-bad-choice-token",
+    "name": "Workshop Verifier: Bad Choice Token",
+    "desc": "Verifier violation hint returned when a data-choice value does not match the slug grammar."
+  },
+  "1badd605d451284993a863a5762cc91946555dd7": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-verifier-svg-style",
+    "name": "Workshop Verifier: Style Inside SVG",
+    "desc": "Verifier violation hint returned when a workshop page places a <style> element inside SVG."
+  },
+  "1c4d8b37fdf3e2635bc4fa925d30a8b3d70ec3e5": {
+    "facing": "model",
+    "id": "tool-result-artifact-composed-review-publishing-not-enabled",
+    "name": "Composed Review Publishing Not Enabled",
+    "desc": "Artifact tool error returned to the model when composed pr_review publishing was never enabled for the session, telling it not to retry."
+  },
+  "1dc6982f554687044575249a0c223ddef218bcca": { "facing": "ui" },
+  "1eef81336ace191137adf75cdbc5750a8ef63540": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-verifier-ping-attribute",
+    "name": "Workshop Verifier: Ping Attribute",
+    "desc": "Verifier violation hint returned when a workshop page element carries a ping attribute."
+  },
+  "21aad5953a9c1962d0ef3b64c72c3ce0b8348447": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-verifier-island-close-tag-spelling",
+    "name": "Workshop Verifier: Island Close-Tag Spelling",
+    "desc": "Verifier violation hint returned when the ws-decisions island close tag is not exactly the lowercase </script>."
+  },
+  "233503391f028e9cf56a395404e6fc213dd9c90b": { "facing": "ui" },
+  "247c040558cc187a495c15fd7deec927b7192ddb": {
+    "facing": "model",
+    "id": "tool-result-artifact-read-page-data-requires-schema",
+    "name": "read_page_data Requires Schema",
+    "desc": "Artifact validateInput rejection returned to the model when action read_page_data is called without the required `schema` argument."
+  },
+  "267490a3907b123971d80defa44f44d8f3fc3249": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-verifier-template-content-surface",
+    "name": "Workshop Verifier: Surface Inside Template",
+    "desc": "Verifier violation hint returned when the island or decision markup sits inside <template> content."
+  },
+  "27f8cc5bc28a39adc813ac0137d48927de231093": { "facing": "internal" },
+  "282990aaca878fd6bc3eb9eb983a67eab708465d": { "facing": "ui" },
+  "284b2dca715d70e212542927f1ee155405ae0cf3": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-verifier-unsafe-srcset-url",
+    "name": "Workshop Verifier: Unsafe srcset URL",
+    "desc": "Verifier violation hint returned when a workshop page srcset entry uses a scheme outside http(s)/mailto/relative/fragment."
+  },
+  "2afc633d65d1167597bf0b57625a7fa1f5dda39e": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-verifier-refused-link-element",
+    "name": "Workshop Verifier: Link Elements Not Allowed",
+    "desc": "Verifier violation hint returned when a workshop page contains a <link> element."
+  },
+  "2da88efb52721eacfd884c7425549236d72925e4": { "facing": "ui" },
+  "3045540b2fdad60d5ffbb008d42c5a5d05efeca8": {
+    "facing": "model",
+    "id": "tool-result-artifact-interaction-schema-unavailable",
+    "name": "Interaction Schema Unavailable",
+    "desc": "Artifact validateInput rejection returned to the model when the named interaction schema is not registered in this session, listing the available ones."
+  },
+  "33afd0ae506a05f94214dc135e00aeacc9411e38": { "facing": "internal" },
+  "3419cc799966d049e3b58bad40cd24e1ad0d3403": {
+    "facing": "model",
+    "id": "tool-description-workflow-size-guideline-default-lead",
+    "name": "Workflow Size Guideline Default Lead",
+    "desc": "Opening clause of the workflow size guideline appended to the Workflow tool description when the guideline is the built-in default."
+  },
+  "34e61ee41ebeb594e1ea526b59a0db3e63cfac9b": { "facing": "internal" },
+  "35355155478c1bb4bc28e1649aefb06646c6b5dd": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-verifier-reparse-not-fixed-point",
+    "name": "Workshop Verifier: Reparse Not Fixed Point",
+    "desc": "Document-level verifier refusal returned when the page serializes to different bytes on a second parse/serialize round."
+  },
+  "36497b714667ca86e460f8b6f5f816a4cfb43fbb": {
+    "facing": "model",
+    "id": "data-model-catalog-opus-5-1m-long-description",
+    "name": "Data: Model Catalog Opus 5 1M",
+    "desc": "Model-facing catalog description of the Opus 5 1M-context option in the selectable model list"
+  },
+  "381ee267a1c6b1fda3af5fb29a77c63afe64ee47": { "facing": "internal" },
+  "382f642fb531ff30a27cb2d8ff1bc5876f30a143": {
+    "facing": "model",
+    "id": "data-memory-sync-mount-dir-conflict-remedy-tail",
+    "name": "Memory Sync Mount Conflict Remedy Tail",
+    "desc": "Shared tail of both mount-dir conflict warnings, instructing the model to save elsewhere and tell the user the memory directory needs attention."
+  },
+  "3a6efc2b305c35438997df71bfc2966d8dba8a6b": { "facing": "ui" },
+  "3e5b258ed2303b735168c7e69153b54a67adc0bc": { "facing": "ui" },
+  "3eda38ea832d808dd3fe116fc2cb342606373ff1": { "facing": "internal" },
+  "3f4721bf977c8a1f24ef3a282c4c00766f2e3dd9": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-action-read-page-data",
+    "name": "Artifact Action read_page_data Description",
+    "desc": "Clause appended to the Artifact tool's `action` parameter description explaining what read_page_data does, shown when the interaction-schema gate is open."
+  },
+  "428b1db2576866d2d80c2560856e7bac4c6fcdf5": {
+    "facing": "model",
+    "id": "system-reminder-memory-index-partially-loaded",
+    "name": "System Reminder: Memory index partially loaded",
+    "desc": "Warning appended to a truncated memory index attachment telling the model to keep index entries short"
+  },
+  "42e03bbae395ff63e9cd96255806b5f3146da165": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-verifier-rel-opener-attribute",
+    "name": "Workshop Verifier: rel Opener Token",
+    "desc": "Verifier violation hint returned when a workshop page's rel attribute contains the opener token."
+  },
+  "43767c4c3e227729047c850605cda5472a279a29": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-sidecar-history-contract-violation",
+    "name": "Workshop Sidecar History Contract Violation",
+    "desc": "Artifact publish refusal returned when a workshop redeploy omits refusedSidecarHistory, so the sidecar-ordering gate cannot run."
+  },
+  "44f4586430ba40ab4de95eb807b91fcf16dd0b03": { "facing": "internal" },
+  "49236adea65b7b8dba9134933d2de4d8298dc55f": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-sidecar-refused-tail",
+    "name": "Workshop Sidecar Refusal Tail",
+    "desc": "Tail of the Artifact publish error when a workshop page ships renderable or executable sidecar files."
+  },
+  "4964226ac964f972fb797037fc02137ebe48f148": { "facing": "ui" },
+  "49eba37bca357999a8170ed305c0e9162c93fe29": { "facing": "internal" },
+  "4cee12a123290328a1934dcc77bd19ab556d8642": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-verifier-resolved-custom-mismatch",
+    "name": "Workshop Verifier: Resolved Custom Mismatch",
+    "desc": "Verifier violation hint returned when data-resolved-custom does not match the island entry's custom text byte for byte."
+  },
+  "4d3e22a0df9c4472d33c262e4d04bc19970e2b73": {
+    "facing": "model",
+    "id": "data-memory-sync-mount-dir-unmanifested-nonempty",
+    "name": "Memory Sync Unmanifested Nonempty Dir Warning",
+    "desc": "PostToolUse additionalContext injected after a memory-file write when the mount directory held content before the store was mounted, so writes are local-only."
+  },
+  "4d5ed69b6518c9bb7d5754cee3539226c78c3840": { "facing": "ui" },
+  "4f0385ea83ea3c260543c66e3863b74de661742f": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-verifier-orphan-choice",
+    "name": "Workshop Verifier: Orphan Choice",
+    "desc": "Verifier violation hint returned when a data-choice element sits outside any data-decision-id item."
+  },
+  "4f58fe91b4f5f471224930b9bf12f615c64c492f": { "facing": "internal" },
+  "500f515aafa5c13eeff76387c41bded0fd9b994d": { "facing": "internal" },
+  "5305935b5665d3539fa450c389275c2b9adea71f": { "facing": "internal" },
+  "533d2bd8729860875b98a07f9108bf2ef991f4c6": {
+    "facing": "model",
+    "id": "system-reminder-plan-mode-workflow-custom-instructions",
+    "name": "System Reminder: Plan mode workflow (custom instructions)",
+    "desc": "Plan-mode reminder used when custom plan instructions exist: plan-file constraints plus the supplied workflow"
+  },
+  "5409c58837364c76530594796a8a5f615468579f": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-verifier-external-script-src",
+    "name": "Workshop Verifier: External Script src",
+    "desc": "Verifier violation hint returned when a workshop page script carries a src attribute instead of being self-contained."
+  },
+  "5468aaa6cdb9e21e2c77957a4e2d80e282986b31": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-verifier-bad-anchor-value",
+    "name": "Workshop Verifier: Bad data-anchor Value",
+    "desc": "Verifier violation hint returned when a workshop page's data-anchor value breaks the allowed character grammar."
+  },
+  "59541945772344edbafa2da1967e58923f101939": { "facing": "ui" },
+  "5ae5bce5aec60856386e0476d00e8997703efd2b": {
+    "facing": "model",
+    "id": "system-reminder-memory-file-contents",
+    "name": "System Reminder: Memory file contents",
+    "desc": "Contents of a memory file by path"
+  },
+  "5b404f3e36feb972f5b1cb0c87f701d71611b39d": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-verifier-markup-nests-too-deeply",
+    "name": "Workshop Verifier: Markup Nests Too Deeply",
+    "desc": "Verifier violation hint returned when workshop page markup exceeds the nesting-depth cap."
+  },
+  "602db2bb008923edb9055e1e692197488692f046": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-verifier-verifier-error",
+    "name": "Workshop Verifier: Verifier Error",
+    "desc": "Document-level verifier refusal returned when the structural verifier throws while examining the page."
+  },
+  "6339aac21647ce95cef03b6fac857bdb9a4bec3c": {
+    "facing": "model",
+    "id": "tool-result-automemory-readonly-shell-and-md-removal-only",
+    "name": "Automemory Read-Only Shell Denial",
+    "desc": "Permission-deny reason returned to the model when an automemory-scoped session tries a Bash/PowerShell command that is not a read-only op or an -f-only rm of a .md file."
+  },
+  "673a08a275ab8f593e31675f06965d51be173c14": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-verifier-svg-smil-target",
+    "name": "Workshop Verifier: SMIL Animation Target",
+    "desc": "Verifier violation hint returned when SMIL animates a URL, navigation, script, style or workshop-surface attribute."
+  },
+  "680358a09aefe7347892a7edb4dcdfa57505262c": {
+    "facing": "model",
+    "id": "system-prompt-persistent-memory-usage-and-writing-guidance",
+    "name": "System Prompt: Persistent memory usage and writing guidance",
+    "desc": "Explains how to use file-based memory across sessions, what makes a good memory, and the required file format"
+  },
+  "68fb4b37837b78b27d2f5d80f56586b75262ea06": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-verifier-reparse-divergence",
+    "name": "Workshop Verifier: Reparse Divergence",
+    "desc": "Document-level verifier refusal returned when the page verifies as written but its parse/serialize round trip does not."
+  },
+  "69b4bdad82ee53afcadc6e1219392694e4355101": { "facing": "internal" },
+  "6abff199f209c4b2b6b35bb953ae7e81468d43f5": {
+    "facing": "model",
+    "id": "system-prompt-phase-four-of-plan-mode",
+    "name": "System Prompt: Phase four of plan mode",
+    "desc": "Final plan-writing instructions for phase four of plan mode"
+  },
+  "6bc3fb9959a58d5658863507dd3c111c6eb7048f": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-island-entry-grammar",
+    "name": "Tool Result: Workshop decisions island grammar",
+    "desc": "Verifier violation when the ws-decisions island does not match the required entry grammar and resolution invariant"
+  },
+  "6bf7460dd5cb7efbc6ac56e122d331076d3021b5": { "facing": "internal" },
+  "6d308bb283adf03d64664c09a86da07b146a0c0d": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-verifier-missing-island",
+    "name": "Workshop Verifier: Missing Island",
+    "desc": "Verifier violation hint returned when decision items exist but the page has no ws-decisions island."
+  },
+  "6ebdda1b24c5b2259a1ec4b8afd65f57b9f45120": { "facing": "internal" },
+  "7336a99c0ddce71eb74a17a732b43294435201c6": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-verifier-unsafe-url",
+    "name": "Workshop Verifier: Unsafe URL",
+    "desc": "Verifier violation hint returned when a workshop page href/xlink:href uses a disallowed URL scheme."
+  },
+  "77acdfc267c8eb11c7a4177cf8d86c0306024753": { "facing": "internal" },
+  "798621ba21790872e466a8f373440c54e699acd8": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-verifier-refused-embedding-element",
+    "name": "Workshop Verifier: Refused Embedding Element",
+    "desc": "Verifier violation hint returned when an iframe/embed/object appears inside SVG on a workshop page."
+  },
+  "7b2c087fa75a9f9c4333ad0cc198d876c769a1d6": {
+    "facing": "model",
+    "id": "tool-result-artifact-pr-review-republish-cli-version-drift",
+    "name": "PR Review Republish CLI Version Drift",
+    "desc": "Artifact tool error returned to the model when a composed pr_review republish target was published by a different CLI version and cannot be reproduced."
+  },
+  "7b98113bfdaa4301deeefe2ac25cd29a86ac5585": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-verifier-markup-unverifiable-depth",
+    "name": "Workshop Verifier: Page Too Nested To Verify",
+    "desc": "Document-level verifier refusal returned when the page has too many nested or unclosed elements to check affordably."
+  },
+  "7c40286a4eb4b74fefcb7b29ad940d583dc908a6": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-verifier-refused-element-generic",
+    "name": "Workshop Verifier: Element Not Allowed",
+    "desc": "Generic refused-element hint returned when a workshop page contains any other disallowed element (base, plaintext, ...)."
+  },
+  "7e6cade58ad3629f2bb188d3780bf32c1f2259c6": { "facing": "ui" },
+  "7f37f6c8a1472a26e8d0a4e2df527f09e81e108b": { "facing": "ui" },
+  "801b7f17016cb78bc7c04e5cb262e496acbc099c": { "facing": "ui" },
+  "847d6df85307de294cf9cc406b69d57b7e7ff686": { "facing": "internal" },
+  "85c0a96dcf7fc0a71a1c601f17f13cff80234e2c": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-verifier-refused-lead",
+    "name": "Workshop Verifier Refusal Lead",
+    "desc": "Lead line of the Artifact publish error when the workshop structural verifier refuses the page; the violation list follows."
+  },
+  "86f3232c934d6192bc9299d2b68581377b16f148": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-verifier-violation-cap-reached",
+    "name": "Workshop Verifier: Violation Cap Reached",
+    "desc": "Trailing verifier note returned when more violations were found than the report records."
+  },
+  "89e0f3d33c30290329e0af0911af8b911eb20176": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-verifier-island-open-tag-byte-spelling",
+    "name": "Workshop Verifier: Island Open-Tag Byte Spelling",
+    "desc": "Verifier violation hint returned when the ws-decisions island open tag does not end with the exact template bytes."
+  },
+  "8a7cb19aa8e9f60dc1facf5a3bc5b1d3600760b4": {
+    "facing": "model",
+    "id": "system-reminder-plan-mode-workshop-write-carve-out",
+    "name": "System Reminder: Plan mode workshop write carve-out",
+    "desc": "Extends the plan-mode read-only rule so the session workshop document may be edited and published"
+  },
+  "8b43a3e216296919c2c342cfda9c78b217b6f9be": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-verifier-open-item-carries-resolution",
+    "name": "Workshop Verifier: Open Item Carries Resolution",
+    "desc": "Verifier violation hint returned when an unresolved decision item carries a stray data-resolved-* attribute."
+  },
+  "8c4de5cae70fc340b026fe4b626912b026b47800": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-verifier-banner-state-invalid",
+    "name": "Workshop Verifier: Banner State Invalid",
+    "desc": "Verifier violation hint returned when data-ws-state is not one of in-progress|ready|started."
+  },
+  "8ca31b77ee39385174f35b173e15cf2b1f0bb0f7": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-verifier-resolved-choice-mismatch",
+    "name": "Workshop Verifier: Resolved Choice Mismatch",
+    "desc": "Verifier violation hint returned when data-resolved-choice disagrees with the island entry's choice."
+  },
+  "8cfafa95f51abbbbf16d363453b7e6f5c97e3969": { "facing": "ui" },
+  "8e5847b3d3954103cc4bf267e6ed67deb6648e93": { "facing": "ui" },
+  "8ee6b586b51022547f05c322d0df4fb8a2c604a2": { "facing": "ui" },
+  "8efc957e37729865a44a17b35a05aafd23f2728c": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-verifier-target-attribute",
+    "name": "Workshop Verifier: Disallowed target",
+    "desc": "Verifier violation hint returned when a workshop page uses a target other than _blank or _self."
+  },
+  "958ba318f6eb67013f05f24cf959fe423a35c4ef": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-verifier-meta-http-equiv",
+    "name": "Workshop Verifier: http-equiv Meta",
+    "desc": "Verifier violation hint returned when a workshop page carries an http-equiv meta tag."
+  },
+  "95dc2c21c1ce3a2e9374cbbe707a5ef8356ac445": { "facing": "ui" },
+  "961fc0574d4d99aa690818c2488964155f3b1171": { "facing": "internal" },
+  "9d3e8af6de401d502431baee61a3fe9c7359d25f": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-verifier-bad-decision-id",
+    "name": "Workshop Verifier: Bad Decision Id",
+    "desc": "Verifier violation hint returned when a data-decision-id value does not match the slug grammar."
+  },
+  "9dee9b1ef197a22b87e530060eb4765c32d27a58": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-island-byte-sequence-collision",
+    "name": "Tool Result: Workshop island byte-sequence collision",
+    "desc": "Verifier violation when the island marker byte sequence occurs more often than real island elements"
+  },
+  "9deffa4015caeccf994f7eb778bb662e3b065855": { "facing": "internal" },
+  "9ec93a4f97e92069768f9861ef141b48f4c07862": {
+    "facing": "model",
+    "id": "data-model-catalog-opus-48-description",
+    "name": "Data: Model Catalog Opus 4.8",
+    "desc": "Model-facing catalog description of Opus 4.8 in the selectable model list"
+  },
+  "a06429c5059b134f4ecf8ae10bde9ba7715c4574": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-verifier-refused-noscript-element",
+    "name": "Workshop Verifier: noscript Not Allowed",
+    "desc": "Verifier violation hint returned when a workshop page contains a <noscript> element."
+  },
+  "a1d0e25321cc43effac87f291d3131f5b1ad4de2": { "facing": "ui" },
+  "a38a51f8a56b76c53b5e97303b5074cf5ca68b8b": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-verifier-mathml-not-allowed",
+    "name": "Workshop Verifier: MathML Not Allowed",
+    "desc": "Verifier violation hint returned when a workshop page contains a <math> subtree."
+  },
+  "a4fd9fc39668a232b858d7323d50267b1fa35852": { "facing": "internal" },
+  "a771735e30098e31843a41734b5dd512f43e8a93": { "facing": "ui" },
+  "a8ae20eeee7502045b9203bdd03b558d0620d2e2": { "facing": "internal" },
+  "a8d69f45eddcbab3538b45a98a83978cf894409e": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-verifier-lean-choice-not-in-opts",
+    "name": "Workshop Verifier: Lean Choice Not In Opts",
+    "desc": "Verifier violation hint returned when data-lean-choice is not one of the island entry's opts."
+  },
+  "a96708e810ee3eb5b2c0f40c558cbdb073620b96": { "facing": "ui" },
+  "ac34650377eebd4ba491e706704c7c0851928edc": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-verifier-unknown-data-island",
+    "name": "Workshop Verifier: Unknown Data Island",
+    "desc": "Verifier violation hint returned when a workshop page contains a JSON script element other than the ws-decisions island."
+  },
+  "b1665ff3c399e0892a66ae8b81160ce95bb954fb": { "facing": "internal" },
+  "b8b206d215c9e516234ff6e443e986ba52503634": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-verifier-refused-form-element",
+    "name": "Workshop Verifier: Forms Not Allowed",
+    "desc": "Verifier violation hint returned when a workshop page contains a <form> element."
+  },
+  "bafe7be9a174d8aca9bf8e5741d1b6843bb4f7c8": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-verifier-svg-foreignobject",
+    "name": "Workshop Verifier: foreignObject",
+    "desc": "Verifier violation hint returned when a workshop page uses <foreignObject> inside SVG."
+  },
+  "bb11f951b82e2c9addc0e14c459db7ec2c3dfff6": { "facing": "internal" },
+  "bbdd964774a379522b86e90faea560be1ec6f52d": { "facing": "ui" },
+  "bd3aec21748a4200aac0b48c5ba1bbc46a6944da": {
+    "facing": "model",
+    "id": "system-reminder-plan-mode-workflow",
+    "name": "System Reminder: Plan mode workflow",
+    "desc": "Full plan-mode workflow reminder covering plan file constraints, exploration, design, review, final plan, and approval"
+  },
+  "bd995b77d0f7d6b8272f4ab18cde9ae44222ab91": { "facing": "internal" },
+  "bf0dc262f6cea3d8012ee6e5a2a0f1a57ba35d94": { "facing": "ui" },
+  "bf5fef8943a583ebf878181db6677e49ac795ffd": {
+    "facing": "model",
+    "id": "system-reminder-workflow-size-guideline-changed",
+    "name": "Workflow Size Guideline Changed",
+    "desc": "System-reminder injected mid-session when the workflow size guideline setting changes, restating the new guideline."
+  },
+  "bf9c27dbb029eb081cc6d754591d1ca5eb8562fa": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-verifier-banner-state-mismatch",
+    "name": "Workshop Verifier: Banner State Mismatch",
+    "desc": "Verifier violation hint returned when data-ws-state disagrees with the state the island derives."
+  },
+  "c106b02008e69eff2d241faefd3429a65e79e1dc": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-verifier-refused-frameset-element",
+    "name": "Workshop Verifier: Frameset Not Allowed",
+    "desc": "Verifier violation hint returned when a workshop page contains a frameset or frame element."
+  },
+  "c14189a6742a27a2f622f9049b5a11aa33fc88b1": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-sidecar-priors-remedy",
+    "name": "Workshop Sidecar Priors Remedy",
+    "desc": "Closing remedy sentence of the sidecar-priors publish refusal, telling the model how to proceed."
+  },
+  "c41e4b5933d07f006aaf2ec0c10010e2347e581f": {
+    "facing": "model",
+    "id": "system-reminder-memory-file-partially-loaded",
+    "name": "System Reminder: Memory file partially loaded",
+    "desc": "Warning appended to a truncated memory file attachment telling the model to keep each file focused on one topic"
+  },
+  "c62852453580114c0538f02e5e322c0e35bd1ce0": { "facing": "ui" },
+  "c91c8219bcee4cf62fa24f3acd8bda08757d3f5b": { "facing": "internal" },
+  "ccccbbf044d532b25dfcbab4737a2401a145b099": { "facing": "internal" },
+  "cce4fb630e634aaaf7ef3bce53a6473567bf8e28": { "facing": "internal" },
+  "cd205306bc0504fb05551d907539548f597a0782": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-verifier-island-id-misuse",
+    "name": "Workshop Verifier: Island Id Misuse",
+    "desc": "Verifier violation hint returned when the ws-decisions id is placed on an element other than the JSON island script."
+  },
+  "cd831bbcc514cea70538dfefc26a6e52a848277d": { "facing": "internal" },
+  "ce78b7c189607628237e581a523dd835bae70a81": { "facing": "internal" },
+  "cec48173a3f491ce025beb0dd3caa3bbc073498c": {
+    "facing": "model",
+    "id": "data-memory-sync-currently-paused-notice",
+    "name": "Data: Memory sync currently paused notice",
+    "desc": "PostToolUse context appended after a memory write when sync is paused after repeated failures"
+  },
+  "cf5214a60862639e09082ca0513b415f15c8578e": {
+    "facing": "model",
+    "id": "data-memory-sync-mount-dir-foreign-partition",
+    "name": "Memory Sync Foreign Partition Warning",
+    "desc": "PostToolUse additionalContext injected after a memory-file write when the directory already holds another memory store's sync data, so the write is local-only."
+  },
+  "d259727bd28bdf81d1b87b80f8eca88f8f8ed52c": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-sidecar-verifier-refused-lead",
+    "name": "Workshop Sidecar Verifier Refusal Lead",
+    "desc": "Lead line of the Artifact publish error when a sidecar file itself fails the workshop structural verifier."
+  },
+  "d40bb6534cb05496662fc630c6851a3261b96978": {
+    "facing": "model",
+    "id": "tool-result-artifact-composed-review-publishing-turned-off",
+    "name": "Composed Review Publishing Turned Off",
+    "desc": "Artifact tool error returned to the model when composed pr_review publishing was disabled by an operator mid-session, telling it to retry later rather than loop."
+  },
+  "d490f403ca1472c311d03c9d939d282c4bb08f5c": { "facing": "internal" },
+  "d4dd99168f904d0c8700acb1382679c2fa992ec6": {
+    "facing": "model",
+    "id": "slash-command-code-review-inline-assembly",
+    "name": "Slash Command: Inline code-review prompt assembly",
+    "desc": "Composition shell joining header, review target, effort body and trailing notes into the inline /code-review prompt"
+  },
+  "d6fcfb5d51708e0e23925f2cc2fc1625c8ecc38e": {
+    "facing": "model",
+    "id": "tool-description-workflow-size-guideline-config-hint",
+    "name": "Workflow Size Guideline Config Hint",
+    "desc": "Trailing sentence appended to the Workflow tool description when the size guideline is the default, telling the model the user can change it via /config."
+  },
+  "d7bee50eaa0c0ddc0e35427266368106ef7d9429": { "facing": "internal" },
+  "d87b75037407c7561c64227d555accb628d525b4": { "facing": "ui" },
+  "d90becb3d18c77f1588e2de222c51dcb7ec421ab": {
+    "facing": "model",
+    "id": "data-model-catalog-opus-5-description",
+    "name": "Data: Model Catalog Opus 5",
+    "desc": "Model-facing catalog description of Opus 5 in the selectable model list"
+  },
+  "d93158cb2f8130404a4d9f2b696bd44d19063cdc": { "facing": "ui" },
+  "ddb4bea0b59a721d9d6e75b82beaaa26cd5428f2": {
+    "facing": "model",
+    "id": "system-prompt-plan-mode-interactive-workshop-offer",
+    "name": "System Prompt: Plan mode interactive workshop offer",
+    "desc": "Instructs plan mode to offer an interactive workshop for substantive design decisions and fold decisions into the plan"
+  },
+  "de08220cc8edc19e954e5cfa8d68c824b40642a4": { "facing": "ui" },
+  "dee012bd625ee3771c7089e56e1f1b023464a09c": { "facing": "internal" },
+  "df7df971914b2904a12fd11c017020aab2938cb4": { "facing": "internal" },
+  "dfab916161967b7f115df9fc885925677a302dec": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-verifier-svg-nonlocal-reference",
+    "name": "Workshop Verifier: SVG Non-Local Reference",
+    "desc": "Verifier violation hint returned when an SVG element references a target outside the page instead of a #fragment."
+  },
+  "e0baff9c152710a1d845479aed1dd1e10ebd457a": {
+    "facing": "model",
+    "id": "system-reminder-plan-mode-workshop-doc-grant-sparse",
+    "name": "Plan Mode Workshop Doc Grant (Sparse)",
+    "desc": "Sparse-form clause in the plan-mode system reminder naming the session's workshop document as editable and publishable."
+  },
+  "e4ffd316ec9f405221ba6e111f013707f4501d89": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-verifier-referrerpolicy-attribute",
+    "name": "Workshop Verifier: Referrerpolicy Attribute",
+    "desc": "Verifier violation hint returned when a workshop page element carries a referrerpolicy attribute."
+  },
+  "e58c72e50ae360f7191995867dfbc33b71b5d7d8": { "facing": "internal" },
+  "e7a80750efabfbfc7089292c910c0f4296d7486b": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-verifier-svg-script",
+    "name": "Workshop Verifier: Script Inside SVG",
+    "desc": "Verifier violation hint returned when a workshop page puts a <script> inside an SVG diagram."
+  },
+  "e913c35a8475e94541275dfe2a4ad3daa14e4c5f": { "facing": "ui" },
+  "e975dbd66ada520f07fca4b454bc709e460c0130": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-sidecar-priors-refused",
+    "name": "Workshop Sidecar Priors Refusal",
+    "desc": "Artifact publish refusal returned when the target artifact previously shipped renderable or executable sidecar files."
+  },
+  "ed5f9e6466e4e620ea02891fd4fa28e867a97814": {
+    "facing": "model",
+    "id": "system-reminder-plan-mode-workshop-in-progress",
+    "name": "Plan Mode Workshop In Progress",
+    "desc": "Block appended to the full plan-mode system reminder when a decision workshop is active, restating the grant and to fold decisions back into the plan file."
+  },
+  "eddd6cd3d999a9a41b677eb69e5d658d9ff4e05a": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-verifier-island-no-close-tag-location",
+    "name": "Workshop Verifier: Island Missing Close-Tag Location",
+    "desc": "Verifier violation hint returned when the ws-decisions island element has no close-tag source location to spell-check."
+  },
+  "ee272277106f85d68c53af15ea1ba1a50f5fe6f2": { "facing": "internal" },
+  "ef51f76e7a4c6b9fa9929a4d7f17aafb1ea457bf": {
+    "facing": "model",
+    "id": "data-memory-truncation-byte-limit-detail",
+    "name": "Data: Memory truncation limit detail",
+    "desc": "Byte/line limit clause interpolated into the truncation warning on a partially loaded memory file or index"
+  },
+  "f20aab489425b646d8935218b2d1dbbd43ed2482": { "facing": "ui" },
+  "f2362c518ca35bb030707784f43977ce7d06eeec": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-verifier-duplicate-decision-item",
+    "name": "Workshop Verifier: Duplicate Decision Item",
+    "desc": "Verifier violation hint returned when one decision id appears on more than one element."
+  },
+  "f303cb5692b7ddd34338359a2191b87bb2358cd6": { "facing": "internal" },
+  "f322ea5e9688d954518c5a5ce8b39e89ac632eea": { "facing": "ui" },
+  "f41a892b1da4ce96de709ba2fa8c262e9088b928": { "facing": "internal" },
+  "f441e8fa653b9d815ddb8334ad31faaa374115d6": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-verifier-svg-rawtext-hazard",
+    "name": "Workshop Verifier: SVG Rawtext Hazard",
+    "desc": "Verifier violation hint returned when a rawtext-named element appears inside an SVG subtree."
+  },
+  "f4f768cfa9e0b5ddc108512e949ea46603274364": { "facing": "internal" },
+  "f6d35f68dd22a4574f9a103a8d9f10707fec093a": { "facing": "internal" },
+  "f915d3f7725e387cc5e24d5836765038fbef3c33": {
+    "facing": "model",
+    "id": "tool-description-workflow-size-guideline-configured-lead",
+    "name": "Workflow Size Guideline Configured Lead",
+    "desc": "Opening clause of the workflow size guideline appended to the Workflow tool description when the user configured a guideline."
+  },
+  "f9c639aab9aeb21c7c68b5fa50ae7e6a3d073809": { "facing": "ui" },
+  "f9ceec3ac3841063c43f596ae08fb38deaa713c0": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-verifier-choice-rows-mismatch",
+    "name": "Workshop Verifier: Choice Rows Mismatch",
+    "desc": "Verifier violation hint returned when the data-choice rows do not match the island entry's opts one-for-one."
+  },
+  "fb58dd23bf5e7d8e8c3eac45a54cb9ffd8ddc8b0": {
+    "facing": "model",
+    "id": "data-task-notification-directory-added-hook-failed",
+    "name": "DirectoryAdded Hook Failed Notification",
+    "desc": "Task-notification line injected into the conversation after /add-dir when one or more DirectoryAdded hooks failed and their output was suppressed."
+  },
+  "fc3c061eb16c4ab4732c1c11d3c93788205cd568": {
+    "facing": "model",
+    "id": "system-reminder-plan-mode-workshop-publish-turn-end-clause",
+    "name": "Plan Mode Workshop Publish Turn-End Clause",
+    "desc": "Clause added to the plan-mode turn-ending instructions allowing the turn to end by publishing the workshop document."
+  },
+  "fc81808531e72ef5b301aeeaa7018ba992faef69": {
+    "facing": "model",
+    "id": "agent-prompt-code-review-minimal-mode",
+    "name": "Agent Prompt: /code-review minimal mode",
+    "desc": "Minimal /code-review prompt that does one careful diff pass and reports up to fifteen findings"
+  },
+  "fee08d96ad1144893e7fdc98e8c204930aa8f981": {
+    "facing": "model",
+    "id": "system-reminder-plan-mode-sparse-end-turn-tools",
+    "name": "Plan Mode Sparse End-Turn Tools",
+    "desc": "Sparse-form plan-mode reminder telling the model which tools may end the turn and to never request plan approval via text."
+  },
+  "516636ea690d729c61ef33ed73a62710908d9129": { "facing": "ui" },
+  "aa7628dd13ef783444746a61f3a776c13a406744": { "facing": "ui" }
 }
