@@ -131,3 +131,39 @@ describe('detectionCoverage: capture test', () => {
     ).toBe(true);
   });
 });
+
+// The extractor must never STORE a joined composite. The joined form exists
+// only at runtime — cli.js holds ["a","b"].join("\n") — so a regex built from
+// it can never match the bundle and every apply reports "Could not find".
+// Regression for the 3-per-set CnF this caused before fragments became the
+// stored unit.
+describe('detectionCoverage: composites are evidence, not stored prompts', () => {
+  const fs = require('node:fs');
+  const path = require('node:path');
+  const JSON_PATH = path.join(
+    __dirname,
+    '..',
+    'data',
+    'prompts',
+    'prompts-2.1.220.json'
+  );
+
+  it('the Opus 5 pair is catalogued as two splicable fragments, not one joined string', () => {
+    if (!fs.existsSync(JSON_PATH)) return;
+    const prompts = JSON.parse(fs.readFileSync(JSON_PATH, 'utf8')).prompts;
+    const bodies = prompts.map(p => (p.pieces || []).join(''));
+    expect(bodies).toContain(
+      'Do not call the AgentTool unless the user requested it'
+    );
+    expect(bodies).toContain(
+      'Do not use workflows or deep-research unless the user requested it'
+    );
+    // the joined form must NOT be stored
+    const joined = bodies.find(
+      b =>
+        b.includes('Do not call the AgentTool') &&
+        b.includes('Do not use workflows')
+    );
+    expect(joined).toBeUndefined();
+  });
+});

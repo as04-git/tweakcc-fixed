@@ -150,10 +150,10 @@
     "excerpt": "## What NOT to save in memory - Code patterns, conventions, architecture, file paths, or project structure — these can be derived by reading"
   },
   "ee9a8eff5c32f159": {
-    "verdict": "model",
+    "verdict": "internal",
     "shape": "array",
     "excerpt": "## Before recommending from memory A memory that names a specific function, file, or flag is a claim that it existed *when the memory was wr",
-    "note": "confirmed model-facing 2026-07-27; extractStrings cannot assemble this shape yet"
+    "note": "captured per-FRAGMENT as of 2026-07-27 (the joined form only exists at runtime and can never be spliced); coverage is judged on the fragments"
   },
   "ef6f55e5eab707e9": {
     "verdict": "REVIEW",
@@ -171,10 +171,10 @@
     "excerpt": "it2 was found on PATH — check that the iTerm2 Python API is enabled (Preferences > General > Magic > Enable Python API)."
   },
   "257b0632319d1016": {
-    "verdict": "model",
+    "verdict": "internal",
     "shape": "array",
     "excerpt": "Wait for MCP servers that are still connecting and whose tools are not yet in your tool list. Pass `servers` to wait for specific ones, or o",
-    "note": "confirmed model-facing 2026-07-27; extractStrings cannot assemble this shape yet"
+    "note": "captured per-FRAGMENT as of 2026-07-27 (the joined form only exists at runtime and can never be spliced); coverage is judged on the fragments"
   },
   "9e0d9926f343db12": {
     "verdict": "REVIEW",
@@ -207,10 +207,10 @@
     "excerpt": "DesignSync needs design-system authorization for your claude.ai account. Approving opens your browser to authorize access to your org's desi"
   },
   "738c1a08e4bb5ea2": {
-    "verdict": "model",
+    "verdict": "internal",
     "shape": "array",
     "excerpt": "The user *explicitly* asks you to bypass sandbox A specific command just failed and you see evidence of sandbox restrictions causing the fai",
-    "note": "confirmed model-facing 2026-07-27; extractStrings cannot assemble this shape yet"
+    "note": "captured per-FRAGMENT as of 2026-07-27 (the joined form only exists at runtime and can never be spliced); coverage is judged on the fragments"
   },
   "7c5a938ac9fb3d13": {
     "verdict": "REVIEW",
@@ -228,10 +228,10 @@
     "excerpt": "Advanced multi-agent plan mode. Runs in Claude Code on the web. When the plan is ready, you can execute it in the web session or send it bac"
   },
   "869c792bfbe4773f": {
-    "verdict": "model",
+    "verdict": "internal",
     "shape": "array",
     "excerpt": "Do not call the AgentTool unless the user requested it Do not use workflows or deep-research unless the user requested it",
-    "note": "confirmed model-facing 2026-07-27; extractStrings cannot assemble this shape yet"
+    "note": "captured per-FRAGMENT as of 2026-07-27 (the joined form only exists at runtime and can never be spliced); coverage is judged on the fragments"
   },
   "6200c200d74ed331": {
     "verdict": "REVIEW",
@@ -324,16 +324,16 @@
     "excerpt": "Dynamic workflows can use a lot of tokens quickly by running many subagents in parallel — which counts against your usage limit. Stop a runn"
   },
   "525c946f97cddf81": {
-    "verdict": "model",
+    "verdict": "internal",
     "shape": "array",
     "excerpt": "# Keybindings Skill Create or modify `~/.claude/keybindings.json` to customize keyboard shortcuts. ## CRITICAL: Read Before Write **Always r",
-    "note": "confirmed model-facing 2026-07-27; extractStrings cannot assemble this shape yet"
+    "note": "captured per-FRAGMENT as of 2026-07-27 (the joined form only exists at runtime and can never be spliced); coverage is judged on the fragments"
   },
   "65d16b04890a85c7": {
-    "verdict": "model",
+    "verdict": "internal",
     "shape": "array",
     "excerpt": "## How User Bindings Interact with Defaults - User bindings are **additive** — they are appended after the default bindings - To **move** a ",
-    "note": "confirmed model-facing 2026-07-27; extractStrings cannot assemble this shape yet"
+    "note": "captured per-FRAGMENT as of 2026-07-27 (the joined form only exists at runtime and can never be spliced); coverage is judged on the fragments"
   },
   "ed6d0c352843bfdf": {
     "verdict": "REVIEW",
@@ -361,10 +361,10 @@
     "excerpt": "Ordered messagesToKeep UUIDs. Supersedes preserved_segment — readers look up each UUID directly and relink uuids[i] to uuids[i-1] (uuids[0] "
   },
   "ecd9d62bb371c8d5": {
-    "verdict": "model",
+    "verdict": "internal",
     "shape": "concat",
     "excerpt": "Invokes an MCP tool via the subprocess MCP client without a model turn. No permission check (control channel is trusted, same as other subty",
-    "note": "confirmed model-facing 2026-07-27; extractStrings cannot assemble this shape yet"
+    "note": "re-judged 2026-07-27: zod .describe() on the SDK CONTROL-PROTOCOL schema (trusted control channel, SDK-type servers rejected as caller-provided) - describes an SDK subtype, never sent to a model"
   },
   "0a23219a958a660c": {
     "verdict": "REVIEW",

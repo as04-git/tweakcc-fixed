@@ -226,7 +226,12 @@ function main() {
     if (!looksLikeProse(c.text)) continue;
     if (isDroppedByContext(c.text, lead)) continue;
     if (isCaptured(corpus, c.text)) continue;
-    // a composite whose every fragment is individually captured is already covered
+    // Coverage is judged per FRAGMENT, not on the joined text. The joined form
+    // exists only at runtime, so the extractor never stores it — cataloguing it
+    // would guarantee a "Could not find" at every apply, since no regex built
+    // from it can match the bundle. A composite counts as covered once its
+    // substantive fragments are each captured, which is what the extractor
+    // actually emits.
     if (
       c.parts.length > 1 &&
       c.parts.every(p => norm(p).length < 45 || isCaptured(corpus, p))

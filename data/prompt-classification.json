@@ -16969,7 +16969,12 @@
   "6e574d97626dec096b520d83b1e070647959bcc2": { "facing": "internal" },
   "e088b6e9332e1948197885d1e03653f47ab581ac": { "facing": "internal" },
   "6c2a51eff81dca7991f9711e9386c0f264fb99be": { "facing": "internal" },
-  "03a08d484afb4a4f2ea12f63ec22c183639fb086": { "facing": "internal" },
+  "03a08d484afb4a4f2ea12f63ec22c183639fb086": {
+    "facing": "model",
+    "id": "tool-description-mcp-elicitation-url-fallback",
+    "name": "Tool Description: MCP elicitation URL fallback",
+    "desc": "Explains the call errors with a URL to open when no elicitation hook resolves"
+  },
   "c214760c3a37ecb184dc58eced1a236162068b48": { "facing": "internal" },
   "0eacb13570bad3b15580432057e3e1a21dbef8f9": { "facing": "internal" },
   "f01fb75f172aad268ae63154c3d342ef107d649f": { "facing": "internal" },
@@ -22895,5 +22900,371 @@
   "756d4c0ec76bfad2040464a8e470d3b7013e1059": { "facing": "ui" },
   "5524dabce15e4da17aed6623f5a31ce951b2d39c": { "facing": "ui" },
   "164cfae03d1d8d6f771c55da7e4c23c4db47775f": { "facing": "ui" },
-  "5a5a68fe3e81f453cd330194f4fbb6a57c82f0c8": { "facing": "ui" }
+  "5a5a68fe3e81f453cd330194f4fbb6a57c82f0c8": { "facing": "ui" },
+  "fad884244a823ee96c99752def4e8b934801f482": { "facing": "internal" },
+  "a9cc8418d7cbc1ddb6de22a26d5186a1a9e9b4a8": { "facing": "internal" },
+  "f1247c552480f34f03434cb4ca4e0538ebb3c8b7": { "facing": "internal" },
+  "a8c2d628e0f80aa0e45333f4a0b3ccaf8b1d37bb": {
+    "facing": "model",
+    "id": "data-memory-type-user-how-to-use",
+    "name": "Data: Memory type \"user\" how-to-use",
+    "desc": "how_to_use guidance for the user memory type"
+  },
+  "86fb34486ce76f8aa707415701d233c46c629553": {
+    "facing": "model",
+    "id": "data-memory-type-user-how-to-use-solo",
+    "name": "Data: Memory type \"user\" how-to-use (solo)",
+    "desc": "how_to_use guidance for the user memory type, single-user phrasing"
+  },
+  "c777b746d70cb49e041966266ec616a72c369117": {
+    "facing": "model",
+    "id": "data-memory-type-reference-how-to-use-2",
+    "name": "Data: Memory type \"reference\" how-to-use (variant)",
+    "desc": "how_to_use guidance for the reference memory type, second site"
+  },
+  "fab4d1fa81910935aed4558d65de1abff0e217f3": {
+    "facing": "model",
+    "id": "data-memory-type-project-scope",
+    "name": "Data: Memory type \"project\" scope",
+    "desc": "scope declaration for the project memory type"
+  },
+  "8478f55aedb1a1f54f901be6c00ced95e3c95bc0": { "facing": "internal" },
+  "c76ec2a8abeb19b363fb3df34b14f45354f892b7": { "facing": "internal" },
+  "530f7e507a6e6c6580651b2b0d1774c3dbeac7ea": {
+    "facing": "model",
+    "id": "skill-keybindings-context-minimal-override",
+    "name": "Skill: Keybindings context minimality rule",
+    "desc": "Tells the agent a context only needs to appear when something changes in it"
+  },
+  "8282e67303916d2f6effd93b9f3d373ce97fbf45": {
+    "facing": "model",
+    "id": "system-prompt-memory-skip-claudemd-documented",
+    "name": "System Prompt: Do not store what CLAUDE.md documents",
+    "desc": "Memory what-not-to-save rule for content already in CLAUDE.md"
+  },
+  "8d79df0dd8473423bda8763a3412fb88b9a5f8e5": {
+    "facing": "model",
+    "id": "system-prompt-github-issue-title-clarity",
+    "name": "System Prompt: GitHub issue title clarity rule",
+    "desc": "Issue title should be direct and clear for developers"
+  },
+  "d0cad3e956b7752caa5ce831cc9c4e66cdfadc31": {
+    "facing": "model",
+    "id": "system-prompt-memory-skip-ephemeral-task-details",
+    "name": "System Prompt: Do not store ephemeral task details",
+    "desc": "Memory what-not-to-save rule for in-progress and conversation state"
+  },
+  "b33f151b70761dbf4489f2e3ffde39f16a7bb90b": {
+    "facing": "model",
+    "id": "system-prompt-github-issue-title-type-prefix",
+    "name": "System Prompt: GitHub issue title type prefix",
+    "desc": "Issue title must lead with [Bug] or [Feature Request]"
+  },
+  "e6cccde2cd2a54d954877b9d766fdd3d55ea3398": {
+    "facing": "model",
+    "id": "skill-keybindings-use-edit-tool",
+    "name": "Skill: Keybindings use Edit for existing files",
+    "desc": "Directs the agent to Edit rather than Write an existing keybindings file"
+  },
+  "d04a7c95b2333785366c3a99e615e23a2460f4b1": {
+    "facing": "model",
+    "id": "skill-keybindings-use-write-tool",
+    "name": "Skill: Keybindings use Write only when absent",
+    "desc": "Directs the agent to Write only when the keybindings file does not exist"
+  },
+  "fcdac085ccfc4ca3f88b28324f388c3a85db2324": {
+    "facing": "model",
+    "id": "system-prompt-github-issue-title-terminology",
+    "name": "System Prompt: GitHub issue title terminology",
+    "desc": "Issue title should use software-appropriate technical terminology"
+  },
+  "6671f94f9151930ecf0a8192c55f100a142d99ea": {
+    "facing": "model",
+    "id": "skill-keybindings-user-bindings-additive",
+    "name": "Skill: Keybindings user bindings are additive",
+    "desc": "Explains user bindings append after defaults"
+  },
+  "f1bfab0b100d5b9a5f990add64bb41fa45343f5f": {
+    "facing": "model",
+    "id": "system-prompt-memory-claim-vs-current-state",
+    "name": "System Prompt: A memory claim is not current state",
+    "desc": "Warns that a memory asserting X exists is not evidence X exists now"
+  },
+  "8d46f9f097ff885d1c7f1e8ada3b2ecb28412338": { "facing": "internal" },
+  "d405533603db06edec66a6f055507a238eeb2742": {
+    "facing": "model",
+    "id": "skill-keybindings-chords",
+    "name": "Skill: Keybindings chord syntax",
+    "desc": "Describes space-separated chord keystrokes and their timeout"
+  },
+  "060a01cd237404eeb33d9c083e430134ac35c8a1": {
+    "facing": "model",
+    "id": "skill-keybindings-examples",
+    "name": "Skill: Keybindings examples",
+    "desc": "Example keystroke bindings"
+  },
+  "1e88d1bdd9f87cb2271636b85f67470ceaea2644": {
+    "facing": "model",
+    "id": "skill-keybindings-special-keys",
+    "name": "Skill: Keybindings special keys",
+    "desc": "Lists the recognised special key names"
+  },
+  "230b29f4d18f20c02b750c9e6fe599fe919be490": { "facing": "internal" },
+  "ac15e3b11f43cb587c8112949b3152b56ebb98f7": {
+    "facing": "model",
+    "id": "skill-keybindings-interaction-heading",
+    "name": "Skill: Keybindings defaults-interaction heading",
+    "desc": "Section heading for how user bindings interact with defaults"
+  },
+  "476c23d92a05d20f1ef7c119c937353f79bc2ec1": { "facing": "internal" },
+  "666ff7115499b3cc89b7eb145de0cec8445fde46": { "facing": "internal" },
+  "2a513a8b6236d203f27e36d8df5a9f8109f32fb7": { "facing": "internal" },
+  "1666ec1aa6883bf57e9e0b08a6a6d6b92bd82c21": { "facing": "internal" },
+  "783d9dcda56045599aa440bbabc8872bb2f4659e": { "facing": "internal" },
+  "16790e96967e08ab56b26e4bf8d681a90b55c602": { "facing": "internal" },
+  "276f1f6c651dfd3da580ad379de18d6679b2e72d": {
+    "facing": "model",
+    "id": "tool-parameter-array-of-strings-no-prose",
+    "name": "Tool Parameter: Plain array of strings, no prose",
+    "desc": "Requires a bare string array with no fence, prose or extra keys"
+  },
+  "55f547f74e6ba7faa541ea89114f2251b77e9b8e": {
+    "facing": "model",
+    "id": "tool-description-request-access-scope-note",
+    "name": "Tool Description: request_access scope note",
+    "desc": "Clarifies the approval authorizes only the specific action under review"
+  },
+  "e0d004e9cdf627b9f781af8382cedc4e33b9f0e7": {
+    "facing": "model",
+    "id": "tool-description-request-access-retry-note",
+    "name": "Tool Description: request_access retry note",
+    "desc": "Tells the agent to call request_access again immediately"
+  },
+  "a075015212cd297d8d359b12624526c1aea1ba92": {
+    "facing": "model",
+    "id": "tool-description-request-teach-access-retry-note",
+    "name": "Tool Description: request_teach_access retry note",
+    "desc": "Tells the agent to call request_teach_access again immediately"
+  },
+  "1b2222d40a0611f65d9f0285ac968b88aa14d322": {
+    "facing": "model",
+    "id": "tool-description-artifact-capabilities-clear-note",
+    "name": "Tool Description: Artifact capabilities clearing note",
+    "desc": "Clearing a stored capability declaration still needs the current contract"
+  },
+  "d1f61336822230d6adfac04267c61fe03dad4f2d": { "facing": "internal" },
+  "f295f640d6140d7b6ee750cfde632b6fa62fe824": { "facing": "internal" },
+  "06dc88dbff4d76720d52f5abc45a3dcec5a26869": {
+    "facing": "model",
+    "id": "tool-description-report-validate-counts-only",
+    "name": "Tool Description: report_validate counts only",
+    "desc": "Restricts report_validate aggregation to counts, no names or paths"
+  },
+  "d4c4612954f18d2c6510a9bc0f76254492d78e82": { "facing": "internal" },
+  "022f115dfd3d7f4f91a69e5de48e466131cfedb5": { "facing": "internal" },
+  "bc2708412c2ca7e70ff1af6d20c210ebbff1a046": { "facing": "internal" },
+  "740967bc67073d7c09fa9969a0432758d6919ee8": { "facing": "internal" },
+  "daafdd632a9c3458d3db416a7dd9d6f59f18d389": { "facing": "internal" },
+  "191ccbd6f3764e3a7c0bf1227873d19382d7aa3b": { "facing": "internal" },
+  "6318a4338462adfc23d7ed99bd646cf2ea2ec6a3": { "facing": "internal" },
+  "41774dbfb9a77ba744766d9b6f3f334272e5f90a": {
+    "facing": "model",
+    "id": "agent-prompt-date-parser-invalid-examples",
+    "name": "Agent Prompt: Date parser invalid examples",
+    "desc": "Examples of input the date parser must reject as INVALID"
+  },
+  "41e167f6d3b947c73b846e9f91fc6f4ffb43dea6": {
+    "facing": "model",
+    "id": "agent-prompt-date-parser-time-without-date",
+    "name": "Agent Prompt: Date parser time-without-date rule",
+    "desc": "Use today as the date when the input carries only a time"
+  },
+  "f3f13662e731351ec57da5043a752c3a9aafd0df": { "facing": "internal" },
+  "6529f1710fb3ccee8ea1651bcf37c184069c2552": { "facing": "internal" },
+  "d46a7509edb12de99a209ae9f6ab20ee010dbdd0": { "facing": "internal" },
+  "c128bd810c43daf48c1b380cb6be881bcbdef0cd": { "facing": "internal" },
+  "2e1331ee75b175a1c7bdc7a2218a5cec34145710": { "facing": "internal" },
+  "56382cbacfd9144c6f544294c42d4672f291429b": { "facing": "internal" },
+  "86cd60e294c85dcacabd4a38a7109817866c05bc": {
+    "facing": "model",
+    "id": "tool-description-workflow-args-json-string-warning",
+    "name": "Tool Description: Workflow args JSON-string warning",
+    "desc": "Warns a stringified list breaks args.filter in a workflow script"
+  },
+  "65f7c4e0e2c43e88d5fa64850a8907de9dba6c29": {
+    "facing": "model",
+    "id": "tool-description-write-files-split-bundles",
+    "name": "Tool Description: write_files split large bundles",
+    "desc": "Directs splitting large bundles across calls under one planId"
+  },
+  "49add0f0bd1437ad32db4d97ea49084be968c9e0": { "facing": "internal" },
+  "cdbbf645733a47b9139a4e12fd828aba234f5c99": { "facing": "internal" },
+  "f542d4488f3070a7b5ef5299efa10049a6cc19fd": { "facing": "internal" },
+  "f275fce30e53be7a31c43834191d3b8cc858e6ab": { "facing": "internal" },
+  "c6695169f5801b7c195ff852af01a04a8940b5bd": { "facing": "internal" },
+  "3f313d9b937c0e0440e9bbb2011a4dcbe46d0320": { "facing": "internal" },
+  "d89c2f480bb8ebff65f5f4c1d62c1a9a474689a1": {
+    "facing": "model",
+    "id": "tool-result-memory-credential-detected",
+    "name": "Tool Result: Memory content contains a credential",
+    "desc": "Refuses a memory write containing an API key and asks for rotation"
+  },
+  "edccfc6ce09396dec117a42709ea34fb9837f1a1": {
+    "facing": "model",
+    "id": "tool-result-multi-file-publish-not-enabled",
+    "name": "Tool Result: Multi-file publish not enabled",
+    "desc": "Tells the agent multi-file publish is unavailable for the account"
+  },
+  "7587d27fe3abf3d94d0906413fe2d2ce25b7d009": { "facing": "internal" },
+  "cf41682e9542591431e452db0b0337628a0d14f6": { "facing": "internal" },
+  "9b6c8e8b4df96d1eb0cd4f3abfb9bc3cf064fd44": { "facing": "internal" },
+  "d617152f0e87d2841ed0368be7f6d47eb2147fa9": { "facing": "internal" },
+  "1138dde7bf3c568d0d91529864a57265db6996d9": { "facing": "internal" },
+  "4d9c50931be2ac2e3610fa29d2500d86398a2347": {
+    "facing": "model",
+    "id": "tool-description-teach-step-batch-actions",
+    "name": "Tool Description: teach_step batch actions",
+    "desc": "Directs packing as many actions as possible into each step"
+  },
+  "da9885244f6f8f2685315a258d8286d69943c995": {
+    "facing": "model",
+    "id": "tool-description-glob-pattern-entry-cap",
+    "name": "Tool Description: Glob pattern entry cap",
+    "desc": "Explains the 256-entry cap and to use broader globs"
+  },
+  "e55c9b61eddab72865558ab9ab95789247f11e27": { "facing": "internal" },
+  "42d979a083fc8161f2432fe1127a6854ee3d26ab": { "facing": "internal" },
+  "7580ee9f22978ab09246fc236df5dcfccb94a9ba": {
+    "facing": "model",
+    "id": "tool-description-artifact-contract-author-intent",
+    "name": "Tool Description: Artifact contract author intent",
+    "desc": "Pass the contract only when the author intends the behaviour change"
+  },
+  "ccaefaf01d3609d06f3498cd42e956663a81faf4": { "facing": "internal" },
+  "b3ec010de56d7cd74dd22f62c525b5b86c3bf91a": { "facing": "internal" },
+  "a64e8d708db5298a25cfcc726e9404b8aa3b09d4": { "facing": "internal" },
+  "c6cffd9d012de7a0edf0e7b3d23cbc585624237a": {
+    "facing": "model",
+    "id": "tool-description-split-batches-same-planid",
+    "name": "Tool Description: Split batches under one planId",
+    "desc": "Directs splitting batches over 256 across calls with the same planId"
+  },
+  "c6910a9365866c3009f1394de1efbcd16e19ecee": {
+    "facing": "model",
+    "id": "tool-result-background-service-no-sessions",
+    "name": "Tool Result: Background service without sessions",
+    "desc": "Reports the control socket failed to start and how to check the cause"
+  },
+  "2aa27fac49e9ab5667919efcb2369d45f1945e03": {
+    "facing": "model",
+    "id": "tool-result-artifact-deploy-missing-content",
+    "name": "Tool Result: Artifact deploy missing content",
+    "desc": "Reports the server kept seeing missing content at deploy time"
+  },
+  "bfedbe91204162fec38df1b4766cd30ecadf05cd": {
+    "facing": "model",
+    "id": "tool-description-bash-sandbox-bypass-explicit-request",
+    "name": "Tool Description: Sandbox bypass on explicit request",
+    "desc": "First condition permitting dangerouslyDisableSandbox"
+  },
+  "fe716305894def7c2be0d07f14fb7579eaf01fb0": {
+    "facing": "model",
+    "id": "system-prompt-memory-types-intro-line",
+    "name": "System Prompt: Memory types intro line",
+    "desc": "Intro sentence for the discrete memory types list"
+  },
+  "fdba3f2d9cb60bbb5017fb5c4bf4ea6f3100da21": {
+    "facing": "model",
+    "id": "tool-description-upload-direct-read-note",
+    "name": "Tool Description: Upload reads and encodes directly",
+    "desc": "Explains file contents never enter the conversation"
+  },
+  "45c4dc7ab6d5855848502470c3ef5c8d608bd2b0": {
+    "facing": "model",
+    "id": "tool-description-design-system-categorization",
+    "name": "Tool Description: Design system categorization",
+    "desc": "Directs reuse of the source design system's own categorization"
+  },
+  "f0ed0d8f844c87840a71f61b0a020b9f4b2ce966": { "facing": "internal" },
+  "f3df1c25acfccd6773a4594e3609e8b2df836a91": { "facing": "internal" },
+  "1ce705d1da3c8208243b8dbf769095f0a8af7c3f": {
+    "facing": "model",
+    "id": "tool-description-mcp-wait-intro",
+    "name": "Tool Description: MCP wait intro",
+    "desc": "Opening line of the MCP wait-for-servers tool description"
+  },
+  "3c9f84787d2aa9f0591131e41a3c76083e1b54ce": { "facing": "internal" },
+  "a8c2d8e3049cb1da86dd39caca66ce1925723a67": { "facing": "internal" },
+  "00d142796a7b5503f419552bba4c6919117a872f": { "facing": "internal" },
+  "db81abd5a4be101265f4a1180f7e92f93cd5e80f": { "facing": "internal" },
+  "7133c7052b8c827ee3ebbfa4939b4828a9f84e50": { "facing": "internal" },
+  "9298e7d30db5384008a8c107ab131ae06053c079": {
+    "facing": "model",
+    "id": "tool-result-workshop-page-sidecar-refused",
+    "name": "Tool Result: Workshop page sidecar refused",
+    "desc": "Refuses renderable or executable sidecar files on workshop pages"
+  },
+  "96cbdb1803189e48ebe956add30992c07fc308f0": {
+    "facing": "model",
+    "id": "tool-description-teach-batch-multiple-calls",
+    "name": "Tool Description: teach_batch multiple calls",
+    "desc": "Explains teach_batch may be called repeatedly in one tour"
+  },
+  "49f8ed29a6fb973c56068f4e175d8154c8957e13": {
+    "facing": "model",
+    "id": "system-prompt-opus5-subagent-restraint",
+    "name": "System Prompt: Opus 5 subagent restraint",
+    "desc": "Opus-5-only pair telling the model not to call the Agent tool, workflows or deep research unless the user asked"
+  },
+  "bfa78d70bd56c9eabffe9e1275263165bd40c635": { "facing": "internal" },
+  "290d6697e5ccd09d09c6add7de1395aee99325d9": { "facing": "internal" },
+  "3cbbb81236df46411cc4406f4b0aeeb9b37fa1e0": { "facing": "internal" },
+  "98fd213628b08757e87749ed8d9f55feb792a1d1": { "facing": "internal" },
+  "66ed2c48bd73980d6405ae5dd4306d48bf85bf50": { "facing": "internal" },
+  "08ebb9c78c05eb6f0df128c316d86dd7bc6bb346": { "facing": "internal" },
+  "b37e39b58cc700e3e9dba0871122ea93dd427908": { "facing": "internal" },
+  "2d5eeff3b478e08b6bc3644f05eb4a6772263caf": { "facing": "internal" },
+  "c80062f6a2d791030277adf750ecc67480532ee6": { "facing": "internal" },
+  "fc7e21e39a9d013a55a47f6aaaf3d30519f21648": { "facing": "internal" },
+  "8e4453cca9448e73bcbe7f9f1f5e58d0e8e078c4": { "facing": "internal" },
+  "407bb9194fe1c09ee547866b503db6848baeb210": { "facing": "internal" },
+  "1895c99f9f01e2457abad898e1dbe968a7d75329": { "facing": "internal" },
+  "00a896c56b17d9db41a010b010dd17610d4a34bb": { "facing": "internal" },
+  "551f05560684fb0a13bc6828aed1b3079950103d": { "facing": "internal" },
+  "6e851bd2289e95d072b774c7ab7a1d70139004c0": { "facing": "internal" },
+  "2392babb5e0f11fd52780b342f80b24441c4808b": { "facing": "internal" },
+  "e9f47111d1c9f2e1387dfd73cd60bd019b254af5": { "facing": "internal" },
+  "7deea7d0b80d835a0183b92015878248f1d7cf18": { "facing": "internal" },
+  "6f320cbca5ac41a9b4a78ad3b46acc5a17dd5ea9": { "facing": "internal" },
+  "4b9ee93a6d96a2bae77954a2f35532333b62116e": { "facing": "internal" },
+  "35560677a0604ae9cdb32ddd594367c32a24be35": { "facing": "internal" },
+  "256e2a4d4f9f0dcb651a3bbe4d848e061f35b2ad": { "facing": "internal" },
+  "faac375b0772c8a3494ef3ebe92976071d24e01a": { "facing": "internal" },
+  "1cf3be014d91f3ce0ee08aa286ce3d2da7399ad9": { "facing": "internal" },
+  "0d56d1f8153937cc38459de8bfab7f1fa0ab74c0": { "facing": "internal" },
+  "3eb808dc73cee51da7d7178fb912c2a1057a9b8b": { "facing": "internal" },
+  "f354eb141c998c4f3625fa301af9b204687fbb77": { "facing": "internal" },
+  "f9cdde53a1257bf13162f5606f2456d4f7523891": { "facing": "internal" },
+  "f48f2eee60bcecfdf7062af9e0d7b0129d315bb6": { "facing": "internal" },
+  "635cf15c8ce06c8d58fdc6937960d1f15b5c81f1": { "facing": "internal" },
+  "f1d4d3bd69b4f2ef24149ffe70ae49d0d8a4d216": { "facing": "internal" },
+  "56f695da507b056ab5ac41d4718c073c4f107c54": { "facing": "internal" },
+  "7dc300e81fdb72c0a44cd04b20f8c8820f357774": { "facing": "internal" },
+  "06537b41203593fa583a0266f886ada80b58b45a": { "facing": "internal" },
+  "cb8e9726e7f0d62b860874af7d9adb44e852bdc8": { "facing": "internal" },
+  "210d7f7ec69389393a8c51316ea6a7bba2197696": { "facing": "internal" },
+  "e92dcacdd01829a901e17c2db9ab13b71e36429e": { "facing": "internal" },
+  "9196d3a16aae7521c968967e430bf6d718cc53ff": { "facing": "internal" },
+  "b924a260054dfd9a6be7446c91b828e8c6a56296": {
+    "facing": "model",
+    "id": "system-prompt-opus5-no-agenttool-unless-requested",
+    "name": "System Prompt: Opus 5 do not call AgentTool unless requested",
+    "desc": "Opus-5-only line telling the model not to call the Agent tool unless the user asked for it"
+  },
+  "6c7255d1f0c1f26468aac4a0fe9428534f61e505": {
+    "facing": "model",
+    "id": "system-prompt-opus5-no-workflows-unless-requested",
+    "name": "System Prompt: Opus 5 do not use workflows unless requested",
+    "desc": "Opus-5-only line telling the model not to use workflows or deep research unless the user asked"
+  }
 }

@@ -2608,7 +2608,12 @@ function looksLikeEnglishProse(text) {
     if (stop >= 2) break;
   }
   if (stop < 2) return false;
-  return /[.,:;!?)](\s|$)/.test(text);
+  // Punctuation is the usual sentence signal, but a multi-line instruction
+  // block can carry none at all — the Opus 5 pair ("Do not call the AgentTool
+  // unless the user requested it\nDo not use workflows…") is exactly that, and
+  // a punctuation-only test dropped it before it could even become a
+  // classification candidate. A line break marks the same boundary.
+  return /[.,:;!?)](\s|$)/.test(text) || /\n/.test(text.trim());
 }
 
 // Strings rejected ONLY by the prose-quality gates (they cleared the drop
@@ -2980,6 +2985,84 @@ function decodeUnicodeEscapesInPiece(s) {
   return out;
 }
 
+// ---------------------------------------------------------------------------
+// Multi-node composites
+//
+// A prompt can be ONE string semantically but N nodes syntactically:
+//   ttp = ["Do not call the AgentTool…","Do not use workflows…"].join("\n")
+//   .describe("Invokes an MCP tool " + "via the subprocess MCP client.")
+// Gating each node alone can never see it — every fragment is short and its
+// lead (`["`, `,"`, `+`) carries no model-facing signal, so it falls under the
+// floor and is not even offered to the classification phase. That is how the
+// Opus 5 anti-delegation pair and chunks of the bundled keybindings skill
+// stayed uncaptured through 2.1.218/219/220.
+//
+// The assembled text is EVIDENCE ONLY, never a stored prompt: the joined form
+// exists at runtime, not in cli.js, so a regex built from it could never match
+// and every apply would report "Could not find" (the same reasoning
+// isHardExcluded already applies to unspliceable model-facing text). Each
+// FRAGMENT is a real literal, so the fragments are what get captured.
+// ---------------------------------------------------------------------------
+
+const literalOf = node => {
+  if (!node) return null;
+  if (node.type === 'StringLiteral') return node.value;
+  if (node.type === 'TemplateLiteral' && node.expressions.length === 0) {
+    return node.quasis[0].value.cooked;
+  }
+  return null;
+};
+
+// Leaf NODES of a `"a" + "b" + "c"` chain, or null if any leaf is not a literal.
+const concatLeafNodes = node => {
+  if (node.type === 'BinaryExpression' && node.operator === '+') {
+    const l = concatLeafNodes(node.left);
+    const r = concatLeafNodes(node.right);
+    return l !== null && r !== null ? [...l, ...r] : null;
+  }
+  return literalOf(node) === null ? null : [node];
+};
+
+// { text, nodes } for a composite node, else null.
+function assembleComposite(node) {
+  const fromArray = (elements, sep) => {
+    const nodes = elements || [];
+    const parts = nodes.map(literalOf);
+    if (parts.length < 2 || !parts.every(p => typeof p === 'string'))
+      return null;
+    return { text: parts.join(sep), nodes };
+  };
+
+  // `[...].join(sep)` — the separator is known, so the text is exact.
+  if (
+    node.type === 'CallExpression' &&
+    node.callee?.type === 'MemberExpression' &&
+    node.callee.property?.name === 'join' &&
+    node.callee.object?.type === 'ArrayExpression'
+  ) {
+    const sepArg = node.arguments.length ? literalOf(node.arguments[0]) : ',';
+    return fromArray(
+      node.callee.object.elements,
+      typeof sepArg === 'string' ? sepArg : ','
+    );
+  }
+
+  // A bare array of string literals. The separator is unknown (joined
+  // elsewhere, or spread into a builder), so assume a newline — every observed
+  // case in cli.js is line-oriented markdown or instruction text.
+  if (node.type === 'ArrayExpression') return fromArray(node.elements, '\n');
+
+  if (node.type === 'BinaryExpression' && node.operator === '+') {
+    const nodes = concatLeafNodes(node);
+    if (nodes === null || nodes.length < 2) return null;
+    const parts = nodes.map(literalOf);
+    if (!parts.every(p => typeof p === 'string')) return null;
+    return { text: parts.join(''), nodes };
+  }
+
+  return null;
+}
+
 function extractStrings(filepath, minLength = 500) {
   _gateCandidates.clear(); // idempotent across calls
   const code = fs.readFileSync(filepath, 'utf-8');
@@ -2993,6 +3076,68 @@ function extractStrings(filepath, minLength = 500) {
 
   const traverse = node => {
     if (!node || typeof node !== 'object') return;
+
+    // Multi-node composites. Runs before the per-node branches, but only ever
+    // emits FRAGMENTS (never the joined text — see the note above), each at its
+    // own range, so nothing already captured is enclosed or retired.
+    {
+      const composite = assembleComposite(node);
+      if (composite !== null) {
+        const fragCaptured = composite.nodes.map(frag => {
+          const v = literalOf(frag);
+          const fragLead = code.slice(Math.max(0, frag.start - 600), frag.start);
+          return shouldCapture(v, v, fragLead, minLength);
+        });
+        const lead = code.slice(Math.max(0, node.start - 600), node.start);
+        // Model-facing if a sibling already made it into the catalogue, or if
+        // the assembled text carries a cache verdict / clears the gate.
+        const modelFacing =
+          fragCaptured.some(Boolean) ||
+          classifyByCache(composite.text)?.facing === 'model' ||
+          shouldCapture(composite.text, composite.text, lead, minLength);
+
+        if (modelFacing) {
+          composite.nodes.forEach((frag, i) => {
+            if (fragCaptured[i]) return; // the normal path already took it
+            const v = literalOf(frag);
+            if (!v) return;
+            // The cache stays authoritative here exactly as inside
+            // shouldCapture: a 'ui'/'internal' verdict must be able to drop a
+            // fragment, a 'model' verdict admits it outright.
+            const verdict = classifyByCache(v);
+            if (verdict) {
+              if (verdict.facing !== 'model' || isHardExcluded(v)) return;
+            } else {
+              // Deliberately NOT looksLikeEnglishProse: these fragments are
+              // mid-sentence by construction (one sentence split across array
+              // elements), so a full-sentence test rejects exactly the ones
+              // worth rescuing. The captured sibling is the evidence the array
+              // is model-facing; here we only exclude markdown scaffolding
+              // ("```json", "", "- ") and code.
+              const words = v.trim().split(/\s+/).length;
+              if (
+                v.trim().length < ADMIT_FLOOR ||
+                words < 5 ||
+                !/[a-z]/.test(v) ||
+                isHardExcluded(v)
+              ) {
+                return;
+              }
+            }
+            stringData.push({
+              name: '',
+              id: '',
+              description: '',
+              pieces: [v],
+              identifiers: [],
+              identifierMap: {},
+              start: frag.start,
+              end: frag.end,
+            });
+          });
+        }
+      }
+    }
 
     // Extract string literals. shouldCapture folds together the drop
     // contexts, the classification cache (authoritative — a 'model' verdict
