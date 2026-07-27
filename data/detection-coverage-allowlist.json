@@ -1,0 +1,389 @@
+{
+  "449a9bee144b47c0": {
+    "verdict": "REVIEW",
+    "shape": "array",
+    "excerpt": "You've hit your You've reached your You're out of usage credits Your org is out of usage · add funds to continue Your org is out of usage · "
+  },
+  "79f8d8934690894d": {
+    "verdict": "REVIEW",
+    "shape": "concat",
+    "excerpt": "When true, the sandbox runtime deterministically denies hosts not in allowedDomains instead of prompting. Enforced for sandboxed commands on"
+  },
+  "450d81795a98a3f8": {
+    "verdict": "REVIEW",
+    "shape": "concat",
+    "excerpt": "[EXPERIMENTAL] Enable in-process TLS termination so the per-request filter can see HTTPS request bodies. Provide a CA cert+key, or omit both"
+  },
+  "7f6576084354ecaf": {
+    "verdict": "REVIEW",
+    "shape": "concat",
+    "excerpt": "macOS and Linux/WSL only: skip filesystem isolation entirely while keeping network and seccomp isolation. Ignored on native Windows, where t"
+  },
+  "b8e99da38e0fe170": {
+    "verdict": "REVIEW",
+    "shape": "concat",
+    "excerpt": "Access mode for this environment variable. `deny` unsets the variable for sandboxed commands; `mask` shows sandboxed commands a sentinel val"
+  },
+  "3cf02e0ca8445cb5": {
+    "verdict": "REVIEW",
+    "shape": "concat",
+    "excerpt": "Optional narrowing of where the proxy substitutes this credential. Only meaningful when mode is `mask`; accepted but ignored for `deny`. If "
+  },
+  "c061c16d38e1b76e": {
+    "verdict": "REVIEW",
+    "shape": "concat",
+    "excerpt": "Allow sentinel→real substitution on the plain-HTTP proxy path. Defaults to false: without TLS termination the upstream identity is unverifie"
+  },
+  "a03d1af5c47a17a0": {
+    "verdict": "REVIEW",
+    "shape": "concat",
+    "excerpt": "macOS only: Allow access to com.apple.trustd.agent in the sandbox. Needed for Go-based CLI tools (gh, gcloud, terraform, etc.) to verify TLS"
+  },
+  "f197bd131ed587d2": {
+    "verdict": "REVIEW",
+    "shape": "concat",
+    "excerpt": "macOS only: Allow sandboxed commands to send Apple Events (and look up the appleeventsd Mach service). Needed for `open`, `osascript`, and b"
+  },
+  "ad2221e3dd76a41c": {
+    "verdict": "REVIEW",
+    "shape": "concat",
+    "excerpt": "Argument list for exec form. When present, `command` is resolved as an executable and spawned directly with these arguments — no shell. Path"
+  },
+  "396747dd128c5e84": {
+    "verdict": "REVIEW",
+    "shape": "concat",
+    "excerpt": "Marketplace name. Must match the extraKnownMarketplaces key (enforced); the synthetic manifest is written under this name. Same validation a"
+  },
+  "a2306938a3b98fe4": {
+    "verdict": "REVIEW",
+    "shape": "concat",
+    "excerpt": "Placeholder for source types this Claude Code version does not recognize. Never authored by hand — PluginMarketplaceSchema rewrites unparsea"
+  },
+  "a896dd0b20f094d5": {
+    "verdict": "REVIEW",
+    "shape": "concat",
+    "excerpt": "Where to fetch the plugin from. Must be a remote source — relative paths have no marketplace repository to resolve against."
+  },
+  "39153f450619319e": {
+    "verdict": "REVIEW",
+    "shape": "concat",
+    "excerpt": "Glob patterns (e.g. [\"**/*.tf\"]) — the plugin is relevant when a file Claude has read this session matches any pattern. Matched against read"
+  },
+  "d6d426f3af153fa2": {
+    "verdict": "REVIEW",
+    "shape": "concat",
+    "excerpt": "Dependency declared in a package manifest. Each {file, pattern} is a pair of RegExp sources: `file` matches the manifest filename (package.j"
+  },
+  "5604fedd01e10677": {
+    "verdict": "REVIEW",
+    "shape": "concat",
+    "excerpt": "Glob patterns (e.g. [\"Engine/Source/Runtime/Renderer/**\"]) — the plugin is relevant when the session's working directory is at or under a di"
+  },
+  "dffac88775950017": {
+    "verdict": "REVIEW",
+    "shape": "concat",
+    "excerpt": "What the user is working with when this plugin is relevant — fills \"Working with {topic}?\". Often the product name (e.g. \"Stripe\"); use a do"
+  },
+  "9e6af820a08bf67e": {
+    "verdict": "REVIEW",
+    "shape": "concat",
+    "excerpt": "When true in any settings source, claude.ai MCP cloud connectors are not auto-fetched or connected. Only gates auto-fetched connectors — a c"
+  },
+  "4bfc82448302de00": {
+    "verdict": "REVIEW",
+    "shape": "concat",
+    "excerpt": "Directories to include when creating worktrees, via git sparse-checkout (cone mode). Dramatically faster in large monorepos — only the liste"
+  },
+  "b197ffdf43272f49": {
+    "verdict": "REVIEW",
+    "shape": "concat",
+    "excerpt": "When set in managed settings, blocks non-plugin customization sources for the listed surfaces. Array form locks specific surfaces (e.g. [\"sk"
+  },
+  "88c0c727fe5738a7": {
+    "verdict": "REVIEW",
+    "shape": "concat",
+    "excerpt": "Enterprise strict list of allowed marketplace sources. When set in managed settings, ONLY these exact sources can be added as marketplaces. "
+  },
+  "831901d9a9e595e3": {
+    "verdict": "REVIEW",
+    "shape": "concat",
+    "excerpt": "Controls whether the SDK parent tier (Options.managedSettings / --managed-settings) layers under this admin tier. \"first-wins\" (default): pa"
+  },
+  "1a05c0a446549112": {
+    "verdict": "REVIEW",
+    "shape": "concat",
+    "excerpt": "Enable ultracode for the session: xhigh effort plus standing dynamic-workflow orchestration. Session-scoped — typically provided via --setti"
+  },
+  "649b00f31c7c8ec4": {
+    "verdict": "REVIEW",
+    "shape": "concat",
+    "excerpt": "Managed-org allowlist of channel plugins. When set, replaces the default Anthropic allowlist — admins decide which plugins may push inbound "
+  },
+  "70e4a004e08e046d": {
+    "verdict": "REVIEW",
+    "shape": "array",
+    "excerpt": "Failed to fetch NetworkError when attempting to fetch resource The Internet connection appears to be offline Load failed Network request fai"
+  },
+  "eb17e31f022cb8cf": {
+    "verdict": "REVIEW",
+    "shape": "concat",
+    "excerpt": "Every address for a gateway host must be private — if this is a dual-stack DNS name, publish only private records for it (for example, remov"
+  },
+  "168e22a5a43b3c57": {
+    "verdict": "REVIEW",
+    "shape": "array",
+    "excerpt": "memory content appears to contain a credential or API key; remove it before writing. If the credential is real, rotate it. content_secret"
+  },
+  "f44095b63e6443dd": {
+    "verdict": "REVIEW",
+    "shape": "array",
+    "excerpt": "## Types of memory There are several discrete types of memory that you can store in your memory system. Each type below declares a <scope> o"
+  },
+  "8b18573d7ff814a4": {
+    "verdict": "REVIEW",
+    "shape": "array",
+    "excerpt": "## Types of memory There are several discrete types of memory that you can store in your memory system: <types> <type> <name>user</name> <de"
+  },
+  "c82af7b353d9e38e": {
+    "verdict": "REVIEW",
+    "shape": "array",
+    "excerpt": "## What NOT to save in memory - Code patterns, conventions, architecture, file paths, or project structure — these can be derived by reading"
+  },
+  "ee9a8eff5c32f159": {
+    "verdict": "model",
+    "shape": "array",
+    "excerpt": "## Before recommending from memory A memory that names a specific function, file, or flag is a claim that it existed *when the memory was wr",
+    "note": "confirmed model-facing 2026-07-27; extractStrings cannot assemble this shape yet"
+  },
+  "ef6f55e5eab707e9": {
+    "verdict": "REVIEW",
+    "shape": "array",
+    "excerpt": "; Apple Events - opt-in; needed for open/osascript to talk to other apps (appleeventsd) (allow appleevent-send) (allow mach-lookup (global-n"
+  },
+  "001e7b1d061eb689": {
+    "verdict": "REVIEW",
+    "shape": "concat",
+    "excerpt": "[Sandbox Windows] updateConfig: the resolved file-access set (filesystem.* ∪ credentials.files) changed but the ACL stamp/grant is session-w"
+  },
+  "0cbe12305e464c29": {
+    "verdict": "REVIEW",
+    "shape": "concat",
+    "excerpt": "it2 was found on PATH — check that the iTerm2 Python API is enabled (Preferences > General > Magic > Enable Python API)."
+  },
+  "257b0632319d1016": {
+    "verdict": "model",
+    "shape": "array",
+    "excerpt": "Wait for MCP servers that are still connecting and whose tools are not yet in your tool list. Pass `servers` to wait for specific ones, or o",
+    "note": "confirmed model-facing 2026-07-27; extractStrings cannot assemble this shape yet"
+  },
+  "9e0d9926f343db12": {
+    "verdict": "REVIEW",
+    "shape": "array",
+    "excerpt": "Almost done! Enable the Python API in iTerm2: iTerm2 → Settings → General → Magic → Enable Python API After enabling, you may need to restar"
+  },
+  "d1bd0c3ba749f77e": {
+    "verdict": "REVIEW",
+    "shape": "concat",
+    "excerpt": "clearing a stored declaration also needs the current contract. Retry when the contract service is reachable — until the clear lands, the sto"
+  },
+  "713662f6b0f5628c": {
+    "verdict": "REVIEW",
+    "shape": "concat",
+    "excerpt": "workshop pages cannot ship renderable or executable sidecar files — each is a URL that bypasses the publish-time verifier:"
+  },
+  "59ab0468c080a919": {
+    "verdict": "REVIEW",
+    "shape": "concat",
+    "excerpt": "the server answered the upload preflight for a different artifact — not publishing."
+  },
+  "3a773556461da09f": {
+    "verdict": "REVIEW",
+    "shape": "concat",
+    "excerpt": "the server kept reporting missing content at deploy time after it was uploaded — not looping. Retry publishing to"
+  },
+  "9c6e37bafb6d8067": {
+    "verdict": "REVIEW",
+    "shape": "concat",
+    "excerpt": "DesignSync needs design-system authorization for your claude.ai account. Approving opens your browser to authorize access to your org's desi"
+  },
+  "738c1a08e4bb5ea2": {
+    "verdict": "model",
+    "shape": "array",
+    "excerpt": "The user *explicitly* asks you to bypass sandbox A specific command just failed and you see evidence of sandbox restrictions causing the fai",
+    "note": "confirmed model-facing 2026-07-27; extractStrings cannot assemble this shape yet"
+  },
+  "7c5a938ac9fb3d13": {
+    "verdict": "REVIEW",
+    "shape": "concat",
+    "excerpt": "Voice mode could not find a working audio recorder in WSL. WSL2 with WSLg provides audio via PulseAudio — install SoX with its PulseAudio ba"
+  },
+  "45e6c9c94c55ecf6": {
+    "verdict": "REVIEW",
+    "shape": "array",
+    "excerpt": "Remote plan mode with rich web editing experience. Runs in Claude Code on the web. When the plan is ready, you can execute it in the web ses"
+  },
+  "a79bddc40e330b3c": {
+    "verdict": "REVIEW",
+    "shape": "array",
+    "excerpt": "Advanced multi-agent plan mode. Runs in Claude Code on the web. When the plan is ready, you can execute it in the web session or send it bac"
+  },
+  "869c792bfbe4773f": {
+    "verdict": "model",
+    "shape": "array",
+    "excerpt": "Do not call the AgentTool unless the user requested it Do not use workflows or deep-research unless the user requested it",
+    "note": "confirmed model-facing 2026-07-27; extractStrings cannot assemble this shape yet"
+  },
+  "6200c200d74ed331": {
+    "verdict": "REVIEW",
+    "shape": "concat",
+    "excerpt": "does not exist or is not a directory. The path came from a WorktreeCreate hook — the hook must print the directory it created as the last li"
+  },
+  "367140252562af45": {
+    "verdict": "REVIEW",
+    "shape": "concat",
+    "excerpt": "Could not verify the gateway's TLS certificate. If your gateway uses a private CA or self-signed certificate: Claude Code reads your OS trus"
+  },
+  "0fe20c7872464cea": {
+    "verdict": "REVIEW",
+    "shape": "concat",
+    "excerpt": "ablation requested but no plugin resolved for this case: auto-detection found no plugin.json (or .claude-plugin/plugin.json) between the cas"
+  },
+  "907083f104badc39": {
+    "verdict": "REVIEW",
+    "shape": "concat",
+    "excerpt": "Run eval cases (evals/**/case.yaml or evals/**/prompt.md + graders/*.md) against a plugin and report scored results. Target is a path, a plu"
+  },
+  "80b12137bb04b7a6": {
+    "verdict": "REVIEW",
+    "shape": "concat",
+    "excerpt": "Optional hard cost ceiling; abort and report partial results if hit (exit 2). Overrun is bounded to one agent run — when that run breaches, "
+  },
+  "bf62d436862b9b67": {
+    "verdict": "REVIEW",
+    "shape": "array",
+    "excerpt": "This session hasn ' t worked here before. Is this a directory you created or one you trust?"
+  },
+  "4db688730cb9d766": {
+    "verdict": "REVIEW",
+    "shape": "concat",
+    "excerpt": "the background service on this machine is running without background sessions — its control socket failed to start. Check the cause with 'cl"
+  },
+  "be9fbfebe9af882b": {
+    "verdict": "REVIEW",
+    "shape": "concat",
+    "excerpt": "Quick lessons on the things power users do — plan mode, undo, subagents, memory. About 5 minutes. Come back any time with /powerup."
+  },
+  "73d174b9c138c8b3": {
+    "verdict": "REVIEW",
+    "shape": "concat",
+    "excerpt": "New here? Type /powerup for a 5-minute tour — modes, undo, @-mentions, and how to teach Claude your rules."
+  },
+  "b23bfaf3d2947618": {
+    "verdict": "REVIEW",
+    "shape": "array",
+    "excerpt": "· managed hooks and settings policy from your organization still apply; managed plugins, skills, CLAUDE.md, and MCP servers do not"
+  },
+  "607d7dee658cf925": {
+    "verdict": "REVIEW",
+    "shape": "concat",
+    "excerpt": "Need help? Common issues: · Permission denied → Run: gh auth refresh -h github.com -s repo,workflow · Not authorized → Ensure you have admin"
+  },
+  "668ae9d1be2b1948": {
+    "verdict": "REVIEW",
+    "shape": "concat",
+    "excerpt": "Need help? Common issues: · Permission denied → Run: gh auth refresh -h github.com -s repo · Not authorized → Ensure you have admin access t"
+  },
+  "00941a14e2862353": {
+    "verdict": "REVIEW",
+    "shape": "array",
+    "excerpt": "Run: gh auth login Follow the prompts to authenticate with GitHub Or set up authentication using environment variables or other methods"
+  },
+  "5d6b99c9ce14dcdc": {
+    "verdict": "REVIEW",
+    "shape": "array",
+    "excerpt": "Repository admins can install GitHub Apps and set secrets Ask a repository admin to run this command if setup fails Alternatively, you can u"
+  },
+  "4181f64c3775001e": {
+    "verdict": "REVIEW",
+    "shape": "array",
+    "excerpt": "(dash = not in the current listing, costs nothing; full SKILL.md loads only when it runs)"
+  },
+  "823e94b24ba94c50": {
+    "verdict": "REVIEW",
+    "shape": "array",
+    "excerpt": "7d tokens = tokens attributed to the skill over the last 7 days of sessions on this machine"
+  },
+  "c813b36dd9015715": {
+    "verdict": "REVIEW",
+    "shape": "array",
+    "excerpt": "This rule is configured by managed settings and cannot be modified. Contact your system administrator for more information."
+  },
+  "6d07c0fc47c88814": {
+    "verdict": "REVIEW",
+    "shape": "concat",
+    "excerpt": "Dynamic workflows can use a lot of tokens quickly by running many subagents in parallel — which counts against your usage limit. Stop a runn"
+  },
+  "525c946f97cddf81": {
+    "verdict": "model",
+    "shape": "array",
+    "excerpt": "# Keybindings Skill Create or modify `~/.claude/keybindings.json` to customize keyboard shortcuts. ## CRITICAL: Read Before Write **Always r",
+    "note": "confirmed model-facing 2026-07-27; extractStrings cannot assemble this shape yet"
+  },
+  "65d16b04890a85c7": {
+    "verdict": "model",
+    "shape": "array",
+    "excerpt": "## How User Bindings Interact with Defaults - User bindings are **additive** — they are appended after the default bindings - To **move** a ",
+    "note": "confirmed model-facing 2026-07-27; extractStrings cannot assemble this shape yet"
+  },
+  "ed6d0c352843bfdf": {
+    "verdict": "REVIEW",
+    "shape": "array",
+    "excerpt": "`Invalid action for \"X\"` Action value is not a string or null Actions must be strings like `\"app:help\"` or `null` to unbind"
+  },
+  "e31d8f35ee3358f5": {
+    "verdict": "REVIEW",
+    "shape": "concat",
+    "excerpt": "Press enter again to restart this session fresh — it has no saved transcript (stopped before its first response; any conversation it was bac"
+  },
+  "41b1b98e0825ced8": {
+    "verdict": "REVIEW",
+    "shape": "array",
+    "excerpt": "Quick safety check: Is this a project you created or one you trust? (Like your own code, a well-known open source project, or work from your"
+  },
+  "7dda4425729a361b": {
+    "verdict": "REVIEW",
+    "shape": "concat",
+    "excerpt": "Prompt text submitted when the cron fires. Capped at 1000 chars; clipped values append an in-string \"… [+N chars]\" marker."
+  },
+  "db1c38848a3809cb": {
+    "verdict": "REVIEW",
+    "shape": "concat",
+    "excerpt": "Ordered messagesToKeep UUIDs. Supersedes preserved_segment — readers look up each UUID directly and relink uuids[i] to uuids[i-1] (uuids[0] "
+  },
+  "ecd9d62bb371c8d5": {
+    "verdict": "model",
+    "shape": "concat",
+    "excerpt": "Invokes an MCP tool via the subprocess MCP client without a model turn. No permission check (control channel is trusted, same as other subty",
+    "note": "confirmed model-facing 2026-07-27; extractStrings cannot assemble this shape yet"
+  },
+  "0a23219a958a660c": {
+    "verdict": "REVIEW",
+    "shape": "concat",
+    "excerpt": "MCP tool result — the content array, structuredContent, and _meta from CallToolResult. Content passes through the same processing as model-t"
+  },
+  "1cc646a273d690b4": {
+    "verdict": "REVIEW",
+    "shape": "concat",
+    "excerpt": "telemetry.forward_to is configured but listen.public_url is not — clients will not be told to export OTLP. Set listen.public_url so /managed"
+  },
+  "4b578bb7ffc5200b": {
+    "verdict": "REVIEW",
+    "shape": "concat",
+    "excerpt": "listen.public_url is required when listen.host is not a loopback address — set it to the externally-visible origin (e.g. https://claude-gate"
+  },
+  "957a10ccc68e4f6a": {
+    "verdict": "REVIEW",
+    "shape": "concat",
+    "excerpt": "oidc.allowed_groups is set but Google ID tokens do not carry a groups claim — every login will be denied. Set oidc.google_groups to fetch Wo"
+  }
+}
