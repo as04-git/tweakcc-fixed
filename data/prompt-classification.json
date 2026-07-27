@@ -8042,7 +8042,12 @@
     "desc": "Output-schema field description for the set_cwd rejected-arm `message` string returned to the model; model-facing."
   },
   "183baf71b12e0b10984be5f2f1b1ff595d4e6e75": { "facing": "internal" },
-  "a633f8ad745a664080a050cc3a67d27877f9d72d": { "facing": "internal" },
+  "a633f8ad745a664080a050cc3a67d27877f9d72d": {
+    "facing": "model",
+    "id": "tool-result-memory-write-credential-detected",
+    "name": "Tool Result: Memory write credential detected",
+    "desc": "Rejects a memory write whose content looks like a credential and asks for rotation"
+  },
   "c210651cfafad1b0f1831894a5045c27759d3678": {
     "facing": "model",
     "id": "tool-result-memory-sync-paused-after-failures",
@@ -23266,5 +23271,25 @@
     "id": "system-prompt-opus5-no-workflows-unless-requested",
     "name": "System Prompt: Opus 5 do not use workflows unless requested",
     "desc": "Opus-5-only line telling the model not to use workflows or deep research unless the user asked"
+  },
+  "3595ef8b10734fe7b810697f88031b8cfd8216fa": { "facing": "model" },
+  "d036486ef74bd42efb2bcbdfbb6d0d8699b6b88f": { "facing": "model" },
+  "5b9ed242c7f5ff74d3c76ce6f0da7d5ac34cdf19": { "facing": "model" },
+  "0ba85971fc00bc7a3ac594154fffdf3319218067": { "facing": "model" },
+  "9b772ef66963fd2feeef5bca0992ff13edf0ba7f": { "facing": "model" },
+  "1c1da08c2b8b292edeb5ccedc1d335439fef0d5a": { "facing": "model" },
+  "470f3556f5b1dddf0d1d1a2457a6bbfa3173951f": { "facing": "model" },
+  "6b5ae78478e11e91768369e6fa36d43c78c7d4f0": { "facing": "model" },
+  "32e979400002882866daaad7b26a4673d66132d8": {
+    "facing": "model",
+    "id": "skill-keybindings-invalid-action-fix",
+    "name": "Skill: Keybindings invalid action fix",
+    "desc": "Explains action values must be strings like \"app:help\" or null to unbind"
+  },
+  "3a0d09c45c5c61fdd0f424e5994452cbdb8a9a34": {
+    "facing": "model",
+    "id": "tool-result-artifact-preflight-slug-mismatch",
+    "name": "Tool Result: Artifact preflight slug mismatch",
+    "desc": "Reports the server answered the upload preflight for a different artifact"
   }
 }

@@ -112,13 +112,15 @@ const literalValue = node => {
   return null;
 };
 
-const concatChain = node => {
+// Leaf VALUES of a `"a" + "b" + "c"` chain, or null if any leaf is not literal.
+const concatLeaves = node => {
   if (node.type === 'BinaryExpression' && node.operator === '+') {
-    const left = concatChain(node.left);
-    const right = concatChain(node.right);
-    return left !== null && right !== null ? left + right : null;
+    const left = concatLeaves(node.left);
+    const right = concatLeaves(node.right);
+    return left !== null && right !== null ? [...left, ...right] : null;
   }
-  return literalValue(node);
+  const v = literalValue(node);
+  return v === null ? null : [v];
 };
 
 function collectComposites(code) {
@@ -147,10 +149,18 @@ function collectComposites(code) {
 
     if (node.type === 'BinaryExpression' && node.operator === '+') {
       if (!seenStart.has(node.start)) {
-        const joined = concatChain(node);
-        if (joined !== null) {
+        const leaves = concatLeaves(node);
+        if (leaves !== null) {
           seenStart.add(node.start);
-          out.push({ shape: 'concat', node, parts: [joined], text: joined });
+          // parts must be the LEAVES, not the joined text: coverage is judged
+          // per fragment (the joined form is never stored), so a single-element
+          // parts array of the joined string could never be satisfied.
+          out.push({
+            shape: 'concat',
+            node,
+            parts: leaves,
+            text: leaves.join(''),
+          });
         }
       }
     }
@@ -191,8 +201,19 @@ function isCaptured(corpus, text) {
     .split(/\$\{[^}]*\}/)
     .map(x => x.trim())
     .filter(x => x.length >= 45);
-  const probes = (runs.length ? runs : [s]).slice(0, 8);
-  return probes.some(p => corpus.includes(p.slice(0, 55)));
+  const probes = [];
+  for (const run of (runs.length ? runs : [s]).slice(0, 8)) {
+    // Sample WINDOWS across each run, not just its head: the extractor stores a
+    // prompt split into pieces, and the stored piece often starts partway into
+    // the text (an interpolation, or a differently-cut fragment), so a
+    // head-only probe reports a captured prompt as missing.
+    for (const frac of [0, 0.25, 0.5, 0.75]) {
+      const at = Math.floor(run.length * frac);
+      if (at + 45 <= run.length) probes.push(run.slice(at, at + 45));
+    }
+    probes.push(run.slice(0, 45));
+  }
+  return probes.some(p => corpus.includes(p));
 }
 
 // --------------------------------------------------------------------------
