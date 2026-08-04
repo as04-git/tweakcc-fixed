@@ -1,0 +1,317 @@
+{
+  "agent-prompt-date-parser-invalid-examples": {
+    "verdict": "pristine-keep",
+    "version": "2.1.221",
+    "why": "Read in full: 'Examples of INVALID input: partial dates like \"2025-01-\", lone numbers like \"13\", gibberish.' \u2014 no CAPS theater beyond the sentinel token, no hedging, no scaffolding. Binary check (native-claudejs-orig.js, function cCm) shows it is one line of a single 8-line lp([...]) system prompt for a cheap utility model that parses NL dates into ISO 8601 for MCP elicitation \u2014 not the main agent"
+  },
+  "agent-prompt-date-parser-time-without-date": {
+    "verdict": "pristine-keep",
+    "version": "2.1.221",
+    "why": "Read in full: \"For times without dates, use today's date.\" \u2014 42 chars, zero slop. Binary check places it in the same 8-line utility-parser prompt as the id above. Corpus scan for \"today's date\" returns only this id plus unrelated schedule/date-changed prompts. Its mirror system-prompt-nl-datetime-parser-date-only-rule ('For dates without times, do not include a time component.') is deployed pristi"
+  },
+  "data-memory-type-project-scope": {
+    "verdict": "pristine-keep",
+    "version": "2.1.221",
+    "why": "Read in full: '    <scope>private or team, but strongly bias toward team</scope>'. Binary check: it is the project type's <scope> inside the team-enabled Sen=[...] memory-types block (offset ~3667143), whose own header \u2014 deployed as system-prompt-memory-types-overview with a body \u2014 states 'Each type below declares a <scope> of `private`, `team`, or guidance for choosing between the two.' Suppressi"
+  },
+  "data-memory-type-reference-how-to-use-2": {
+    "verdict": "pristine-keep",
+    "version": "2.1.221",
+    "why": "Read in full: '    <how_to_use>When the user references an external system or information that may be in an external system.</how_to_use>'. Binary check: it is the reference type's sole <how_to_use>, appearing identically in BOTH the team block (~3669697) and the solo block (~3677118) \u2014 a multisite id, so whichever variant renders, this is the only read-trigger reference memories get. Corpus dupli"
+  },
+  "data-memory-type-user-how-to-use": {
+    "verdict": "pristine-keep",
+    "version": "2.1.221",
+    "why": "CATALOGUE NAME IS WRONG \u2014 this is not the user type. Binary check (offset ~3665630) shows it is the FEEDBACK type's <how_to_use> in the team-enabled Sen=[...] block; the user type's how_to_use is system-prompt-user-memory-usage-guidance, which sits directly above it and is deployed with a trimmed body. Read in full: 'Let these memories guide your behavior so that the user and other users in the pr"
+  },
+  "data-memory-type-user-how-to-use-solo": {
+    "verdict": "pristine-keep",
+    "version": "2.1.221",
+    "why": "Same misnaming: binary check (offset ~3673406) shows this is the FEEDBACK type's <how_to_use> in the SOLO memory-types block (the variant that omits <scope> fields entirely because there is no team directory). Read in full: 'Let these memories guide your behavior so that the user does not need to offer the same guidance twice.' \u2014 clean, no slop. It is not a duplicate of data-memory-type-user-how-t"
+  },
+  "skill-keybindings-chords": {
+    "verdict": "pristine-keep",
+    "version": "2.1.221",
+    "why": "Read in full: '**Chords**: Space-separated keystrokes, e.g. `ctrl+k ctrl+s` (1-second timeout between keystrokes)'. Binary check: it sits in the dqT 'Keystroke Syntax' section of the lazily-loaded Keybindings Skill doc. Corpus duplication scan across all 3347 entries: '1-second' returns this id ALONE, and 'Chords' returns only this id plus two unrelated computer-use prompts. skill-keybindings-exam"
+  },
+  "skill-keybindings-context-minimal-override": {
+    "verdict": "wipe-merge",
+    "version": "2.1.221",
+    "why": "Coverage is REAL and always co-renders. Structural proof from /Users/batricperovic/.tweakcc/native-claudejs-orig.js (~offset 19988229): the keybindings-help skill builds its prompt as o=[cqT,uqT,dqT,pqT,fqT,mqT,hqT,gqT,...].join(\"\\n\\n\"), so fqT (this bullet's section, '## How User Bindings Interact with Defaults') and hqT ('## Behavioral Rules', rule-1) ship together in every render of the skill. "
+  },
+  "skill-keybindings-examples": {
+    "verdict": "pristine-keep",
+    "version": "2.1.221",
+    "why": "Checked for the obvious wipe and it does not hold up. Corpus regex for `**Modifiers**` across the keybindings family: there is NO modifier-list prompt - the only modifier fragment is skill-keybindings-alt-modifier (deployed pristine, alt/opt/option aliases). So this line is the sole place in the entire catalogue that demonstrates the composite `mod+mod+key` form (`ctrl+shift+p`, the only ctrl+shif"
+  },
+  "skill-keybindings-interaction-heading": {
+    "verdict": "pristine-keep",
+    "version": "2.1.221",
+    "why": "Read as a candidate for redundant scaffolding and rejected on structure. Corpus regex for \"Interact with Defaults\" returns exactly one hit - no competing heading - and it is the ONLY `##` heading among all 32 keybindings fragments, i.e. the sole delimiter for its section. The bullets it governs survive: skill-keybindings-move-binding and skill-keybindings-context-minimal-override are both deployed"
+  },
+  "skill-keybindings-invalid-action-fix": {
+    "verdict": "pristine-keep",
+    "version": "2.1.221",
+    "why": "Corpus-wide regex for `app:help` returns exactly ONE hit in all 3347 prompts - this one. The `namespace:verb` shape of an action value is stated nowhere else; skill-keybindings-rule-2 only points at \"the known lists below\" without naming the format. Partial overlap with skill-keybindings-unbind (deployed pristine: \"Set a key to `null` to remove its default binding:\") covers only the null half; the"
+  },
+  "skill-keybindings-read-before-write": {
+    "verdict": "pristine-keep",
+    "version": "2.1.221",
+    "why": "Never had an override file in any deployed set (opus-5, opus-4-8, fable-5, opus-4-7 - all confirmed ABSENT by python), so pristine applies today. Corpus scan for merge-vs-replace of an existing config: this is the ONLY prompt in all 3347 entries that tells the model to merge rather than overwrite keybindings.json (regex over every body: only hit besides unrelated skills). That is a genuine data-lo"
+  },
+  "skill-keybindings-special-keys": {
+    "verdict": "pristine-keep",
+    "version": "2.1.221",
+    "why": "Pure parser-token mechanics: a 10-item enumeration of the exact accepted key-name strings, several with aliases the model cannot guess (escape/esc, enter/return - is it `return` or `enter`? `up` or `arrowup`? `delete` or `del`?). Guessing wrong produces a silently non-functional binding. Corpus scan: no other prompt in prompts-2.1.221.json enumerates Claude Code's keybinding key names - the only n"
+  },
+  "skill-keybindings-use-edit-tool": {
+    "verdict": "pristine-keep",
+    "version": "2.1.221",
+    "why": "Every external coverage claim in the rationale is FALSE against the wire capture \u2014 the rationale verified .md files on disk but never verified that any of them render.\n\n(1) tool-description-write: the quoted line '- Prefer the Edit tool for modifying existing files - it only sends the diff. Use Write only to create new files or for complete rewrites.' lives in the DEAD branch of h8u(e) in native-c"
+  },
+  "skill-keybindings-use-write-tool": {
+    "verdict": "pristine-keep",
+    "version": "2.1.221",
+    "why": "Both cited covers are FALSE against the wire capture.\n\n(1) tool-description-write: 'Use Write only to create new files or for complete rewrites' sits in the dead `return` branch of h8u(e) (native-claudejs-patched.js ~5022214). /tmp/wirecap/req-13.json tools[Write].description is the Ev(e) branch; python search for 'overwriting any existing file at the path' across all tools[].description returns -"
+  },
+  "skill-keybindings-user-bindings-additive": {
+    "verdict": "wipe-merge",
+    "version": "2.1.221",
+    "why": "Cover verified live, not just on disk. rule-4 is present in the SHIPPED prompt: native-claudejs-patched.js hqT (~19872700) reads '4. When adding a new binding for an existing action, the new binding is additive (existing default still works unless explicitly unbound)', and the inline blob that owns that span, system-prompts-opus-5/inline-skill-keybindings-behavioral-rules.md, contains the same lin"
+  },
+  "system-prompt-exited-auto-mode": {
+    "verdict": "trim",
+    "version": "2.1.221",
+    "why": "Verified on every axis. (a) Current state: python os.path.exists confirms no system-prompt-exited-auto-mode.md in system-prompts-opus-5 (nor via the ~/.tweakcc/system-prompts symlink), so pristine applies today and this trim creates the override. (b) Not shadowed: I scanned every .md frontmatter in the opus-5 set for a shadows: list naming this id \u2014 none. (c) Placeholders intact: catalogue entry i"
+  },
+  "system-prompt-github-issue-title-clarity": {
+    "verdict": "wipe-merge",
+    "version": "2.1.221",
+    "why": "Same runtime array verified in pristine /Users/batricperovic/.tweakcc/native-claudejs-orig.js at offset 16766537: h2f() -> $G({systemPrompt: lp([...])}) for the GitHub issue-title utility-model call. Deployed sibling ~/.tweakcc/lobotomized-claude-code/system-prompts-opus-5/system-prompt-issue-title-generator-concise.md has a NON-EMPTY body: '- Be concise, specific and descriptive of the actual pro"
+  },
+  "system-prompt-github-issue-title-terminology": {
+    "verdict": "wipe-merge",
+    "version": "2.1.221",
+    "why": "Cited host system-prompt-github-issue-title-generator.md is DEPLOYED NON-EMPTY and still carries the register word: 'Generate a concise, technical issue title (max 80 chars) for a public GitHub issue based on this bug report for Claude Code.' Also deployed non-empty in the same lp([...]) array (pristine offset 16766537): system-prompt-issue-title-generator-intro.md ('Claude Code is an agentic codi"
+  },
+  "system-prompt-github-issue-title-type-prefix": {
+    "verdict": "pristine-keep",
+    "version": "2.1.221",
+    "why": "Deployed file is an untouched pristine stub. Read in full: '- Include the type of issue [Bug] or [Feature Request] as the first thing in the title'. Slop check: no CAPS, no hedging, no rationale, no repetition, no anti-laziness \u2014 one dense mechanical directive. Tripwire: FROZEN on three counts \u2014 a two-item enumeration, two sentinel/enum literals ([Bug], [Feature Request]), and the ordering constra"
+  },
+  "system-prompt-local-command-caveat": {
+    "verdict": "pristine-keep",
+    "version": "2.1.221",
+    "why": "No override file in any of the four sets (confirmed by python os.path.exists, not grep); applies as pristine. Located in cli.js at offset 13691353 in VDe(), the meta message emitted immediately before the <command-name>/<command-message>/<command-args> block. Read in full, 291 chars: it is a trust boundary \u2014 it tells the model that text appearing under a local-command wrapper is tool-generated tra"
+  },
+  "system-prompt-memory-claim-vs-current-state": {
+    "verdict": "wipe-merge",
+    "version": "2.1.221",
+    "why": "Runtime block confirmed in pristine cli.js at offset 3679445: Cen=['## Before recommending from memory','',<lead-in>,'',3 verify bullets,'',this aphorism,'',<frozen-snapshot>]. Opened every member's .md in system-prompts-opus-5 (python reads, not grep): system-prompt-memory-frozen-snapshot.md is DEPLOYED NON-EMPTY -- 'A memory that summarizes repo state (activity logs, architecture snapshots) is f"
+  },
+  "system-prompt-memory-project-how-to-use-2": {
+    "verdict": "pristine-keep",
+    "version": "2.1.221",
+    "why": "Deployed file is an untouched pristine stub (opus-5, 353 bytes). Read in full: the <how_to_use> slot of the `project` memory type. The near-identical system-prompt-memory-project-how-to-use is NOT a duplicate \u2014 I verified in cli.js that there are two separate <types> arrays: the team-enabled one (offset 3668001) carries the extra clause 'anticipate coordination issues across users', the solo one ("
+  },
+  "system-prompt-memory-skip-claudemd-documented": {
+    "verdict": "pristine-keep",
+    "version": "2.1.221",
+    "why": "Deployed file is an untouched pristine stub (opus-5, 214 bytes). Read in full: '- Anything already documented in CLAUDE.md files.'. Runtime block confirmed at cli.js offset 3678270: wen=['## What NOT to save in memory','', <5 bullets>,'', <exclusions-apply-even-if-asked para>]. Deployed-state audit of every sibling by opening each .md \u2014 all five bullets are deployed pristine (non-empty), and each "
+  },
+  "system-prompt-memory-skip-ephemeral-task-details": {
+    "verdict": "pristine-keep",
+    "version": "2.1.221",
+    "why": "Slop check: one bullet, no CAPS, no hedging, no rationale padding, no internal repetition \u2014 nothing to cut. It is also frozen mechanics (enumeration of three items after a colon: in-progress work, temporary state, current conversation context), so the only legal edit would be outright deletion. Corpus check: it sits in the 'What NOT to save in memory' list whose other four bullets are all deployed"
+  },
+  "system-prompt-memory-types-intro-line": {
+    "verdict": "wipe-merge",
+    "version": "2.1.221",
+    "why": "Verified the two arms in pristine cli.js: Sen=['## Types of memory','','There are several discrete types of memory that you can store in your memory system. Each type below declares a <scope> of `private`, `team`, or guidance for choosing between the two.','','<types>',...] at offset 3662124, and Ten=['## Types of memory','','There are several discrete types of memory that you can store in your me"
+  },
+  "system-prompt-opus5-no-agenttool-unless-requested": {
+    "verdict": "pristine-keep",
+    "version": "2.1.221",
+    "why": "The coverage claim is FALSE on the wire. Read tools[].description with python from /tmp/wirecap/req-13.json and req-15.json (the only tool-bearing requests, both model=claude-opus-5, 13 tools incl. Agent): the Agent description runs 'Launch a new agent to handle complex, multi-step tasks... ## When to use / Delegate when the task matches an agent type... Pass `run_in_background: false`...' and con"
+  },
+  "system-prompt-opus5-no-workflows-unless-requested": {
+    "verdict": "wipe-merge",
+    "version": "2.1.221",
+    "why": "Coverage verified LIVE in the wire, not just in the .md. /tmp/wirecap/req-13.json and req-15.json both carry Workflow in the tools array (name list: Agent, Artifact, AskUserQuestion, Bash, Edit, Read, ReportFindings, ScheduleWakeup, Skill, ToolSearch, Workflow, DeferredToolPlaceholder, Write) and its 14422-char description contains verbatim: 'ONLY call this tool when the user has explicitly opted "
+  },
+  "system-prompt-output-text-to-user": {
+    "verdict": "pristine-keep",
+    "version": "2.1.221",
+    "why": "UNACTIONABLE \u2014 the id is SHADOWED, and the rationale never mentions it. ~/.tweakcc/lobotomized-claude-code/system-prompts-opus-5/inline-system-bullets.md declares 'shadows:\\n  - system-prompt-output-text-to-user'. src/patches/systemPrompts.ts: 'Shadowed prompts (owned by inline-blob, system-reminders, or a wider named-prompt) are filtered upstream in loadSystemPromptsWithRegex via the `shadows:` f"
+  },
+  "system-reminder-async-agent-launched": {
+    "verdict": "pristine-keep",
+    "version": "2.1.221",
+    "why": "Two independent defects. (1) UNACTIONABLE \u2014 SHADOWED: ~/.tweakcc/lobotomized-claude-code/system-prompts-opus-5/inline-subagent-no-duplicate-work.md declares 'shadows:\\n  - system-reminder-async-agent-launched' (inlineBlobAnchor: \"`Do not duplicate this agent\\\\'s work \\\\u2014 avoid working with the same files\"). Per src/patches/systemPrompts.ts these are 'filtered upstream in loadSystemPromptsWithR"
+  },
+  "system-reminder-exited-plan-mode": {
+    "verdict": "pristine-keep",
+    "version": "2.1.221",
+    "why": "UNACTIONABLE \u2014 SHADOWED, and the rationale never mentions it. ~/.tweakcc/lobotomized-claude-code/system-reminders/plan-mode-exit.md declares 'shadows:\\n  - system-reminder-exited-plan-mode'. loadShadowSet in src/systemPromptSync.ts reads both SYSTEM_PROMPTS_DIR and SYSTEM_REMINDERS_DIR ('Shadowed ids are skipped by syncPrompt (no auto-create) and by applySystemPrompts (no iteration, no warning)'),"
+  },
+  "system-reminder-file-opened-in-ide": {
+    "verdict": "pristine-keep",
+    "version": "2.1.221",
+    "why": "Slop check: one sentence of event data carrying the ${ATTACHMENT_OBJECT.filename} slot, plus 'This may or may not be related to the current task.' That trailing clause reads like hedging but is the only guidance in the prompt and is load-bearing anti-overtrigger: IDE focus events fire constantly, and without it a literal Opus 5 treats a focus change as a task pivot. Nothing else to cut. Corpus che"
+  },
+  "system-reminder-large-pdf-read-guidance": {
+    "verdict": "wipe-merge",
+    "version": "2.1.221",
+    "why": "Every claim in the rationale checks out against the files. (1) Shadow confirmed: ~/.tweakcc/lobotomized-claude-code/system-reminders/pdf-reference.md frontmatter carries 'shadows:\\n  - system-reminder-large-pdf-read-guidance', and src/systemPromptSync.ts -> loadShadowSet scans SYSTEM_REMINDERS_DIR, so a catalogue-side override would be skipped with no warning \u2014 which is why no system-prompts-opus-"
+  },
+  "system-reminder-lines-selected-in-ide": {
+    "verdict": "wipe-merge",
+    "version": "2.1.221",
+    "why": "Verdict is mechanically correct, but ONE FACTUAL ERROR IN THE RATIONALE THE PARENT MUST NOT CARRY FORWARD. Correct parts: system-reminders/selected-lines-in-ide.md carries `shadows: [system-reminder-lines-selected-in-ide]` and an EMPTY body (338 bytes, all frontmatter), loadShadowSet picks it up from the symlinked ~/.tweakcc/system-reminders, so applySystemPrompts never iterates the id and any cat"
+  },
+  "system-reminder-memory-consolidation-tool-constraints": {
+    "verdict": "pristine-keep",
+    "version": "2.1.221",
+    "why": "COVERAGE CLAIM IS FALSE. The rationale asserts the two dropped mechanics are 'still delivered verbatim in the SAME injection by the sibling Available tools: prompt.' They are not \u2014 they are in a DIFFERENT injection. In native-claudejs-patched.js: (a) the 'Available tools: ... (outside protected subdirectories like .git or agents${n?\"; rm takes no flags except -f\":\"\"})' string is inside `function j"
+  },
+  "system-reminder-question-context": {
+    "verdict": "wipe-merge",
+    "version": "2.1.221",
+    "why": "Strongest evidence class available: LIVE WIRE CAPTURE. /tmp/wirecap/req-13.json and req-15.json (both model claude-opus-5) each contain the host body verbatim \u2014 '...# currentDate\\nToday's date is 2026-08-04.\\n\\n      This context may or may not be relevant; draw on it only where it bears on the task.\\n</system-reminder>' \u2014 immediately preceding the user turn. So this override RENDERS; it is not si"
+  },
+  "system-reminder-session-stop-hook-active": {
+    "verdict": "wipe-merge",
+    "version": "2.1.221",
+    "why": "Shadow + rewrite both verified. system-reminders/stop-hook-session-goal.md carries `shadows: [system-reminder-session-stop-hook-active]`; ~/.tweakcc/system-reminders symlinks to lobotomized-claude-code/system-reminders, and loadShadowSet (src/systemPromptSync.ts:29) scans it, so applySystemPrompts never iterates this id \u2014 a catalogue-side override is impossible, which is exactly what wipe-merge as"
+  },
+  "system-reminder-usd-budget": {
+    "verdict": "wipe-merge",
+    "version": "2.1.221",
+    "why": "Suppression verified end-to-end. system-reminders/budget-usd.md has `shadows: [system-reminder-usd-budget]` and an EMPTY body (251 bytes, all frontmatter, body is a lone newline), so parseReminderMarkdown sets isSuppressed and BUDGET_USD_INJECTION.apply takes its `if(isSuppressed) return `budget_usd:(${hParam})=>[]`` branch. Confirmed in the binary: native-claudejs-orig.js has `budget_usd:(e)=>[Kr"
+  },
+  "tool-description-agent-usage-notes": {
+    "verdict": "wipe-merge",
+    "version": "2.1.221",
+    "why": "SHADOW CONFIRMED (verdict is structurally inert, so nothing can be lost by it). `~/.tweakcc/lobotomized-claude-code/system-prompts-opus-5/tool-description-agent-simple-usage-notes.md` frontmatter declares `shadows:\\n  - tool-description-agent-usage-notes\\n  - tool-description-agent-when-to-launch-subagents`. `/Users/batricperovic/dev/tweakcc-fixed/src/systemPromptSync.ts` -> `loadShadowSet()` coll"
+  },
+  "tool-description-agent-when-to-launch-subagents": {
+    "verdict": "wipe-merge",
+    "version": "2.1.221",
+    "why": "SHADOW CONFIRMED: same `shadows:` list on `tool-description-agent-simple-usage-notes.md`; my recomputed shadow set maps this id to ['tool-description-agent-simple-usage-notes.md']; no `tool-description-agent-when-to-launch-subagents.md` exists on disk. Inert as a trim target.\n\nCITED HOST RENDERS \u2014 VERIFIED IN THE CAPTURE, NOT ASSUMED. `inline-tool-agent-base-description.md` body is `Launch a new a"
+  },
+  "tool-description-artifact-capabilities-clear-note": {
+    "verdict": "pristine-keep",
+    "version": "2.1.221",
+    "why": "Sub-sentence concatenation fragment, not a standalone prompt. Host in cli.js (function dFy): \"couldn't fetch the capability contract (\u2026) \u2014 \" + <this> + \"contract. Retry when the contract service is reachable \u2014 \" + \"until the clear lands, the stored grants stay live.\" Both continuation fragments (tool-result-artifact-contract-unreachable-fragment, tool-result-artifact-clear-grants-fragment) are DEP"
+  },
+  "tool-description-artifact-contract-author-intent": {
+    "verdict": "pristine-keep",
+    "version": "2.1.221",
+    "why": "Middle third of one sentence in the Artifact `contract` schema describe(): tool-parameter-artifact-runtime-version (deployed pristine, ends \"\u2026Changing it changes how the \") + <this> + tool-parameter-artifact-version (deployed pristine, \"explicitly intends the change, never as a side effect of editing.\"). Wiping produces \"Changing it changes how the explicitly intends the change\u2026\". Tripwire: contai"
+  },
+  "tool-description-bash-sandbox-bypass-explicit-request": {
+    "verdict": "pristine-keep",
+    "version": "2.1.221",
+    "why": "One element of the bullet array under tool-description-bash-sandbox-default (\"\u2026Do NOT attempt to set `dangerouslyDisableSandbox: true` unless:\"), which is deployed in a trimmed form that KEEPS the \"unless:\" header. The only other bullet is tool-description-bash-sandbox-failure-evidence (deployed, body present). So the permitted-bypass list has exactly two conditions and this is the sole one author"
+  },
+  "tool-description-design-system-categorization": {
+    "verdict": "pristine-keep",
+    "version": "2.1.221",
+    "why": "Middle operand of E.string().max(64).describe(\"Free-form section label for the Design System pane (max 64 chars). \" + <this> + 'e.g. Material has Buttons/Cards/\u2026 The pane groups by the value you send.'). The trailing em dash belongs to this fragment and introduces the following clause, whose id (tool-parameter-designsync-section-label) is ALREADY TRIMMED in system-prompts-opus-5 to 'The pane group"
+  },
+  "tool-description-glob-pattern-entry-cap": {
+    "verdict": "pristine-keep",
+    "version": "2.1.221",
+    "why": "Middle operand of the finalize_plan `writes` describe(): \"\u2026Max 3 `*`/`**` wildcards per \" + <this> + \"files rather than enumerating paths.\" Mid-sentence, so a wipe garbles the cap statement. Tripwire: contains a hard number/cap (256 entries) the model cannot derive \u2192 FROZEN, verbatim or gone, and gone breaks the splice. Corpus check: \"256 entries\" / \"broader globs\" occurs nowhere else in the catal"
+  },
+  "tool-description-mcp-elicitation-url-fallback": {
+    "verdict": "pristine-keep",
+    "version": "2.1.221",
+    "why": "Middle operand of the mcp_call control-subtype describe(): \"UrlElicitationRequired (-32042) tries Elicitation hooks; if no hook \" + <this> + \"out-of-band, then retry mcp_call. \". Mid-clause \u2014 the two halves are meaningless apart. Tripwire: the sentence carries an error tag (-32042), an ordering word (`then retry`) and a tool name (mcp_call) \u2192 FROZEN. Corpus check: no other prompt describes the eli"
+  },
+  "tool-description-mcp-wait-intro": {
+    "verdict": "pristine-keep",
+    "version": "2.1.221",
+    "why": "Line 1 of the [...].join(\"\\n\") array that builds the WaitForMcpServers tool description (function n0s), ending mid-sentence at \"\u2026whose tools are not\"; line 2 is tool-description-mcp-wait-servers-param, DEPLOYED PRISTINE (\"yet in your tool list. Pass `servers` to wait for specific ones, or omit\"). Suppressing this deletes the tool's entire purpose statement and leaves the description opening with \""
+  },
+  "tool-description-report-validate-counts-only": {
+    "verdict": "pristine-keep",
+    "version": "2.1.221",
+    "why": "Second operand of the DesignSync `counts` schema describe(): \"report_validate: aggregate from the final .render-check.json \u2014 \" + <this>. The lead fragment (tool-parameter-design-sync-report-validate-counts) is DEPLOYED PRISTINE and ends on a dangling em dash, so a wipe leaves \"\u2026from the final .render-check.json \u2014\". Tripwire: restrictive `only` plus a negative enumeration (\"no component names or pa"
+  },
+  "tool-description-request-access-retry-note": {
+    "verdict": "pristine-keep",
+    "version": "2.1.221",
+    "why": "Read in full. Mid-sentence fragment of a runtime tool-result string in the TCC-grant-success branch of zfy(): host piece `tool-result-computer-use-permissions-granted` ('macOS Accessibility and Screen Recording are now both granted. ', deployed pristine) + this fragment + an uncatalogued tail ('the app selection list.'). Slop check: no CAPS, no hedging, no example, no repetition \u2014 64 chars of pure"
+  },
+  "tool-description-request-access-scope-note": {
+    "verdict": "trim",
+    "version": "2.1.221",
+    "why": "NOT SHADOWED (checked against the recomputed 17-id shadow set) and the anchor binds unambiguously: python read of native-claudejs-orig.js and native-claudejs-patched.js each return exactly 1 occurrence of 'authorizes the SPECIFIC action under review'.\n\nASSEMBLY SITE READ DIRECTLY from the patched binary \u2014 function `sZy()` builds a role:\"user\" message by concatenating four literals: `text:\"The foll"
+  },
+  "tool-description-request-teach-access-retry-note": {
+    "verdict": "pristine-keep",
+    "version": "2.1.221",
+    "why": "Read in full. Structural twin of the request_access retry note but a distinct runtime branch in Kfy(), with a different split point (this fragment ends 'the next call will ', tail is 'show the app selection list.' \u2014 confirmed against cli.js). Slop check: none. Tripwire: FROZEN \u2014 tool name `request_teach_access` plus ordering ('again immediately', 'the next call'). Corpus check: the same-claim sibl"
+  },
+  "tool-description-split-batches-same-planid": {
+    "verdict": "pristine-keep",
+    "version": "2.1.221",
+    "why": "Read in full. Terminal fragment of the DesignSync `paths` zod field description: host `tool-description-designsync-delete-files-param` ('delete_files: paths to delete. unregister_assets: paths whose Design System pane card should be removed. Max 256 per call \u2014 ', deployed pristine) + this fragment closing the sentence. Slop check: none \u2014 it is the recovery instruction for the 256 cap the host just"
+  },
+  "tool-description-teach-batch-multiple-calls": {
+    "verdict": "pristine-keep",
+    "version": "2.1.221",
+    "why": "Read in full. Fragment of the teach_batch tool description; the following piece is `tool-description-teach-batch-segment-anchoring`, whose DEPLOYED body I opened \u2014 it begins with the lowercase noun 'segment (typically all the steps on one page).' and therefore depends on this fragment's trailing 'treat each batch as one predictable ' for its subject. Slop check: no CAPS (the pristine 'SEGMENT' liv"
+  },
+  "tool-description-teach-step-batch-actions": {
+    "verdict": "pristine-keep",
+    "version": "2.1.221",
+    "why": "Read in full. Fragment of the teach_step tool description, sandwiched between `tool-description-computer-use-teach-step-4` and `tool-description-computer-use-teach-step-5` \u2014 both opened, both deployed pristine with trailing spaces. Tripwire: FROZEN \u2014 parameter name `actions`, the quantifier 'each', and the packing directive. Slop check does find real slop in the sentence, but it is NOT in this fra"
+  },
+  "tool-description-upload-direct-read-note": {
+    "verdict": "pristine-keep",
+    "version": "2.1.221",
+    "why": "Read in full. Fragment of the Projects tool `local_path` zod field: `tool-parameter-projects-local-path` ('project_write: a file inside the working directory to upload. The ') + this fragment + `tool-description-projects-write-local-path` ('your context. Mutually exclusive with content.') \u2014 both neighbours opened, both deployed pristine. Slop check: none, 65 chars. Tripwire: FROZEN \u2014 contains `nev"
+  },
+  "tool-description-workflow-args-json-string-warning": {
+    "verdict": "pristine-keep",
+    "version": "2.1.221",
+    "why": "Read in full. Middle fragment of the Workflow `args` zod field: `tool-parameter-workflow-args` ('\u2026Pass arrays/objects as actual JSON values, NOT as a ') + this fragment + `tool-parameter-workflow-args-2` ('`args.map` in the script. Use for parameterized named workflows (e.g. a research question).') \u2014 both opened, both deployed pristine. Tripwire: FROZEN \u2014 carries the identifier `args.filter` and a"
+  },
+  "tool-description-write-files-split-bundles": {
+    "verdict": "pristine-keep",
+    "version": "2.1.221",
+    "why": "Verified in pristine cli.js (offset 10554431, 1 occurrence): this is the SECOND operand of a concatenated zod .describe() on the DesignSync `files` field \u2014 `files:E.array(Pjy()).max(256).optional().describe(\"write_files: file contents to write (max 256 per call \u2014 split \"+\"larger bundles across multiple write_files calls under the same planId).\")`. The first operand is catalogued as `tool-parameter"
+  },
+  "tool-parameter-array-of-strings-no-prose": {
+    "verdict": "pristine-keep",
+    "version": "2.1.221",
+    "why": "Verified in pristine cli.js (offset 11698882, 1 occurrence): tail operand of the auto-mode-setup JSON repair turn `ftb=\"Please fix up the formatting of this incorrect JSON: ... each an \"+\"array of strings \u2014 no surrounding prose, no code fence, no other keys.\"`. The head is catalogued as `system-prompt-auto-mode-setup-proposal-json-repair` and is DEPLOYED PRISTINE in system-prompts-opus-5, ending m"
+  },
+  "tool-result-artifact-deploy-missing-content": {
+    "verdict": "pristine-keep",
+    "version": "2.1.221",
+    "why": "Verified in pristine cli.js (offset 9879939, 1 occurrence): the LEAD operand of a three-part model-facing tool error \u2014 `fe(\"artifact_publish\",\"prepare_gc_loop\",l),wg(\"the server kept reporting missing content at deploy time \"+\"after it was uploaded \u2014 not looping. Retry publishing to \"+`slug ${R}.`)`. The middle operand is catalogued as `tool-result-artifact-gc-loop-missing-content` and is DEPLOYED"
+  },
+  "tool-result-artifact-preflight-slug-mismatch": {
+    "verdict": "pristine-keep",
+    "version": "2.1.221",
+    "why": "Verified in pristine cli.js (offset 9878767, 1 occurrence): lead operand of a model-facing publish refusal \u2014 `if(R!==void 0&&W!==R)return fe(\"artifact_publish\",\"prepare_slug_mismatch\",l),wg(\"the server answered the upload preflight for a different \"+\"artifact \u2014 not publishing.\")`. The tail (`artifact \u2014 not publishing.`) is NOT catalogued at all, so this id is the only override-reachable text in th"
+  },
+  "tool-result-memory-write-credential-detected": {
+    "verdict": "pristine-keep",
+    "version": "2.1.221",
+    "why": "NOT A PROMPT \u2014 catalogue false positive. Verified in pristine cli.js (offset 3645009, 1 occurrence): the string is a KEY inside a lookup table, not text ever shown to a model \u2014 `tp_=new Map([[\"memory store has reached its memory limit\",\"store_full\"],...,[\"memory content appears to contain a credential or API key; remove it before writing. If the credential is real, rotate it.\",\"content_secret\"],[\""
+  },
+  "tool-result-multi-file-publish-not-enabled": {
+    "verdict": "pristine-keep",
+    "version": "2.1.221",
+    "why": "Verified in pristine cli.js (offset 9863472, 1 occurrence): lead operand of a model-facing publish refusal behind the account feature gate \u2014 `if(!_Bo())return fe(\"artifact_publish\",\"multifile_flag_off\",{n_files:t.files.length}),wg(\"multi-file publish is not enabled for this account \u2014 publish a \"+\"single-file artifact instead (the extra files were NOT published)\")`. The tail is catalogued as `tool-"
+  },
+  "tool-result-workshop-page-sidecar-refused": {
+    "verdict": "pristine-keep",
+    "version": "2.1.221",
+    "why": "Verified in pristine cli.js (offset 9859604, 1 occurrence): lead operand of the workshop-publish sidecar refusal \u2014 `return Me(\"workshop_html_publish\",\"sidecar_refused\"),fe(...),{url:null,slug:null,version:null,err:\"workshop pages cannot ship renderable or executable sidecar files \u2014 \"+\"each is a URL that bypasses the publish-time verifier: \"+Oce(O.join(\", \"))}`. The tail is catalogued as `tool-resu"
+  }
+}
