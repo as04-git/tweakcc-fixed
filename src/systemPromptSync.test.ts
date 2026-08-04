@@ -32,27 +32,42 @@ describe('systemPromptSync.ts', () => {
       );
     });
 
-    it('unions identifierMap values across the bundled data/prompts/*.json', async () => {
-      const union = await loadIdentifierMapUnion();
+    // These two build the union for real: every data/prompts/*.json is parsed,
+    // so their cost grows with the catalogue (~2.5s per build on 2.1.221) and
+    // multiplies under full-suite CPU contention. The default 5s timeout was
+    // already marginal and flaked in the pre-commit hook; the cache test pays
+    // for two builds, so give both room rather than re-running until green.
+    const UNION_BUILD_TIMEOUT_MS = 60_000;
 
-      // Reads the repo-local bundled prompt data in a checkout.
-      expect(union.size).toBeGreaterThan(0);
-      // A human-name present in ~all 2.1.x prompt files.
-      expect(union.has('GLOB_TOOL_NAME')).toBe(true);
-      // Real minified vars are never human-names, so never in the union.
-      expect(union.has('HL7')).toBe(false);
-    });
+    it(
+      'unions identifierMap values across the bundled data/prompts/*.json',
+      async () => {
+        const union = await loadIdentifierMapUnion();
 
-    it('caches the union and rebuilds it after the cache is cleared', async () => {
-      const first = await loadIdentifierMapUnion();
-      const second = await loadIdentifierMapUnion();
-      expect(second).toBe(first); // same instance while cached
+        // Reads the repo-local bundled prompt data in a checkout.
+        expect(union.size).toBeGreaterThan(0);
+        // A human-name present in ~all 2.1.x prompt files.
+        expect(union.has('GLOB_TOOL_NAME')).toBe(true);
+        // Real minified vars are never human-names, so never in the union.
+        expect(union.has('HL7')).toBe(false);
+      },
+      UNION_BUILD_TIMEOUT_MS
+    );
 
-      clearIdentifierMapUnionCache();
-      const third = await loadIdentifierMapUnion();
-      expect(third).not.toBe(first); // fresh instance after clear
-      expect(third).toEqual(first); // same contents
-    });
+    it(
+      'caches the union and rebuilds it after the cache is cleared',
+      async () => {
+        const first = await loadIdentifierMapUnion();
+        const second = await loadIdentifierMapUnion();
+        expect(second).toBe(first); // same instance while cached
+
+        clearIdentifierMapUnionCache();
+        const third = await loadIdentifierMapUnion();
+        expect(third).not.toBe(first); // fresh instance after clear
+        expect(third).toEqual(first); // same contents
+      },
+      UNION_BUILD_TIMEOUT_MS
+    );
 
     it('falls back to baked IDENTIFIER_UNION when findRepoPromptsDir returns null (npm-install case)', async () => {
       // Simulate npm-installed run: no repo dir on disk
