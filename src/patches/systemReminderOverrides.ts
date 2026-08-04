@@ -963,6 +963,31 @@ const AUTO_MODE_EXIT_INJECTION: ReminderInjection = {
   defaultBody:
     '## Exited Auto Mode\n\nYou have exited auto mode. The user may now want to interact more directly. You should ask clarifying questions when the approach is ambiguous rather than making assumptions.',
   apply(content, body, isSuppressed) {
+    // Method 1 (2.1.221+): the handler became `(e)=>{…}` with two arms selected
+    // by `e.steerOnly` (a terse variant and the full text), and both arms gained
+    // a `${t}` bashFirst suffix. Only the full arm carries the overridable text;
+    // the steerOnly arm is left pristine, and the suffix var is re-emitted so the
+    // bashFirst nudge survives the override.
+    const newShape =
+      /auto_mode_exit:\(([$\w]+)\)=>\{let ([$\w]+)=\1\.bashFirst\?(" [^"]*"):"",([$\w]+)=\1\.steerOnly\?(`[^`]*`):`## Exited Auto Mode\n\nYou have exited auto mode\. The user may now want to interact more directly\. You should ask clarifying questions when the approach is ambiguous rather than making assumptions\.\$\{\2\}`;return ([$\w]+)\(\[([$\w]+)\(\{content:\4,isMeta:!0\}\)\]\)\}/;
+    if (newShape.test(content)) {
+      return findAndReplace(
+        content,
+        newShape,
+        m => {
+          const [, eParam, tVar, bashNudge, rVar, steerArm, o5Name, j6Name] = m;
+          if (isSuppressed) return `auto_mode_exit:(${eParam})=>[]`;
+          return (
+            `auto_mode_exit:(${eParam})=>{let ${tVar}=${eParam}.bashFirst?${bashNudge}:"",` +
+            `${rVar}=${eParam}.steerOnly?${steerArm}:\`${body}\${${tVar}}\`;` +
+            `return ${o5Name}([${j6Name}({content:${rVar},isMeta:!0})])}`
+          );
+        },
+        'auto-mode-exit',
+        c => /auto_mode_exit:\([$\w]+\)=>\[\]/.test(c)
+      );
+    }
+    // Method 2 (<=2.1.220): flat `()=>` handler with a single inline literal.
     return findAndReplace(
       content,
       /auto_mode_exit:\(\)=>([$\w]+)\(\[([$\w]+)\(\{content:`## Exited Auto Mode\n\nYou have exited auto mode\. The user may now want to interact more directly\. You should ask clarifying questions when the approach is ambiguous rather than making assumptions\.`,isMeta:!0\}\)\]\)/,
@@ -972,7 +997,7 @@ const AUTO_MODE_EXIT_INJECTION: ReminderInjection = {
         return `auto_mode_exit:()=>${o5Name}([${j6Name}({content:\`${body}\`,isMeta:!0})])`;
       },
       'auto-mode-exit',
-      c => /auto_mode_exit:\(\)=>\[\]/.test(c)
+      c => /auto_mode_exit:\(\)=>\[\]|auto_mode_exit:\([$\w]+\)=>\[\]/.test(c)
     );
   },
 };
