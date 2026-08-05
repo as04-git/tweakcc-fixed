@@ -272,6 +272,47 @@ JSON and not in any `.md` body, the claim has left the build.
 
 ---
 
+## 6c. Bug class: an override that empties or trims a STRUCTURAL prompt
+
+Two prompts are consumed by CC's own code, not only by the model. Emptying or trimming one
+passes every static gate, because the failure is at runtime or at the API — not in the file.
+
+**(a) Dropped injection site.** CC fills some prompts with `String.replace("<tag>", …)`, which
+**no-ops silently** when the tag is absent. `skrabe/lobotomized-claude-code#2` was the empty-body
+form: the auto-mode classifier prompt shipped blank, and every bash call in auto mode failed with
+`<model> is temporarily unavailable`. CC 2.1.221 hit the subtler form — a trim kept 6.7KB of prose
+but deleted `<permissions_template>` and `<cross_session_messages_rule>`, so the classifier
+silently stopped receiving the user's configured allow/deny rules while `auto-mode defaults` kept
+printing rules (those tags live in the prompt's _second part_).
+
+Gated by `tools/checkSubstitutionTags.mjs`, in `driver check`. It discovers tags from the binary
+rather than hardcoding them, so a tag Anthropic adds is covered the run it appears. Only the
+string-literal form is collected: every regex-form `.replace` in the bundle parses **model
+output** (`<analysis>`/`<summary>` extract the compaction result, `<thinking>` strips classifier
+reasoning), where a prompt that defers to the schema's owner legitimately carries no tag —
+collecting those produced 16 false positives against 3 real findings.
+
+**(b) Suppressing a prompt that renders before the dynamic boundary.** `dda()` splits the system
+array on `__SYSTEM_PROMPT_DYNAMIC_BOUNDARY__` and stamps everything before it
+`cache_control.scope:"global"` — Anthropic's cross-user shared cache. The billing header holds
+`system[0]` and one of three fixed identity strings (the "You are Claude Code…" set) holds
+`system[1]`, which keeps the global block at `[2]`. Suppress the identity override and `[1]` goes
+empty, the global block slides up, and **every interactive request fails**:
+
+```
+400 cache_control.scope: "global" is only valid when every preceding block is also globally scoped
+```
+
+Apply is clean, four-zeros green, every set PASS, `driver check` HEALTH PASSED — and `--print`
+succeeds, because SDK mode takes a different identity variant and keeps the ordering valid. Only a
+live **interactive** turn sees it. Content in that block is unconstrained (a proxy that swaps
+arbitrary text into `[2]` still gets 200), so never chase this as a content bug. Treat every id
+landing before the boundary as un-suppressable: rewriting is fine, emptying is not.
+
+**Verifying either one costs a live turn — take it in a throwaway scratch repo.** Resuming a real
+session to test relaunches that session's background jobs; on 2026-08-05 a verification turn
+restarted a sandbox-bypassing job mid-task.
+
 ## 7. Bug class: code patch applies clean but crashes a lazy UI path (capture-group lesson)
 
 **Symptom.** A regex-replace patch in `src/patches/*.ts` applies with 0 errors and

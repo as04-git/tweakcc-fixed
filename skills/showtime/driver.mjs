@@ -268,7 +268,20 @@ function cmdCheck() {
   }
   console.log('');
 
-  console.log(FAILED ? C.bad('HEALTH CHECK FAILED — see above') : C.ok('HEALTH CHECK PASSED — on-version, patched clean, mis-bind-free, boots'));
+  // 5. substitution-tag audit — CC fills some prompts via String.replace("<tag>", …),
+  //    which no-ops SILENTLY when the tag is absent. An override that trims or suppresses
+  //    one applies clean, boots clean and smokes clean while receiving nothing (issue #2).
+  console.log(C.head('Substitution-tag audit (runtime injection sites in overrides)'));
+  {
+    let out = '', code = 0;
+    try { out = execSync('node tools/checkSubstitutionTags.mjs 2>&1', { cwd: REPO, encoding: 'utf8' }); }
+    catch (e) { out = (e.stdout || '') + (e.stderr || ''); code = e.status || 1; }
+    if (code === 0) console.log(C.ok(out.trim().replace(/^\u2713\s*/, '')));
+    else fail(`substitution tags: ${out.split('\n').filter((l) => /\u2014/.test(l)).slice(0, 4).join(' | ').slice(0, 240)}`);
+  }
+  console.log('');
+
+  console.log(FAILED ? C.bad('HEALTH CHECK FAILED — see above') : C.ok('HEALTH CHECK PASSED — on-version, patched clean, mis-bind-free, injection-sites-intact, boots'));
 }
 
 // ---- dispatch --------------------------------------------------------------
