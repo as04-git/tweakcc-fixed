@@ -1666,10 +1666,9 @@
     "injectionPath": "Conditional runtime notice injected when a background monitor is automatically stopped for excessive output."
   },
   "data-multiple-browsers-connected-tool-result": {
-    "verdict": "trim",
+    "verdict": "pristine-keep",
     "version": "2.1.226",
-    "why": "The first sentence uniquely returns the current browser count. The second interpolation repeats the disambiguation instruction already present in the deployed Chrome tool description, so it need not be repeated in the tool result.",
-    "injectionPath": "Tool result returned conditionally by list_connected_browsers when more than one Chrome browser is connected."
+    "why": "The trim deleted `${VAR_1(VAR_2.askUserToolName)}` as pure interpolation. It is not: _Xr(askUserToolName) renders the instruction to disambiguate with the ask-user tool, and it is the only actionable content on an isError:!0 result that otherwise reads '3 browsers are connected.' followed by a list. Caught by tools/checkTrimSlots.mjs after the fact \u2014 the verdict cited no sibling, so the adversarial pass never selected it."
   },
   "data-no-message-content-placeholder": {
     "verdict": "pristine-keep",
