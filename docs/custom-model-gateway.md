@@ -265,6 +265,10 @@ Formats: `internal/auth/{claude,codex,kimi}/token.go` structs. The proxy has a
 (~5-8h)**; if Kimi 401s persist, re-sync from claudish's refreshed file.
 Codex ~8 days. Claude refreshed continuously by CC itself.
 
+**Resync tool:** `python3 ~/.cli-proxy-api/resync-credentials.py [claude|codex|kimi]`
+(default: all three). Converts the sources above into the proxy's storage
+format in place; the proxy hot-reloads.
+
 ### 4.7 systemd (the "rock solid" layer)
 
 `~/.config/systemd/user/cliproxyapi.service`: `Restart=always`,
@@ -344,8 +348,8 @@ export CLAUDE_CONFIG_DIR=/tmp/cc-test ANTHROPIC_BASE_URL=http://127.0.0.1:8317 \
 **Proxy upgrade**: merge upstream into the fork, resolve against
 `aryan/rate-limit-headers` (two commits, small surface), rebuild, restart.
 
-**rotate/repair creds**: re-run the synthesis step for the failing provider
-(§4.6 sources); the proxy hot-reloads the file.
+**rotate/repair creds**: `python3 ~/.cli-proxy-api/resync-credentials.py <provider>`
+(§4.6); the proxy hot-reloads the file.
 
 **Reverting everything**: `node dist/index.mjs --restore` (CC back to
 pristine), `systemctl --user disable --now cliproxyapi`, use plain `claude`.
