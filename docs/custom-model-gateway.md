@@ -19,7 +19,7 @@ anything; the failure modes section will save you.
 │   agent-tool enum, rate-limit gate, /model aliases                │
 └──────────────┬───────────────────────────────────────────────────┘
                │ ANTHROPIC_BASE_URL=http://127.0.0.1:8317
-               │ ANTHROPIC_API_KEY=<local proxy key>
+               │ ANTHROPIC_AUTH_TOKEN=<local proxy key>  (bearer)
                ▼
 ┌──────────────────────────────────────────────────────────────────┐
 │ CLIProxyAPI (fork, systemd user service, Restart=always)          │
@@ -140,8 +140,9 @@ surface (agent `.md` frontmatter `model:` is already a free string). Widened to
 
 CC populates the statusline's `.rate_limits.five_hour/seven_day` from
 `anthropic-ratelimit-unified-*` response headers ONLY when `ii()` reports an
-OAuth-subscription session (checks credential scopes). With `ANTHROPIC_API_KEY`
-set (any proxy), `ii()` is false and headers are ignored. This neutralizes the
+OAuth-subscription session (checks credential scopes). With a credential env
+var set (`ANTHROPIC_API_KEY` or `ANTHROPIC_AUTH_TOKEN`, any proxy), `ii()` is
+false and headers are ignored. This neutralizes the
 gate in `cpo`: `let o=ii();if(!rir(o)){...return}` → `if(!1){...}`. Absent
 headers still yield an empty map; subscriber sessions unaffected.
 
@@ -370,17 +371,25 @@ launch, so the proxy wiring no longer depends on launching through `cx`:
 ```json
 "env": {
   "ANTHROPIC_BASE_URL": "http://127.0.0.1:8317",
-  "ANTHROPIC_API_KEY": "<local proxy key>",
   "ANTHROPIC_AUTH_TOKEN": "<local proxy key>"
 }
 ```
 
-All three are needed: `BASE_URL`+`API_KEY` cover interactive use (what `cx`
-sets), but **headless `-p` runs pre-flight through a login gate that rejects
-the API-key path** ("Not logged in · Please run /login" — raised when the
-resolver source isn't `ANTHROPIC_API_KEY`/`apiKeyHelper`); `AUTH_TOKEN` is the
-bearer path headless accepts. `cx` remains as the proxy-autostart convenience
-but is otherwise redundant (settings.json is mode 600 — it contains the key).
+Two vars, deliberately. `BASE_URL` routes everything at the proxy.
+**`AUTH_TOKEN` (bearer) is the only credential var** — headless `-p` runs
+pre-flight through a login gate that rejects the API-key path ("Not logged
+in · Please run /login" — raised when the resolver source isn't
+`ANTHROPIC_API_KEY`/`apiKeyHelper`), and the bearer path is what headless
+accepts. **`ANTHROPIC_API_KEY` was removed 2026-08-08**: carrying both made
+CC print "⚠ Both ANTHROPIC_AUTH_TOKEN and ANTHROPIC_API_KEY set" every
+session, and the API-key var also biased CC toward classifying the session
+as API-billing rather than subscription-like. Verified post-removal:
+headless `env -u ANTHROPIC_API_KEY claude -p` round-trips through the proxy
+fine (the proxy accepts the key as either `x-api-key` or bearer). The only
+residue is a harmless "connectors disabled because an auth source is set"
+notice, unavoidable while any credential var points at the proxy. `cx`
+remains as the proxy-autostart convenience but is otherwise redundant
+(settings.json is mode 600 — it contains the key).
 
 **Why plain `claude` failed before this:** no `ANTHROPIC_*` in the shell
 environment → default `api.anthropic.com` + `~/.claude/.credentials.json`,
