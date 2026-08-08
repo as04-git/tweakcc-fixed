@@ -202,19 +202,26 @@ model/effort, context, cost/time, and per-provider quotas. Key properties:
 - **Context segment**: YAS-style state word (`Smart/Coasting/Foggy/Cooked/
 Dumb` at 25/50/70/90) + 4-wide micro-bar + pct + tokens. Toggles:
   `CC_SL_WORDS=0`, `CC_SL_BAR=0`.
-- **Verbosity ladder** for quotas: renders as much as the width allows and
-  sheds in a fixed order — cost/time first (standing call), then burn rate,
-  then quiet providers collapse to `16/52` pairs, then countdowns, then pairs
-  to the binding number, then word, then bar. Full form: per provider, both
-  windows named with countdowns (`✳  5h 16% ↺43m · 7d 52% ↺7h53m`).
+- **Strict-priority greedy packing** for quotas: line 2 starts from compact
+  per-provider pairs (`16/52`) and upgrades one feature at a time while the
+  width budget allows — stressed windows expand first, then the current
+  provider's burn rate, then its full expansion, then other providers (MRU
+  order), then their burn rates, then cost/time (user's standing call: last).
+  The first upgrade that doesn't fit stops the process, so a lower-priority
+  feature never displaces a higher-priority one. (Replaced an all-or-nothing
+  level ladder that wasted ~50 cols when full expansion overshot by a few.)
 - **Width source**: CC injects a fresh `COLUMNS` into the statusline spawn env
   on EVERY render (verified 2026-08-08; absent from the CC process env, so it
   is computed per-spawn — resize-safe). No tty of any kind is available to the
-  spawn; don't bother with ioctls except as fallback.
+  spawn; don't bother with ioctls except as fallback. `CC_SL_DEBUG=1` logs the
+  width + packing result to `/tmp/sl-debug.log`.
 - **Burn rate**: quota-state samples are logged (throttled, 3-day keep) to
   `~/.claude/statusline-quota-history.log`; the trailing-1h slope renders as
   `+N%/h`, amber when the pace runs the window dry before reset. `CC_SL_BURN=0`
-  to disable.
+  to disable. Caveat: this is a RECONSTRUCTION from sparse integer-percent
+  samples — the authoritative source would be proxy-side (it sees every
+  Codex response header and every Kimi poll). If pacing numbers ever look
+  off, move the computation into the proxy and write it into quota-state.json.
 - **Provider-generic + recency-ordered**: the renderer iterates whatever
   providers appear in `quota-state.json` (known glyphs `✳/⬡/☾` for
   claude/codex/kimi; a new provider gets its first letter until added to
