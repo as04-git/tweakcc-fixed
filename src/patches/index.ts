@@ -97,6 +97,7 @@ import { writeScrollEscapeSequenceFilter } from './scrollEscapeSequenceFilter';
 import { writeWorktreeMode } from './worktreeMode';
 import { writeAllowCustomAgentModels } from './allowCustomAgentModels';
 import { writeCustomModelCatalog } from './customModelCatalog';
+import { writeCustomModelPicker } from './customModelPicker';
 import { writeAgentToolModelString } from './agentToolModelString';
 import { writeContextWindowFromCatalog } from './contextWindowFromCatalog';
 import { writeMaxEffortDefault } from './maxEffortDefault';
@@ -269,6 +270,13 @@ const PATCH_DEFINITIONS = [
     group: PatchGroup.MISC_CONFIGURABLE,
     description:
       "Make the context-window resolver read a model's catalog context.window (fixes custom models reporting the hardcoded 200k to the statusline + auto-compact)",
+  },
+  {
+    id: 'custom-model-picker',
+    name: 'Custom model picker entries',
+    group: PatchGroup.MISC_CONFIGURABLE,
+    description:
+      'Show custom models in the interactive /model picker (catalog injection alone only makes them resolvable by name)',
   },
   {
     id: 'show-more-items-in-select-menus',
@@ -1128,6 +1136,12 @@ export const applyCustomization = async (
     },
     'context-window-from-catalog': {
       fn: c => writeContextWindowFromCatalog(c),
+      condition:
+        !!config.settings.customModels &&
+        config.settings.customModels.length > 0,
+    },
+    'custom-model-picker': {
+      fn: c => writeCustomModelPicker(c, config.settings.customModels!),
       condition:
         !!config.settings.customModels &&
         config.settings.customModels.length > 0,

@@ -65,6 +65,7 @@ import { writeAllowCustomAgentModels } from './allowCustomAgentModels';
 import { writeCustomModelCatalog } from './customModelCatalog';
 import { writeAgentToolModelString } from './agentToolModelString';
 import { writeContextWindowFromCatalog } from './contextWindowFromCatalog';
+import { writeCustomModelPicker } from './customModelPicker';
 import { writeWorktreeMode } from './worktreeMode';
 import { writeSessionMemory } from './sessionMemory';
 import { writeSwapRipgrepForFff } from './swapRipgrepForFff';
@@ -300,6 +301,15 @@ const INVOCATIONS: Record<PatchId, (src: string) => string | null> = {
       },
     ]),
   'context-window-from-catalog': c => writeContextWindowFromCatalog(c),
+  'custom-model-picker': c =>
+    writeCustomModelPicker(c, [
+      {
+        id: 'kimi-k3-256k',
+        display_name: 'Kimi K3 256K',
+        family: 'kimi',
+        context_window: 262144,
+      },
+    ]),
   'agent-tool-model-string': c => writeAgentToolModelString(c),
   'worktree-mode': c => writeWorktreeMode(c),
   'session-memory': c => writeSessionMemory(c),
