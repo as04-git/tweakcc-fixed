@@ -96,6 +96,8 @@ import { writeSuppressNativeInstallerWarning } from './suppressNativeInstallerWa
 import { writeScrollEscapeSequenceFilter } from './scrollEscapeSequenceFilter';
 import { writeWorktreeMode } from './worktreeMode';
 import { writeAllowCustomAgentModels } from './allowCustomAgentModels';
+import { writeCustomModelCatalog } from './customModelCatalog';
+import { writeAgentToolModelString } from './agentToolModelString';
 import { writeMaxEffortDefault } from './maxEffortDefault';
 import { writeAutonomousOperationAllModels } from './autonomousOperationAllModels';
 import { writeAutoModeClassifierModel } from './autoModeClassifierModel';
@@ -252,6 +254,13 @@ const PATCH_DEFINITIONS = [
     name: 'Model customizations',
     group: PatchGroup.MISC_CONFIGURABLE,
     description: 'Access all Claude models with /model, not just latest 3',
+  },
+  {
+    id: 'custom-model-catalog',
+    name: 'Custom model catalog',
+    group: PatchGroup.MISC_CONFIGURABLE,
+    description:
+      'Inject custom (non-Anthropic) models into the embedded model catalog so they appear in /model with correct context window, effort rungs, and subagent support (built-in families untouched)',
   },
   {
     id: 'show-more-items-in-select-menus',
@@ -469,6 +478,13 @@ const PATCH_DEFINITIONS = [
     group: PatchGroup.FEATURES,
     description:
       'Allow arbitrary model names in custom agent frontmatter (e.g. gemini-2.5-flash)',
+  },
+  {
+    id: 'agent-tool-model-string',
+    name: 'Agent tool custom models',
+    group: PatchGroup.FEATURES,
+    description:
+      'Let the Agent/Task tool inline model param accept any model name, not just built-in aliases',
   },
   {
     id: 'worktree-mode',
@@ -1096,6 +1112,12 @@ export const applyCustomization = async (
         JSON.stringify(config.settings.subagentModels) !==
           JSON.stringify(DEFAULT_SETTINGS.subagentModels),
     },
+    'custom-model-catalog': {
+      fn: c => writeCustomModelCatalog(c, config.settings.customModels!),
+      condition:
+        !!config.settings.customModels &&
+        config.settings.customModels.length > 0,
+    },
     'thinking-visibility': {
       fn: c => writeThinkingVisibility(c),
       condition: config.settings.misc?.expandThinkingBlocks ?? true,
@@ -1182,6 +1204,12 @@ export const applyCustomization = async (
     'allow-custom-agent-models': {
       fn: c => writeAllowCustomAgentModels(c),
       condition: !!config.settings.misc?.allowCustomAgentModels,
+    },
+    'agent-tool-model-string': {
+      fn: c => writeAgentToolModelString(c),
+      condition:
+        !!config.settings.customModels &&
+        config.settings.customModels.length > 0,
     },
     'worktree-mode': {
       fn: c => writeWorktreeMode(c),

@@ -758,6 +758,7 @@ export const DEFAULT_SETTINGS: Settings = {
     explore: null,
     generalPurpose: null,
   },
+  customModels: [],
   complexityRouter: {
     enabled: false,
     pinPerTask: true,

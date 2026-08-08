@@ -175,6 +175,33 @@ export interface SubagentModelsConfig {
   generalPurpose: string | null;
 }
 
+// Custom (non-Anthropic) models injected into Claude Code's embedded model
+// catalog, so they appear in /model with correct context window, effort rungs,
+// and max-output caps — and so subagents can use them natively. The catalog
+// entry's `id` is the value put on the wire verbatim, so it must be the exact
+// model id the configured gateway/proxy expects. `opus`/`sonnet`/`haiku`/
+// `fable` are never touched.
+export interface CustomModelDefinition {
+  id: string; // model id sent on the wire AND the /model picker value
+  display_name: string; // picker label
+  description?: string; // picker description (defaults to display_name)
+  family: string; // catalog family; use a NOVEL value (e.g. 'gpt', 'kimi'), never a built-in
+  context_window: number; // tokens; drives the statusline ctx bar + auto-compact threshold
+  max_output_tokens?: number; // default 64000
+  // CC effort rungs the model supports, from low..max. Mapped onto catalog
+  // capabilities: always adds 'effort'; adds 'max_effort' if 'max' present;
+  // adds 'xhigh_effort' if 'xhigh' or 'max' present.
+  effort?: Array<'low' | 'medium' | 'high' | 'xhigh' | 'max'>;
+  // extra raw catalog capabilities to merge in (e.g. 'adaptive_thinking')
+  capabilities?: string[];
+  default_effort?: 'low' | 'medium' | 'high' | 'xhigh' | 'max';
+  alias?: string; // optional short alias so `/model <alias>` resolves to this id
+}
+
+export interface CustomModelsConfig {
+  models: CustomModelDefinition[];
+}
+
 // [EXPERIMENTAL] Complexity effort router.
 //
 // Classifies how hard a task is into an ordinal level and pins the session's
@@ -218,6 +245,7 @@ export interface Settings {
   defaultToolset: string | null;
   planModeToolset: string | null;
   subagentModels: SubagentModelsConfig;
+  customModels: CustomModelDefinition[];
   // Non-optional like subagentModels (its analog): DEFAULT_SETTINGS always
   // provides it and normalizeConfig backfills it via deepMergeWithDefaults.
   complexityRouter: ComplexityRouterConfig;

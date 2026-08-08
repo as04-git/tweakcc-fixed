@@ -62,6 +62,8 @@ import { writeAutonomousOperationAllModels } from './autonomousOperationAllModel
 import { writeAutoModeClassifierModel } from './autoModeClassifierModel';
 import { writeComplexityRouter } from './complexityRouter';
 import { writeAllowCustomAgentModels } from './allowCustomAgentModels';
+import { writeCustomModelCatalog } from './customModelCatalog';
+import { writeAgentToolModelString } from './agentToolModelString';
 import { writeWorktreeMode } from './worktreeMode';
 import { writeSessionMemory } from './sessionMemory';
 import { writeSwapRipgrepForFff } from './swapRipgrepForFff';
@@ -276,6 +278,27 @@ const INVOCATIONS: Record<PatchId, (src: string) => string | null> = {
       enabled: true,
     }),
   'allow-custom-agent-models': c => writeAllowCustomAgentModels(c),
+  'custom-model-catalog': c =>
+    writeCustomModelCatalog(c, [
+      {
+        id: 'kimi-k3-256k',
+        display_name: 'Kimi K3 256K',
+        family: 'kimi',
+        context_window: 262144,
+        max_output_tokens: 65536,
+        effort: ['low', 'high', 'max'],
+        alias: 'k3',
+      },
+      {
+        id: 'gpt-5.6-sol',
+        display_name: 'GPT-5.6 Sol',
+        family: 'gpt',
+        context_window: 372000,
+        effort: ['low', 'medium', 'high', 'xhigh'],
+        default_effort: 'high',
+      },
+    ]),
+  'agent-tool-model-string': c => writeAgentToolModelString(c),
   'worktree-mode': c => writeWorktreeMode(c),
   'session-memory': c => writeSessionMemory(c),
   'swap-ripgrep-for-fff': c => writeSwapRipgrepForFff(c, FFF_WRAPPER_PATH),
