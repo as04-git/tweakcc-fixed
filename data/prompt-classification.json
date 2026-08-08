@@ -1350,10 +1350,7 @@
     "facing": "internal"
   },
   "43798cc1e218b76742b17eb98940ca63223f672f": {
-    "facing": "model",
-    "id": "tool-description-listmcpresourcestool",
-    "name": "Tool Description: ListMcpResourcesTool",
-    "desc": "Tool description for listing available MCP resources from all configured servers or a specific server"
+    "facing": "ui"
   },
   "9af247c49fbb491c7b0dd2815cd3d0fb838f6197": {
     "facing": "model",
@@ -1839,10 +1836,7 @@
     "desc": "Team-coordination inbox message that a teammate shut down leaving tasks unassigned; prompts reassignment via TaskUpdate."
   },
   "4fb6f3dd97d34890b4f3e57c6c3801b7baf097b8": {
-    "facing": "model",
-    "id": "tool-description-todowrite-proactive-update-guidance",
-    "name": "Tool Description: TodoWrite proactive update guidance",
-    "desc": "Concise TodoWrite guidance to proactively track progress with one in-progress task and activeForm values"
+    "facing": "ui"
   },
   "b5af5f07d14fcbcb68f9e97ee65132f79c78ee7e": {
     "facing": "model",
@@ -2661,10 +2655,7 @@
     "desc": "TaskUpdate tool_result appended when a task completes, prompting Claude to call TaskList for the next task."
   },
   "6c5f3a7c02353679718364c5cbbd28a3bfb62680": {
-    "facing": "model",
-    "id": "tool-description-remotetrigger",
-    "name": "Tool Description: RemoteTrigger",
-    "desc": "RemoteTrigger tool description (manage scheduled remote Claude Code agents/routines via the CCR API)."
+    "facing": "ui"
   },
   "b68ff8f860e49cf32ae02273ab95399e5074900e": {
     "facing": "internal"
@@ -16731,10 +16722,7 @@
     "facing": "internal"
   },
   "d94af133832dfb308786e2e6c2d369d43a5757d0": {
-    "facing": "model",
-    "id": "tool-description-read-mcp-resource-2",
-    "name": "ReadMcpResource tool description",
-    "desc": "Description of the ReadMcpResource tool, injected into the model's tool list."
+    "facing": "ui"
   },
   "fab55bc69b96ff32695834df04e589cae2d9a0ab": {
     "facing": "model",
@@ -18132,22 +18120,13 @@
     "facing": "ui"
   },
   "c9f43858eada3db6c4bcc7171cd42f97ab29206e": {
-    "facing": "model",
-    "id": "tool-description-search-mcp-registry",
-    "name": "SearchMcpRegistry tool description",
-    "desc": "Description of the SearchMcpRegistry connector-discovery tool."
+    "facing": "ui"
   },
   "d38a0011f9d40d18b2605373098f391a1f3f971b": {
-    "facing": "model",
-    "id": "tool-description-suggest-connectors",
-    "name": "SuggestConnectors tool description",
-    "desc": "Description of the SuggestConnectors tool resolving connector payloads by directoryUuid."
+    "facing": "ui"
   },
   "f98895fe1a9906f56837cc6b70f99abd2a4c06be": {
-    "facing": "model",
-    "id": "tool-description-list-connectors",
-    "name": "ListConnectors tool description",
-    "desc": "Description of the ListConnectors tool listing installed org connectors."
+    "facing": "ui"
   },
   "c6ec36b97e5719f8263f2696fefe4110103f2a84": {
     "facing": "internal"
@@ -28881,10 +28860,7 @@
     "desc": "ClaudeDesign permission-deny message returned to the model when a tokenless write to an ungranted project needs an interactive approval the current permission mode cannot show."
   },
   "e13a8a0742a2968b99617b6d75b820498bf21752": {
-    "facing": "model",
-    "id": "tool-description-refreshmcptools",
-    "name": "Tool Description: RefreshMcpTools",
-    "desc": "Describes when and how to refresh connected MCP servers tool lists to recover missing or stale tools"
+    "facing": "ui"
   },
   "e223ffd52931d0bb7d7b711dbf21317672e8acd9": {
     "facing": "model",
@@ -29730,10 +29706,7 @@
     "facing": "internal"
   },
   "566002d688c911ed30c5541b5c1f698ca1070758": {
-    "facing": "model",
-    "id": "tool-description-propose-skills",
-    "name": "Tool Description: Propose Skills (Short)",
-    "desc": "Short description() returned by the propose_skills tool definition; shown to the model in the tool roster / tool-search summaries."
+    "facing": "ui"
   },
   "89daab81edc65d0b795017932c2c981497f9f784": {
     "facing": "model",
@@ -37014,10 +36987,7 @@
     "facing": "ui"
   },
   "fab5698a6c6fa39fc73e086124ca2413779bb483": {
-    "facing": "model",
-    "id": "tool-description-memorywrite-prompt",
-    "name": "Tool Description: memory_write prompt",
-    "desc": "Describes creating or replacing connected memory-store documents with version checks, conflict handling, and secret-safety requirements."
+    "facing": "ui"
   },
   "ded51ce7a9e14306c1bdfe99bb5ec56605471ef2": {
     "facing": "model",
@@ -38580,16 +38550,10 @@
     "desc": "The applicable/durable/legible rubric block joined into the memory_write tool prompt, teaching the model what is worth saving."
   },
   "3dea2cc2c0822e31eb58d6a7a97c8926f156e0cb": {
-    "facing": "model",
-    "id": "tool-description-memory-list-store",
-    "name": "Tool Description: memory_list",
-    "desc": "Short description of the memory_list tool (listing documents or, with no arguments, the connected stores); returned from the tool's description() to the model."
+    "facing": "ui"
   },
   "9044007dc5db09023b26821a8228d081c17b5a3c": {
-    "facing": "model",
-    "id": "tool-description-memory-read-store",
-    "name": "Tool Description: memory_read",
-    "desc": "Short description of the memory_read tool; returned from the read tool's description() to the model."
+    "facing": "ui"
   },
   "1e1cb6f65b87cd6ca61a903a7379bec95bc85a97": {
     "facing": "model",
@@ -38724,10 +38688,7 @@
     "desc": "memory_write failure returned to the model when the requested path collides with an existing document or one of its ancestors."
   },
   "de2037ac7ea43874ee88970bf57cf4195ae73bf9": {
-    "facing": "model",
-    "id": "tool-description-sendfeedback",
-    "name": "Tool Description: SendFeedback",
-    "desc": "Reworded 2.1.224 version of the dropped 2.1.221 id \u2014 the SendFeedback tool description, now covering the model's own behavior as well as the product; sent to the model whenever SendFeedback is exposed."
+    "facing": "ui"
   },
   "140eb9f63f62c3abc3480d1bddacfb2092864992": {
     "facing": "internal"
@@ -39982,5 +39943,14 @@
   },
   "347e572fa435ffe2563322a25c15a52ecfc1ea21": {
     "facing": "internal"
+  },
+  "59b3d9e9671e5e0ef190dab018d94dc5c8e45eb6": {
+    "facing": "ui"
+  },
+  "d9976cd7aa10a0d8e07388253142d8ca86e380d0": {
+    "facing": "model",
+    "id": "tool-description-memory-write-no-secrets-refused",
+    "name": "Tool Description: MemoryWrite no secrets (refused)",
+    "desc": "Closing line of the MemoryWrite tool's model-facing description: shared-store secrets are refused at write time."
   }
 }
