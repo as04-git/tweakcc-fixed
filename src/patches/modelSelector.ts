@@ -5,6 +5,8 @@ import { escapeIdent, showDiff } from './index';
 // Models to inject/make available.
 // prettier-ignore
 export const CUSTOM_MODELS: { value: string; label: string; description: string }[] = [
+  { value: 'claude-opus-4-8',              label: 'Opus 4.8',             description: "Claude Opus 4.8" },
+  { value: 'claude-opus-4-7',              label: 'Opus 4.7',             description: "Claude Opus 4.7" },
   { value: 'claude-opus-4-6',              label: 'Opus 4.6',             description: "Claude Opus 4.6 (February 2026)" },
   { value: 'claude-sonnet-4-6',            label: 'Sonnet 4.6',           description: "Claude Sonnet 4.6 (February 2026)" },
   { value: 'claude-haiku-4-5-20251001',    label: 'Haiku 4.5',            description: "Claude Haiku 4.5 (October 2025)" },

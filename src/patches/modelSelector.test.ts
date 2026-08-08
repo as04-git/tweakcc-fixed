@@ -40,7 +40,9 @@ describe('writeModelCustomizations', () => {
     const declEnd =
       out!.indexOf('description:"Built in"}];') +
       'description:"Built in"}];'.length;
-    const injectAt = out!.indexOf('nQ.push({"value":"claude-opus-4-6"');
+    const injectAt = out!.indexOf(
+      `nQ.push({"value":"${CUSTOM_MODELS[0].value}"`
+    );
     const origPush = out!.indexOf('description:"Custom model"');
     expect(injectAt).toBe(declEnd); // spliced immediately after the declaration
     expect(injectAt).toBeLessThan(origPush);
@@ -68,7 +70,9 @@ describe('writeModelCustomizations', () => {
     expect(out).toContain(`t.push(${JSON.stringify(CUSTOM_MODELS[0])});`);
     const declEnd =
       out!.indexOf('let t=Amp(e),n=1;') + 'let t=Amp(e),n=1;'.length;
-    const injectAt = out!.indexOf('t.push({"value":"claude-opus-4-6"');
+    const injectAt = out!.indexOf(
+      `t.push({"value":"${CUSTOM_MODELS[0].value}"`
+    );
     expect(injectAt).toBe(declEnd); // spliced right after the declaration's `;`
   });
 
@@ -86,7 +90,7 @@ describe('writeModelCustomizations', () => {
     // The injected run sits between the declaration and the original `if(Q){`.
     // Slice exactly that run (all JSON.stringify'd pushes) and confirm it parses
     // as valid JS — proving descriptions with parens/dates stay properly quoted.
-    const start = out.indexOf('nQ.push({"value":"claude-opus-4-6"');
+    const start = out.indexOf(`nQ.push({"value":"${CUSTOM_MODELS[0].value}"`);
     const injected = out.slice(start, out.indexOf('if(Q){', start));
     expect(() => new Function('nQ', injected)).not.toThrow();
     // Sanity: the run contains exactly one push per custom model.
