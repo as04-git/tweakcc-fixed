@@ -19,7 +19,7 @@ anything; the failure modes section will save you.
 │   agent-tool enum, rate-limit gate, /model aliases                │
 └──────────────┬───────────────────────────────────────────────────┘
                │ ANTHROPIC_BASE_URL=http://127.0.0.1:8317
-               │ ANTHROPIC_AUTH_TOKEN=<local proxy key>  (bearer)
+               │ CC native OAuth bearer (no credential env vars)
                ▼
 ┌──────────────────────────────────────────────────────────────────┐
 │ CLIProxyAPI (fork, systemd user service, Restart=always)          │
@@ -118,6 +118,13 @@ then hardcoded `ber=200000`. Without this patch every custom model reports
 - **Anchor**: `let X=dro(Y);if(X!==null)return X;let Z=` inside `mZc`.
 - Injects `let cw=ww(lo(Y))?.context?.window;if(typeof cw==="number"&&cw>0)return cw;`
   BEFORE the env override (env keeps precedence).
+- **Compaction path**: CC generates its summary with the current model through
+  its normal Anthropic-facing `POST /v1/messages`; it does NOT call a
+  provider-native compact endpoint. Verified from a manual Kimi compaction on
+  2026-08-08: one 169-second `POST /v1/messages?beta=true` routed to
+  `model=kimi-k3`, with no actual `/responses/compact` request. Therefore a
+  Sol compaction enters the proxy as `/v1/messages` and is translated to a
+  normal Codex `/responses` request — not Codex `/responses/compact`.
 - Built-ins unaffected: their 1M path is the pre-existing session-beta branch,
   which runs before the new lookup. Verified: opus/sonnet/haiku all still 200k.
 
@@ -144,7 +151,10 @@ OAuth-subscription session (checks credential scopes). With a credential env
 var set (`ANTHROPIC_API_KEY` or `ANTHROPIC_AUTH_TOKEN`, any proxy), `ii()` is
 false and headers are ignored. This neutralizes the
 gate in `cpo`: `let o=ii();if(!rir(o)){...return}` → `if(!1){...}`. Absent
-headers still yield an empty map; subscriber sessions unaffected.
+headers still yield an empty map; subscriber sessions unaffected. Since §4.7
+now keeps CC on its native OAuth identity, this patch is normally redundant
+for Claude traffic, but remains useful insurance for alternate launchers and
+custom-provider headers.
 
 ### 3.6 `custom-model-alias` (`src/patches/customModelAlias.ts`)
 
@@ -357,55 +367,55 @@ CLI) — with claudish's copies as fallback. The fully manual alternative is the
 proxy's own OAuth flows, which write the auth dir directly:
 `cliproxyapi --claude-login | --codex-login | --kimi-login`.
 
-**Re-login cadence:** Claude's refresh chain breaks ~weekly on this shared
-account (another machine's use rotates it). When Claude starts 401ing:
-`claude /login` in any terminal, then `resync-credentials.py` — the re-login
-signal is detected automatically. A fresh `claude /login` also heals the
-CC-side `.credentials.json` (§4.7) while it lasts.
+**Re-login cadence:** Claude Code now owns the Claude refresh lifecycle
+exclusively for normal CC traffic. If the chain breaks (~weekly by experience
+on this shared account), run `claude /login`; no proxy resync is needed for CC
+itself. `resync-credentials.py` remains useful for Codex/Kimi and for the
+proxy's dormant Claude fallback credential.
 
-### 4.7 Plain `claude` == `cx` (settings-env)
+### 4.7 Plain `claude` == `cx` — native subscription identity
 
-`~/.claude/settings.json` carries an `env` block CC applies to itself at
-launch, so the proxy wiring no longer depends on launching through `cx`:
+`~/.claude/settings.json` carries ONLY the API routing override:
 
 ```json
 "env": {
-  "ANTHROPIC_BASE_URL": "http://127.0.0.1:8317",
-  "ANTHROPIC_AUTH_TOKEN": "<local proxy key>"
+  "ANTHROPIC_BASE_URL": "http://127.0.0.1:8317"
 }
 ```
 
-Two vars, deliberately. `BASE_URL` routes everything at the proxy.
-**`AUTH_TOKEN` (bearer) is the only credential var** — headless `-p` runs
-pre-flight through a login gate that rejects the API-key path ("Not logged
-in · Please run /login" — raised when the resolver source isn't
-`ANTHROPIC_API_KEY`/`apiKeyHelper`), and the bearer path is what headless
-accepts. **`ANTHROPIC_API_KEY` was removed 2026-08-08**: carrying both made
-CC print "⚠ Both ANTHROPIC_AUTH_TOKEN and ANTHROPIC_API_KEY set" every
-session, and the API-key var also biased CC toward classifying the session
-as API-billing rather than subscription-like. Verified post-removal:
-headless `env -u ANTHROPIC_API_KEY claude -p` round-trips through the proxy
-fine (the proxy accepts the key as either `x-api-key` or bearer). The only
-residue is a harmless "connectors disabled because an auth source is set"
-notice, unavoidable while any credential var points at the proxy. `cx`
-remains as the proxy-autostart convenience but is otherwise redundant
-(settings.json is mode 600 — it contains the key).
+There is deliberately **no `ANTHROPIC_API_KEY` or `ANTHROPIC_AUTH_TOKEN`**.
+CC therefore loads `~/.claude/.credentials.json` as a real subscription
+identity: `/login`, OAuth refresh, claude.ai connectors, `/status` billing
+classification, and headless `-p` all use the vanilla code path. `BASE_URL`
+reroutes only API requests (`/v1/messages`); it does not reroute Anthropic's
+browser authorization or token-exchange endpoints.
 
-**Why plain `claude` failed before this:** no `ANTHROPIC_*` in the shell
-environment → default `api.anthropic.com` + `~/.claude/.credentials.json`,
-which WAS a broken credential: an access-token-only export (no refresh token,
-`expiresAt` at the 1970 epoch) had overwritten the healthy file → permanently
-"expired", unrefreshable, login wall. **Healed 2026-08-08 by reverse-sync**:
-`resync-credentials.py` copies the proxy's healthy Claude credential BACK
-into the CC file when the native side is broken (the proxy's copy provably
-works — Claude passthrough serves traffic). With a healthy OAuth identity
-file, even the headless API-key-only path works again, and the in-session
-"OAuth expired" blips stop. **Caveat — rotation race:** both sides now hold
-the same refresh token and Anthropic rotates on use; whichever refreshes
-first invalidates the other. The loser is healed by the next
-`resync-credentials.py` run (proxy-side failures are journal-detected,
-native-side breakage is detected on read). If the race ever goes
-pathological, the fix is to make one side the sole refresh owner.
+The proxy has two complementary fork changes:
+
+1. API routes trust their immediate peer when it is loopback (`127.0.0.0/8`
+   or `::1`), so CC's bearer need not equal the proxy's configured local key.
+   The service is explicitly bound to `127.0.0.1:8317`; management routes keep
+   their separate secret middleware.
+2. For requests whose upstream destination is Anthropic itself, the Claude
+   executor prefers CC's incoming `sk-ant-oat…` bearer over its stored Claude
+   credential. Anthropic therefore sees the same bearer and refresh owner as
+   vanilla CC. Anthropic-compatible third-party executors (notably Kimi,
+   which embeds `ClaudeExecutor`) are destination-gated and continue using
+   their own stored credentials. A 401 from a forwarded Claude bearer is
+   request-scoped: it neither refreshes nor cools down the proxy's stored
+   Claude chain.
+
+The stored Claude credential remains only as a fallback for non-CC local
+clients that send no Claude OAuth bearer. Using that fallback can reintroduce
+a second refresh owner; normal `claude`/`cx` traffic never exercises it.
+`cx` is now functionally redundant except as a proxy-start convenience.
+
+**History:** plain `claude` originally failed because its native credential had
+been overwritten by an access-token-only export (no refresh token and epoch
+`expiresAt`). It was reverse-healed from the proxy on 2026-08-08. The former
+API-key and then bearer-token env approaches worked for transport but made CC
+classify the session as API billing and disabled connectors; both credential
+env vars are now removed.
 
 ### 4.8 systemd (the "rock solid" layer)
 
@@ -448,19 +458,19 @@ Ops: `journalctl --user -u cliproxyapi` (logs),
 
 ## 6. Verification recipes
 
-End-to-end (proxy + patched CC, fresh config dir):
+End-to-end (proxy + patched CC, native subscription identity):
 
 ```bash
-export CLAUDE_CONFIG_DIR=/tmp/cc-test ANTHROPIC_BASE_URL=http://127.0.0.1:8317 \
-       ANTHROPIC_AUTH_TOKEN=<local key>
-~/.local/bin/claude -p "hi" --model kimi-k3 --output-format json \
+# settings.json supplies BASE_URL; explicitly remove inherited credential vars.
+env -u ANTHROPIC_API_KEY -u ANTHROPIC_AUTH_TOKEN \
+  ~/.local/bin/claude -p "hi" --model kimi-k3 --output-format json \
   | jq '.modelUsage | to_entries[0].value | {canonicalModel, contextWindow, maxOutputTokens}'
-# expect: kimi-k3 / 1048576 / 65536
+# expect: kimi-k3 / 1048576 / 65536 (or a provider quota error)
 ```
 
-NB: headless `-p` needs `ANTHROPIC_AUTH_TOKEN`, not `ANTHROPIC_API_KEY` (§4.7);
-a fresh `CLAUDE_CONFIG_DIR` additionally needs a seeded `.claude.json` — or
-just rely on the settings-env and run without `CLAUDE_CONFIG_DIR`.
+A fresh `CLAUDE_CONFIG_DIR` is no longer a useful auth test unless it also
+contains a valid native OAuth identity: the point is specifically to exercise
+CC's real `~/.claude/.credentials.json`, not a credential env override.
 
 - Picker entries in binary: `grep -ac '"value":"kimi-k3","label":"Kimi K3"' <binary>` → 1
 - Alias map in binary: `grep -ac '"k3":"kimi-k3","sol":"gpt-5.6-sol"' <binary>` → 1
@@ -513,24 +523,39 @@ pristine), `systemctl --user disable --now cliproxyapi`, use plain `claude`.
   false (identity vs transport). Fixing means separating OAuth identity from
   API-key transport; deliberately untouched (attribution-confusion risk).
 - **kimi-k3's 1M window** is from the model registry, not a live probe.
-- **Prompt bundles parked**: `opus_5_prompt_bundle`, `fable_5_mitigations`,
-  `lean_prompt` capabilities are NOT set on custom entries (long default prompt
-  everywhere). Per-section env vars exist for testing:
-  `CLAUDE_CODE_BISON_CAIRN` (delivering-work), `CLAUDE_CODE_LARCH_CISTERN`
-  (corrections). **Backlog plan**: mine the system prompts Codex CLI uses for
-  the gpt-5.6 family and Kimi Code uses for k3 (fan out parallel Luna
-  subagents at xhigh to collate them), then attach CC prompt-bundle
-  capabilities to the custom catalog entries with our own prompts informed by
-  those native-CLI best practices.
-- **Gemini provider candidate**: Google AI Pro sub available; CLIProxyAPI
-  supports Gemini OAuth. Proxy-side addition only — the statusline renderer is
-  already provider-generic (§3.8) and CC-side needs only a new `customModels`
-  entry.
-- **`~/.claude/.credentials.json` rotation race** (§4.7): healed via
-  reverse-sync from the proxy, so both sides hold the same rotating refresh
-  token. Occasional mutual invalidation is expected and self-heals via
-  `resync-credentials.py`; if it becomes frequent, designate one refresh
-  owner.
+- **M8 — prompt bundles parked**: `opus_5_prompt_bundle`,
+  `fable_5_mitigations`, `lean_prompt` capabilities are NOT set on custom
+  entries (long default prompt everywhere). Per-section env vars exist for
+  testing: `CLAUDE_CODE_BISON_CAIRN` (delivering-work),
+  `CLAUDE_CODE_LARCH_CISTERN` (corrections). **Backlog plan**: mine the system
+  prompts Codex CLI uses for the gpt-5.6 family and Kimi Code uses for k3 (fan
+  out parallel Luna subagents at xhigh to collate them), include the useful
+  Codex-plugin prompting guidance as another source, then attach CC
+  prompt-bundle capabilities to custom entries with our own logically adapted
+  prompts. Do not import any source wholesale.
+- **M9 — Gemini provider candidate**: Google AI Pro sub available;
+  CLIProxyAPI supports Gemini OAuth. Proxy-side addition only — the statusline
+  renderer is already provider-generic (§3.8) and CC-side needs only a new
+  `customModels` entry.
+- **M11 — gate the `claude-api` skill**: its ~190k-token reference currently
+  auto-triggers and can consume most of a context before useful work starts.
+  Default-disable the full payload, preserve a tiny searchable hint, and
+  load/search the detailed API reference only when the task genuinely needs
+  it. No matching gate patch currently exists in this fork (`rememberSkill`
+  is the only skill-related patch), so M11 requires a new patch or upstream
+  configuration hook. Purpose: retain discoverability without the automatic
+  context tax.
+- **M12 — route Codex compaction to native `/responses/compact`**: CC currently
+  summarizes through ordinary `/v1/messages`, which the proxy translates to a
+  regular Codex `/responses` call. Research OpenAI Codex's exact compact
+  contract and other high-value native behaviors first. Likely clean boundary:
+  add an explicit CC-side compaction marker, then translate only marked Codex
+  requests; avoid brittle summary-prompt sniffing. Do not assume native compact
+  is better until its semantics and output quality are verified.
+- **Claude fallback credential** (§4.7): normal CC traffic forwards CC's own
+  bearer and has one refresh owner. The proxy's stored Claude credential still
+  exists for non-CC/no-bearer callers; exercising that fallback can reintroduce
+  the old rotation race. Prefer CC's native bearer path.
 - **Pricing absent** on injected catalog entries — CC-side cost readout for
   custom models is absent/zero by design (proxy still tracks real usage).
 - **`gpt-5.4` 1M mode** advertised but untested; `gpt-5.4` not added to
