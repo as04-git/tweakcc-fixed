@@ -231,6 +231,15 @@ function cmdCheck() {
     ['"failed to find"', count(/failed to find/g)],
     ['"Could not find"', count(/[Cc]ould not find/g)],
     ['"Conflicts detected"', count(/Conflicts detected/g)],
+    // When the installed CC is newer than the newest published prompts JSON,
+    // EVERY named prompt override is skipped and the run still ends
+    // "Customizations applied successfully!" — the inline blobs and code
+    // patches did apply. None of the patterns above fire, so without this row
+    // a box running Layer 0 with no prompt overrides reports clean.
+    [
+      'system prompts skipped (CC newer than published data)',
+      count(/System prompts not available|Error downloading system prompts|Prompts file not found/gi),
+    ],
   ];
   for (const [label, n] of hyg) {
     if (n === 0) console.log(C.ok(`${label}: 0`));
