@@ -215,10 +215,13 @@ Dumb` at 25/50/70/90) + 4-wide micro-bar + pct + tokens. Toggles:
   `~/.claude/statusline-quota-history.log`; the trailing-1h slope renders as
   `+N%/h`, amber when the pace runs the window dry before reset. `CC_SL_BURN=0`
   to disable.
-- **Provider-generic**: the renderer iterates whatever providers appear in
-  `quota-state.json` (known glyphs `✳/⬡/☾` for claude/codex/kimi; a new
-  provider gets its first letter until added to `PROVIDER_GLYPHS`) — adding
-  e.g. Gemini later is a proxy-side change only.
+- **Provider-generic + recency-ordered**: the renderer iterates whatever
+  providers appear in `quota-state.json` (known glyphs `✳/⬡/☾` for
+  claude/codex/kimi; a new provider gets its first letter until added to
+  `PROVIDER_GLYPHS`), ordered most-recently-used first — so the active
+  provider leads. The session's current provider (from the model id) keeps
+  its burn rate visible at every ladder level. Adding e.g. Gemini later is a
+  proxy-side change only.
 - **Glyph quirk**: `✳` (U+2733) has emoji presentation in several fonts and
   overlaps the next glyph in-cell (fine in window titles — those are OS-drawn);
   the glyph string carries a trailing space as a workaround, regression-tested.
@@ -334,9 +337,23 @@ Claude and Codex are refreshed the same way. **The resync tool below is only
 needed if a REFRESH token itself is rejected** (revocation, or the provider
 invalidates the chain) — not for ordinary expiry.
 
-**Resync tool:** `python3 ~/.cli-proxy-api/resync-credentials.py [claude|codex|kimi]`
-(default: all three). Converts the sources above into the proxy's storage
-format in place; the proxy hot-reloads.
+**Resync tool:** `python3 ~/.cli-proxy-api/resync-credentials.py [--check|--force] [provider]`.
+**Needs-based** (the proxy auto-refreshes access tokens itself, so blind
+copying could clobber a healthy rotated credential): a provider is synced only
+if its proxy credential is missing, has no refresh token, is failing refresh
+in the proxy journal (last 24h), or the native CLI store carries a newer,
+different refresh token (i.e. a re-login just happened). Sources are the
+NATIVE CLI stores first — `~/.claude/.credentials.json` (`claude /login`),
+`~/.codex/auth.json` (`codex login`), `~/.kimi-code/credentials/` (kimi-code
+CLI) — with claudish's copies as fallback. The fully manual alternative is the
+proxy's own OAuth flows, which write the auth dir directly:
+`cliproxyapi --claude-login | --codex-login | --kimi-login`.
+
+**Re-login cadence:** Claude's refresh chain breaks ~weekly on this shared
+account (another machine's use rotates it). When Claude starts 401ing:
+`claude /login` in any terminal, then `resync-credentials.py` — the re-login
+signal is detected automatically. A fresh `claude /login` also heals the
+CC-side `.credentials.json` (§4.7) while it lasts.
 
 ### 4.7 Plain `claude` == `cx` (settings-env)
 
@@ -456,9 +473,11 @@ just rely on the settings-env and run without `CLAUDE_CONFIG_DIR`.
 `aryan/rate-limit-headers` (two commits, small surface), rebuild, restart.
 
 **rotate/repair creds**: only needed when a REFRESH token is rejected (the
-proxy auto-refreshes access tokens itself, §4.6):
-`python3 ~/.cli-proxy-api/resync-credentials.py <provider>`; the proxy
-hot-reloads the file.
+proxy auto-refreshes access tokens itself, §4.6). Run
+`python3 ~/.cli-proxy-api/resync-credentials.py --check` to see who needs
+what; a bare run syncs only the providers that need it, pulling from the
+native CLI stores. If a source is stale, re-login first (`claude /login`,
+`codex login`, kimi-code CLI) or use the proxy's own `--<provider>-login`.
 
 **Reverting everything**: `node dist/index.mjs --restore` (CC back to
 pristine), `systemctl --user disable --now cliproxyapi`, use plain `claude`.
