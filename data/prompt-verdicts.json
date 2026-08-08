@@ -389,8 +389,8 @@
   },
   "slash-command-terminal-setup-description-native-shift-enter": {
     "verdict": "pristine-keep",
-    "version": "2.1.224",
-    "why": "Read in full: 'Check terminal setup (Shift+Enter is natively supported in ${MAP[ee.terminal]})' \u2014 60 characters. No CAPS, no hedging, no CTA, no scaffolding, no restatement; the parenthetical IS the informational payload (it tells reader and model that running the command is a no-op on this terminal), so stripping it would leave a description that says nothing. FROZEN anyway (names the Shift+Enter key binding and interpolates a terminal name). Corpus scan of the other three branches of the same getter \u2014 'Enable Option+Enter key binding for newlines and disable the audible bell (skipped in scre"
+    "version": "2.1.226",
+    "why": "The override differed from pristine only by a hardcoded minified identifier inside the slot (ee.terminal vs te.terminal) \u2014 a platform-specific name baked into an override, which is exactly what the positional remapper exists to avoid. Refreshed to pristine."
   },
   "system-prompt-artifact-auto-edit-patch-retry": {
     "verdict": "trim",
@@ -1350,8 +1350,8 @@
   },
   "tool-result-artifact-comments-sent-to-you-ordering-note": {
     "verdict": "pristine-keep",
-    "version": "2.1.224",
-    "why": "Read in full: one 13-word sentence. Slop check applied despite the length: no CAPS, no hedging, no CTA, no motivational tail. It states an ordering fact the model cannot observe from the rendered list and then explicitly kills the wrong default inference (that a comment list is chronological) \u2014 a negative-framed rule with no positive equivalent, which the standard keeps. Tripwire: FROZEN (ordering word 'first', restrictive 'not chronological'). Corpus scan for 'sent to you' / 'listed first' / 'chronological' across all 3634 bodies: tool-parameter-artifact-action-comments-reply and system-promp"
+    "version": "2.1.226",
+    "why": "The override asserted 'list order is not chronological'; 2.1.226 pristine says the remaining threads follow newest first, so the override now contradicts the binary. Refreshed to pristine."
   },
   "tool-result-artifact-comments-threads-not-listed": {
     "verdict": "pristine-keep",
@@ -1893,13 +1893,13 @@
   },
   "tool-result-send-message-bridge-sessions-unchecked": {
     "verdict": "pristine-keep",
-    "version": "2.1.224",
-    "why": "BODY, two sentences: \"${KIND} sessions could not be checked just now.\" + \"If '${to}' is a ${KIND} session on this account, note those are reply-only from here \u2014 messageable ${WHERE} \u2014 and the send_message connector cannot reach them either.\" Check 1: \"note\" is the one filler word, but it sits inside sentence 2, which is frozen (the `send_message` connector name plus a two-item consequence), so it is not separately removable without compressing a frozen sentence. Otherwise: no CAPS, no CTA, no restatement \u2014 the two sentences carry different facts (the list could not be fetched; what follows IF "
+    "version": "2.1.226",
+    "why": "The override still called Remote Control sessions reply-only; 2.1.226 made them fully addressable and added 'do not fall back to the send_message connector; it cannot reach these sessions'. The stale claim was the override's entire delta, and the slot count changed underneath it. Refreshed to pristine."
   },
   "tool-result-send-message-cloud-approval-required": {
     "verdict": "pristine-keep",
-    "version": "2.1.224",
-    "why": "Read in full \u2014 one sentence. Slop check: no CAPS, no hedging, no apology, no retry exhortation. It names the exact setting that blocked the send (isolatePeerMachines \u2014 otherwise unguessable from the failure), the exact target, and the terminal fact 'nothing was sent', which is what stops the model from reporting a delivery it did not make. That last clause maps directly onto the Opus 5 \u00a73 keep \u2014 'do not assert what you have not observed' / false completion claims flat at 1.27 vs 1.29 \u2014 so it is the opposite of safety theater. Tripwire: FROZEN (config key `isolatePeerMachines`, ${VAR}, 'nothing"
+    "version": "2.1.226",
+    "why": "The override hardcoded 'cloud session' where pristine now interpolates the session kind, so it mislabelled every Remote Control approval as a cloud one. Refreshed to pristine."
   },
   "tool-result-send-message-cross-session-unavailable": {
     "verdict": "pristine-keep",
@@ -1940,8 +1940,8 @@
   },
   "tool-result-sendfile-bridge-sessions-unchecked": {
     "verdict": "pristine-keep",
-    "version": "2.1.224",
-    "why": "BODY: 'Remote Control sessions could not be checked just now. If '${TO}' is a Remote Control session on this account, note it is reply-only from here (messageable only in reply, after it messages you first) and files can't be sent to it by name from this machine.' Check 1: no CAPS, no hedging, no motivational filler, no CTA. Three claims, and only the second sentence is a plausible cut. Check 2: (a) 'could not be checked just now' is unique and is the whole point of the arm \u2014 it tells the model the parent's flat 'No peer session named X is reachable' is an INCOMPLETE search, which nothing else"
+    "version": "2.1.226",
+    "why": "Same stale reply-only claim as the send-message twin, with the same slot-count change. Refreshed to pristine."
   },
   "tool-result-sendfile-device-gated-reply-only": {
     "verdict": "pristine-keep",
