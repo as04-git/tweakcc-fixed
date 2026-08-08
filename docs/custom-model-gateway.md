@@ -377,14 +377,19 @@ but is otherwise redundant (settings.json is mode 600 — it contains the key).
 
 **Why plain `claude` failed before this:** no `ANTHROPIC_*` in the shell
 environment → default `api.anthropic.com` + `~/.claude/.credentials.json`,
-which is a BROKEN credential: access-token-only, no refresh token,
-`expiresAt` pinned to the 1970 epoch → permanently "expired", unrefreshable,
-login wall. The proxy holds the healthy Claude OAuth and self-refreshes it;
-the CC-side file is only an identity anchor for interactive sessions — do not
-"fix" it by deleting it without testing interactive startup first (the
-occasional in-session "OAuth expired" blips trace to it; a fresh `cx` launch
-rewrites/works around it, which is why opening another session heals the
-first).
+which WAS a broken credential: an access-token-only export (no refresh token,
+`expiresAt` at the 1970 epoch) had overwritten the healthy file → permanently
+"expired", unrefreshable, login wall. **Healed 2026-08-08 by reverse-sync**:
+`resync-credentials.py` copies the proxy's healthy Claude credential BACK
+into the CC file when the native side is broken (the proxy's copy provably
+works — Claude passthrough serves traffic). With a healthy OAuth identity
+file, even the headless API-key-only path works again, and the in-session
+"OAuth expired" blips stop. **Caveat — rotation race:** both sides now hold
+the same refresh token and Anthropic rotates on use; whichever refreshes
+first invalidates the other. The loser is healed by the next
+`resync-credentials.py` run (proxy-side failures are journal-detected,
+native-side breakage is detected on read). If the race ever goes
+pathological, the fix is to make one side the sole refresh owner.
 
 ### 4.8 systemd (the "rock solid" layer)
 
@@ -505,11 +510,11 @@ pristine), `systemctl --user disable --now cliproxyapi`, use plain `claude`.
   supports Gemini OAuth. Proxy-side addition only — the statusline renderer is
   already provider-generic (§3.8) and CC-side needs only a new `customModels`
   entry.
-- **`~/.claude/.credentials.json` is deliberately weird** (§4.7): epoch
-  `expiresAt`, no refresh token. Interactive sessions tolerate it (identity
-  anchor); headless must use `ANTHROPIC_AUTH_TOKEN`. Replacing it with a
-  healthy OAuth export would quiet the occasional in-session "OAuth expired"
-  blip, but test interactive startup before touching it.
+- **`~/.claude/.credentials.json` rotation race** (§4.7): healed via
+  reverse-sync from the proxy, so both sides hold the same rotating refresh
+  token. Occasional mutual invalidation is expected and self-heals via
+  `resync-credentials.py`; if it becomes frequent, designate one refresh
+  owner.
 - **Pricing absent** on injected catalog entries — CC-side cost readout for
   custom models is absent/zero by design (proxy still tracks real usage).
 - **`gpt-5.4` 1M mode** advertised but untested; `gpt-5.4` not added to
