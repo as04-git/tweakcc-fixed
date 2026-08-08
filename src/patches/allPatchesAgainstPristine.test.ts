@@ -66,6 +66,7 @@ import { writeCustomModelCatalog } from './customModelCatalog';
 import { writeAgentToolModelString } from './agentToolModelString';
 import { writeContextWindowFromCatalog } from './contextWindowFromCatalog';
 import { writeCustomModelPicker } from './customModelPicker';
+import { writeRateLimitsFromHeaders } from './rateLimitsFromHeaders';
 import { writeWorktreeMode } from './worktreeMode';
 import { writeSessionMemory } from './sessionMemory';
 import { writeSwapRipgrepForFff } from './swapRipgrepForFff';
@@ -310,6 +311,7 @@ const INVOCATIONS: Record<PatchId, (src: string) => string | null> = {
         context_window: 262144,
       },
     ]),
+  'rate-limits-from-headers': c => writeRateLimitsFromHeaders(c),
   'agent-tool-model-string': c => writeAgentToolModelString(c),
   'worktree-mode': c => writeWorktreeMode(c),
   'session-memory': c => writeSessionMemory(c),

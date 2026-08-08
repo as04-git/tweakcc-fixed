@@ -100,6 +100,7 @@ import { writeCustomModelCatalog } from './customModelCatalog';
 import { writeCustomModelPicker } from './customModelPicker';
 import { writeAgentToolModelString } from './agentToolModelString';
 import { writeContextWindowFromCatalog } from './contextWindowFromCatalog';
+import { writeRateLimitsFromHeaders } from './rateLimitsFromHeaders';
 import { writeMaxEffortDefault } from './maxEffortDefault';
 import { writeAutonomousOperationAllModels } from './autonomousOperationAllModels';
 import { writeAutoModeClassifierModel } from './autoModeClassifierModel';
@@ -277,6 +278,13 @@ const PATCH_DEFINITIONS = [
     group: PatchGroup.MISC_CONFIGURABLE,
     description:
       'Show custom models in the interactive /model picker (catalog injection alone only makes them resolvable by name)',
+  },
+  {
+    id: 'rate-limits-from-headers',
+    name: 'Rate limits from headers',
+    group: PatchGroup.MISC_CONFIGURABLE,
+    description:
+      'Populate statusline 5h/7d rate limits from response headers even in API-key sessions (e.g. behind a local gateway)',
   },
   {
     id: 'show-more-items-in-select-menus',
@@ -1142,6 +1150,12 @@ export const applyCustomization = async (
     },
     'custom-model-picker': {
       fn: c => writeCustomModelPicker(c, config.settings.customModels!),
+      condition:
+        !!config.settings.customModels &&
+        config.settings.customModels.length > 0,
+    },
+    'rate-limits-from-headers': {
+      fn: c => writeRateLimitsFromHeaders(c),
       condition:
         !!config.settings.customModels &&
         config.settings.customModels.length > 0,
