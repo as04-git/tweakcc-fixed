@@ -23,6 +23,16 @@ describe('applySafetyHarness: harnessVerdict', () => {
     expect(harnessVerdict({ ...clean, cannotApply: 1 })).toBe(false);
   });
 
+  // A crashed apply writes nothing, so the patched copy stays byte-identical to
+  // the pristine and every downstream check is trivially clean. That reported
+  // PASS for a fable-5 set that applied NOTHING (an over-escaped template
+  // delimiter killed applyIdentifierMapping). The run must be gated on having
+  // completed, not only on what it produced.
+  it('fails when the apply itself did not complete', () => {
+    expect(harnessVerdict({ ...clean, applyOk: false })).toBe(false);
+    expect(harnessVerdict({ ...clean, applyOk: true })).toBe(true);
+  });
+
   it('fails on introduced raw non-ASCII', () => {
     expect(harnessVerdict({ ...clean, rawNonAscii: ['U+2014(+1)'] })).toBe(
       false
@@ -150,5 +160,31 @@ describe('applySafetyHarness: introducedUnresolvedSlots', () => {
     const orig = 'x=1;';
     const patched = 'x=`see ${SHELL_TOOL_NAME}`;';
     expect(flags(orig, patched)).toEqual([]);
+  });
+});
+
+// A splice UPSTREAM of an untouched site shifts that site's bytes, which can push
+// a legitimate binding out of the fixed look-back window. The site then reads as
+// newly dangerous although the patch never wrote it. 2.1.224 hit this with `${w}`
+// in the artifact-comments header (its `w=mr(e.threads,T)` sits ~3,000 chars back).
+// A dangerous slot counts as INTRODUCED only when its surrounding text is text the
+// patch actually authored.
+describe('applySafetyHarness: introducedUnresolvedSlots byte-shift immunity', () => {
+  const flags = (o, p) =>
+    [...introducedUnresolvedSlots(o, p)].map(([v, n]) => `${v}(+${n})`);
+
+  it('does not flag an untouched site whose binding merely shifted out of the window', () => {
+    // Same site, same surrounding text; only the distance to `let w=` grows, from
+    // inside the look-back window to outside it.
+    const site = 'A'.repeat(300) + 'return `head ${w} tail`;';
+    const orig = 'let w=count(x);' + site;
+    const patched = 'let w=count(x);' + 'B'.repeat(2000) + site;
+    expect(flags(orig, patched)).toEqual([]);
+  });
+
+  it('still flags a slot the patch genuinely authored', () => {
+    const orig = 'return `plain head tail`;';
+    const patched = 'return `plain head ${w} brand new tail`;';
+    expect(flags(orig, patched)).toEqual(['w(+1)']);
   });
 });
