@@ -101,6 +101,7 @@ import { writeCustomModelPicker } from './customModelPicker';
 import { writeAgentToolModelString } from './agentToolModelString';
 import { writeContextWindowFromCatalog } from './contextWindowFromCatalog';
 import { writeRateLimitsFromHeaders } from './rateLimitsFromHeaders';
+import { writeCustomModelAlias } from './customModelAlias';
 import { writeMaxEffortDefault } from './maxEffortDefault';
 import { writeAutonomousOperationAllModels } from './autonomousOperationAllModels';
 import { writeAutoModeClassifierModel } from './autoModeClassifierModel';
@@ -285,6 +286,13 @@ const PATCH_DEFINITIONS = [
     group: PatchGroup.MISC_CONFIGURABLE,
     description:
       'Populate statusline 5h/7d rate limits from response headers even in API-key sessions (e.g. behind a local gateway)',
+  },
+  {
+    id: 'custom-model-alias',
+    name: 'Custom model aliases',
+    group: PatchGroup.MISC_CONFIGURABLE,
+    description:
+      'Resolve settings.customModels[].alias in the model resolver so /model <alias> works (vi() only consults a hardcoded alias list; catalog aliases are ignored)',
   },
   {
     id: 'show-more-items-in-select-menus',
@@ -1249,6 +1257,12 @@ export const applyCustomization = async (
     },
     'agent-tool-model-string': {
       fn: c => writeAgentToolModelString(c),
+      condition:
+        !!config.settings.customModels &&
+        config.settings.customModels.length > 0,
+    },
+    'custom-model-alias': {
+      fn: c => writeCustomModelAlias(c, config.settings.customModels!),
       condition:
         !!config.settings.customModels &&
         config.settings.customModels.length > 0,

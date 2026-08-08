@@ -67,6 +67,7 @@ import { writeAgentToolModelString } from './agentToolModelString';
 import { writeContextWindowFromCatalog } from './contextWindowFromCatalog';
 import { writeCustomModelPicker } from './customModelPicker';
 import { writeRateLimitsFromHeaders } from './rateLimitsFromHeaders';
+import { writeCustomModelAlias } from './customModelAlias';
 import { writeWorktreeMode } from './worktreeMode';
 import { writeSessionMemory } from './sessionMemory';
 import { writeSwapRipgrepForFff } from './swapRipgrepForFff';
@@ -312,6 +313,23 @@ const INVOCATIONS: Record<PatchId, (src: string) => string | null> = {
       },
     ]),
   'rate-limits-from-headers': c => writeRateLimitsFromHeaders(c),
+  'custom-model-alias': c =>
+    writeCustomModelAlias(c, [
+      {
+        id: 'kimi-k3',
+        display_name: 'Kimi K3',
+        family: 'kimi',
+        context_window: 1048576,
+        alias: 'k3',
+      },
+      {
+        id: 'gpt-5.6-sol',
+        display_name: 'GPT-5.6 Sol',
+        family: 'gpt',
+        context_window: 372000,
+        alias: 'sol',
+      },
+    ]),
   'agent-tool-model-string': c => writeAgentToolModelString(c),
   'worktree-mode': c => writeWorktreeMode(c),
   'session-memory': c => writeSessionMemory(c),
