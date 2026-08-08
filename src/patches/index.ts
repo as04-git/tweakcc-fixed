@@ -98,6 +98,7 @@ import { writeWorktreeMode } from './worktreeMode';
 import { writeAllowCustomAgentModels } from './allowCustomAgentModels';
 import { writeCustomModelCatalog } from './customModelCatalog';
 import { writeAgentToolModelString } from './agentToolModelString';
+import { writeContextWindowFromCatalog } from './contextWindowFromCatalog';
 import { writeMaxEffortDefault } from './maxEffortDefault';
 import { writeAutonomousOperationAllModels } from './autonomousOperationAllModels';
 import { writeAutoModeClassifierModel } from './autoModeClassifierModel';
@@ -261,6 +262,13 @@ const PATCH_DEFINITIONS = [
     group: PatchGroup.MISC_CONFIGURABLE,
     description:
       'Inject custom (non-Anthropic) models into the embedded model catalog so they appear in /model with correct context window, effort rungs, and subagent support (built-in families untouched)',
+  },
+  {
+    id: 'context-window-from-catalog',
+    name: 'Context window from catalog',
+    group: PatchGroup.MISC_CONFIGURABLE,
+    description:
+      "Make the context-window resolver read a model's catalog context.window (fixes custom models reporting the hardcoded 200k to the statusline + auto-compact)",
   },
   {
     id: 'show-more-items-in-select-menus',
@@ -1114,6 +1122,12 @@ export const applyCustomization = async (
     },
     'custom-model-catalog': {
       fn: c => writeCustomModelCatalog(c, config.settings.customModels!),
+      condition:
+        !!config.settings.customModels &&
+        config.settings.customModels.length > 0,
+    },
+    'context-window-from-catalog': {
+      fn: c => writeContextWindowFromCatalog(c),
       condition:
         !!config.settings.customModels &&
         config.settings.customModels.length > 0,

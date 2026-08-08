@@ -64,6 +64,7 @@ import { writeComplexityRouter } from './complexityRouter';
 import { writeAllowCustomAgentModels } from './allowCustomAgentModels';
 import { writeCustomModelCatalog } from './customModelCatalog';
 import { writeAgentToolModelString } from './agentToolModelString';
+import { writeContextWindowFromCatalog } from './contextWindowFromCatalog';
 import { writeWorktreeMode } from './worktreeMode';
 import { writeSessionMemory } from './sessionMemory';
 import { writeSwapRipgrepForFff } from './swapRipgrepForFff';
@@ -298,6 +299,7 @@ const INVOCATIONS: Record<PatchId, (src: string) => string | null> = {
         default_effort: 'high',
       },
     ]),
+  'context-window-from-catalog': c => writeContextWindowFromCatalog(c),
   'agent-tool-model-string': c => writeAgentToolModelString(c),
   'worktree-mode': c => writeWorktreeMode(c),
   'session-memory': c => writeSessionMemory(c),
