@@ -15,8 +15,8 @@ anything; the failure modes section will save you.
 ```
 ┌──────────────────────────────────────────────────────────────────┐
 │ Claude Code 2.1.220 (patched binary, native ELF)                 │
-│   5 tweakcc patches → model catalog, picker, ctx window,          │
-│   agent-tool enum, rate-limit gate                                │
+│   6 tweakcc patches → model catalog, picker, ctx window,          │
+│   agent-tool enum, rate-limit gate, /model aliases                │
 └──────────────┬───────────────────────────────────────────────────┘
                │ ANTHROPIC_BASE_URL=http://127.0.0.1:8317
                │ ANTHROPIC_API_KEY=<local proxy key>
@@ -61,7 +61,8 @@ the credential source (below); do not run CC through it anymore.
 | Proxy config + creds        | `~/.cli-proxy-api/`                                                                        | you             |
 | Proxy service               | `~/.config/systemd/user/cliproxyapi.service` (+ linger on)                                 | systemd         |
 | Launcher                    | `~/.local/bin/cx`                                                                          | you             |
-| Statusline                  | `~/.claude/statusline-command.sh`                                                          | you             |
+| CC env (replaces cx wiring) | `~/.claude/settings.json` → `env` (BASE_URL/API_KEY/AUTH_TOKEN, §4.7)                      | you             |
+| Statusline                  | `~/.claude/statusline.py` (Python; §3.8) + `~/.claude/statusline-quota-history.log`        | you             |
 | Go toolchain                | `~/.local/go-sdk/go/bin/go` (NOT in PATH)                                                  | you             |
 | Quota state (runtime)       | `~/.cli-proxy-api/quota-state.json`                                                        | proxy writes    |
 | Credential sources          | `~/.claudish/{codex,kimi}-oauth.json`, `~/.codex/auth.json`, `~/.claude/.credentials.json` | OAuth flows     |
@@ -70,7 +71,7 @@ the credential source (below); do not run CC through it anymore.
 
 - tweakcc-fixed: `cc6b9e4` (catalog + agent-tool), `3f2ebba` (ctx window),
   `168783a` (picker), `5aae546` (rate-limit gate), `2623f27` (Opus 4.7/4.8
-  picker list)
+  picker list), `ec00ada` (aliases), `85d5f03` (statusline rewrite)
 - CLIProxyAPI fork: `4256991` (Codex+Kimi header synthesis), `eaa2782`
   (quota-state.json)
 
@@ -79,7 +80,7 @@ the credential source (below); do not run CC through it anymore.
 ## 3. The tweakcc patches (Problem B)
 
 All config-driven via `settings.customModels` in `~/.tweakcc/config.json`; all
-five condition on that array being non-empty. Apply with:
+six condition on that array being non-empty. Apply with:
 
 ```bash
 cd ~/tweakcc-fixed
@@ -144,7 +145,32 @@ set (any proxy), `ii()` is false and headers are ignored. This neutralizes the
 gate in `cpo`: `let o=ii();if(!rir(o)){...return}` → `if(!1){...}`. Absent
 headers still yield an empty map; subscriber sessions unaffected.
 
-### 3.6 Also enabled
+### 3.6 `custom-model-alias` (`src/patches/customModelAlias.ts`)
+
+`vi()` (the model resolver) only consults a hardcoded alias list
+(`m1e=["sonnet","opus","haiku","fable","best",...,"opusplan"]`); catalog
+`aliases{}` are never read there, so `alias` fields on custom entries were
+inert and `/model k3` fell through `vi()` unchanged and 400'd at the proxy.
+This injects a literal alias map at the head of `vi()`, before the built-in
+switch:
+
+```diff
+ function vi(e){let t=e.trim(),r=t.toLowerCase(),n=Wb(r),o=n?Qs(r).trim():r;
++ let am={"k3":"kimi-k3","sol":"gpt-5.6-sol",...};if(am[o])return am[o];
+ if(RI(o))switch(o){...
+```
+
+One injection covers `/model`, `--model`, agent frontmatter, and the Agent
+tool's `model` param — everything downstream (catalog lookup `ww`, ctx window
+`mZc`, allowlist `R5r`, which calls `vi()` FIRST) keys off `vi()`'s return.
+Matching is case-insensitive; `k3[1m]` resolves to `kimi-k3` (the `[1m]` is
+stripped before lookup and deliberately not re-appended). **Guards**: refuses
+aliases colliding with built-in resolver words, with another custom model's
+id, or duplicates. Alias changes require `--restore && --apply` (the anchor no
+longer matches once injected; a partial pair-match fails loudly instead of
+double-injecting).
+
+### 3.7 Also enabled
 
 - `misc.enableModelCustomizations: true` + `CUSTOM_MODELS` in
   `modelSelector.ts` extended with Opus 4.7/4.8 (the hardcoded list stopped at
@@ -152,17 +178,54 @@ headers still yield an empty map; subscriber sessions unaffected.
 
 ### Current `customModels` (as of 2026-08-08)
 
-| id              | family | context_window | effort             | default |
-| --------------- | ------ | -------------- | ------------------ | ------- |
-| `kimi-k3`       | kimi   | 1048576        | low/high/max       | high    |
-| `kimi-k3-256k`  | kimi   | 262144         | low/high/max       | high    |
-| `gpt-5.6-sol`   | gpt    | 372000         | low/med/high/xhigh | high    |
-| `gpt-5.6-terra` | gpt    | 372000         | low/med/high/xhigh | xhigh   |
-| `gpt-5.6-luna`  | gpt    | 372000         | low/med/high/xhigh | high    |
+| id              | family | alias   | context_window | effort             | default |
+| --------------- | ------ | ------- | -------------- | ------------------ | ------- |
+| `kimi-k3`       | kimi   | `k3`    | 1048576        | low/high/max       | high    |
+| `kimi-k3-256k`  | kimi   | —       | 262144         | low/high/max       | high    |
+| `gpt-5.6-sol`   | gpt    | `sol`   | 372000         | low/med/high/xhigh | high    |
+| `gpt-5.6-terra` | gpt    | `terra` | 372000         | low/med/high/xhigh | xhigh   |
+| `gpt-5.6-luna`  | gpt    | `luna`  | 372000         | low/med/high/xhigh | high    |
 
-No `alias` fields — catalog `aliases{}` do NOT affect `/model` resolution
-(`vi()` only consults the hardcoded alias list: sonnet/opus/haiku/fable/best/
-opusplan). Short aliases would need a separate `vi()` patch; unbuilt.
+Aliases resolve via the `custom-model-alias` patch (§3.6). All four verified
+live end-to-end 2026-08-08 (`/model k3` → `kimi-k3` on the wire, correct
+context window).
+
+---
+
+### 3.8 The statusline (not a patch)
+
+`~/.claude/statusline.py` (versioned + tested in `docs/gateway-assets/`), a
+Python rewrite of the old bash `statusline-command.sh` (rollback: point
+`statusLine.command` in settings.json back at it). Two lines; line 2 renders
+model/effort, context, cost/time, and per-provider quotas. Key properties:
+
+- **Context segment**: YAS-style state word (`Smart/Coasting/Foggy/Cooked/
+Dumb` at 25/50/70/90) + 4-wide micro-bar + pct + tokens. Toggles:
+  `CC_SL_WORDS=0`, `CC_SL_BAR=0`.
+- **Verbosity ladder** for quotas: renders as much as the width allows and
+  sheds in a fixed order — cost/time first (standing call), then burn rate,
+  then quiet providers collapse to `16/52` pairs, then countdowns, then pairs
+  to the binding number, then word, then bar. Full form: per provider, both
+  windows named with countdowns (`✳  5h 16% ↺43m · 7d 52% ↺7h53m`).
+- **Width source**: CC injects a fresh `COLUMNS` into the statusline spawn env
+  on EVERY render (verified 2026-08-08; absent from the CC process env, so it
+  is computed per-spawn — resize-safe). No tty of any kind is available to the
+  spawn; don't bother with ioctls except as fallback.
+- **Burn rate**: quota-state samples are logged (throttled, 3-day keep) to
+  `~/.claude/statusline-quota-history.log`; the trailing-1h slope renders as
+  `+N%/h`, amber when the pace runs the window dry before reset. `CC_SL_BURN=0`
+  to disable.
+- **Provider-generic**: the renderer iterates whatever providers appear in
+  `quota-state.json` (known glyphs `✳/⬡/☾` for claude/codex/kimi; a new
+  provider gets its first letter until added to `PROVIDER_GLYPHS`) — adding
+  e.g. Gemini later is a proxy-side change only.
+- **Glyph quirk**: `✳` (U+2733) has emoji presentation in several fonts and
+  overlaps the next glyph in-cell (fine in window titles — those are OS-drawn);
+  the glyph string carries a trailing space as a workaround, regression-tested.
+
+Golden tests (`statusline_test.py`, 18 cases) cover the ladder, burn rate
+coloring, stale/native fallbacks, and toggles. Render time ~40ms vs ~220ms for
+the bash version (which forked jq once per field).
 
 ---
 
@@ -261,15 +324,52 @@ session logs):
 - `kimi-oauth.json` ← `~/.claudish/kimi-oauth.json` + `~/.claudish/kimi-device-id`.
 
 Formats: `internal/auth/{claude,codex,kimi}/token.go` structs. The proxy has a
-15m refresh worker and hot-reloads auth files. **Kimi's token is short-lived
-(~5-8h)**; if Kimi 401s persist, re-sync from claudish's refreshed file.
-Codex ~8 days. Claude refreshed continuously by CC itself.
+built-in auth auto-refresh subsystem (`sdk/cliproxy/auth/auto_refresh_loop.go`;
+kimi is registered with a 5-minute lead in `sdk/auth/refresh_registry.go`) —
+**Kimi tokens auto-renew with no external help**: the access token lives only
+~15 minutes and the loop refreshes it on a ~10-minute cadence (verified in the
+service logs: `auto-refresh scheduler due` → `refreshed kimi, <nil>`), plus a
+reactive path refreshes on a 401 before failover (`conductor_refresh.go`).
+Claude and Codex are refreshed the same way. **The resync tool below is only
+needed if a REFRESH token itself is rejected** (revocation, or the provider
+invalidates the chain) — not for ordinary expiry.
 
 **Resync tool:** `python3 ~/.cli-proxy-api/resync-credentials.py [claude|codex|kimi]`
 (default: all three). Converts the sources above into the proxy's storage
 format in place; the proxy hot-reloads.
 
-### 4.7 systemd (the "rock solid" layer)
+### 4.7 Plain `claude` == `cx` (settings-env)
+
+`~/.claude/settings.json` carries an `env` block CC applies to itself at
+launch, so the proxy wiring no longer depends on launching through `cx`:
+
+```json
+"env": {
+  "ANTHROPIC_BASE_URL": "http://127.0.0.1:8317",
+  "ANTHROPIC_API_KEY": "<local proxy key>",
+  "ANTHROPIC_AUTH_TOKEN": "<local proxy key>"
+}
+```
+
+All three are needed: `BASE_URL`+`API_KEY` cover interactive use (what `cx`
+sets), but **headless `-p` runs pre-flight through a login gate that rejects
+the API-key path** ("Not logged in · Please run /login" — raised when the
+resolver source isn't `ANTHROPIC_API_KEY`/`apiKeyHelper`); `AUTH_TOKEN` is the
+bearer path headless accepts. `cx` remains as the proxy-autostart convenience
+but is otherwise redundant (settings.json is mode 600 — it contains the key).
+
+**Why plain `claude` failed before this:** no `ANTHROPIC_*` in the shell
+environment → default `api.anthropic.com` + `~/.claude/.credentials.json`,
+which is a BROKEN credential: access-token-only, no refresh token,
+`expiresAt` pinned to the 1970 epoch → permanently "expired", unrefreshable,
+login wall. The proxy holds the healthy Claude OAuth and self-refreshes it;
+the CC-side file is only an identity anchor for interactive sessions — do not
+"fix" it by deleting it without testing interactive startup first (the
+occasional in-session "OAuth expired" blips trace to it; a fresh `cx` launch
+rewrites/works around it, which is why opening another session heals the
+first).
+
+### 4.8 systemd (the "rock solid" layer)
 
 `~/.config/systemd/user/cliproxyapi.service`: `Restart=always`,
 `RestartSec=2`, `KillMode=process`. `loginctl enable-linger` is ON (starts at
@@ -314,16 +414,23 @@ End-to-end (proxy + patched CC, fresh config dir):
 
 ```bash
 export CLAUDE_CONFIG_DIR=/tmp/cc-test ANTHROPIC_BASE_URL=http://127.0.0.1:8317 \
-       ANTHROPIC_API_KEY=<local key>
+       ANTHROPIC_AUTH_TOKEN=<local key>
 ~/.local/bin/claude -p "hi" --model kimi-k3 --output-format json \
   | jq '.modelUsage | to_entries[0].value | {canonicalModel, contextWindow, maxOutputTokens}'
 # expect: kimi-k3 / 1048576 / 65536
 ```
 
+NB: headless `-p` needs `ANTHROPIC_AUTH_TOKEN`, not `ANTHROPIC_API_KEY` (§4.7);
+a fresh `CLAUDE_CONFIG_DIR` additionally needs a seeded `.claude.json` — or
+just rely on the settings-env and run without `CLAUDE_CONFIG_DIR`.
+
 - Picker entries in binary: `grep -ac '"value":"kimi-k3","label":"Kimi K3"' <binary>` → 1
+- Alias map in binary: `grep -ac '"k3":"kimi-k3","sol":"gpt-5.6-sol"' <binary>` → 1
+- Alias end-to-end: `claude -p "say ok" --model k3 --output-format json | jq '.modelUsage|keys'` → `["kimi-k3"]`
 - Rate-limit gate neutralized: `grep -ac 'if(!1){if(UDt={}' <binary>` → 1
 - Quota headers on the wire: `curl -D - -o /dev/null <any /v1/messages call> | grep -i anthropic-ratelimit`
-- Statusline render: `echo '<status JSON>' | bash ~/.claude/statusline-command.sh`
+- Statusline render: `echo '<status JSON>' | python3 ~/.claude/statusline.py`;
+  golden tests: `python3 docs/gateway-assets/statusline_test.py`
 
 ---
 
@@ -348,8 +455,10 @@ export CLAUDE_CONFIG_DIR=/tmp/cc-test ANTHROPIC_BASE_URL=http://127.0.0.1:8317 \
 **Proxy upgrade**: merge upstream into the fork, resolve against
 `aryan/rate-limit-headers` (two commits, small surface), rebuild, restart.
 
-**rotate/repair creds**: `python3 ~/.cli-proxy-api/resync-credentials.py <provider>`
-(§4.6); the proxy hot-reloads the file.
+**rotate/repair creds**: only needed when a REFRESH token is rejected (the
+proxy auto-refreshes access tokens itself, §4.6):
+`python3 ~/.cli-proxy-api/resync-credentials.py <provider>`; the proxy
+hot-reloads the file.
 
 **Reverting everything**: `node dist/index.mjs --restore` (CC back to
 pristine), `systemctl --user disable --now cliproxyapi`, use plain `claude`.
@@ -363,14 +472,25 @@ pristine), `systemctl --user disable --now cliproxyapi`, use plain `claude`.
 - **`/usage` box and picker still read as an "API session"** — `ii()` is still
   false (identity vs transport). Fixing means separating OAuth identity from
   API-key transport; deliberately untouched (attribution-confusion risk).
-- **Short aliases** (`/model k3`) don't resolve — `vi()` never reads catalog
-  aliases. Needs a `vi()` patch; parked.
 - **kimi-k3's 1M window** is from the model registry, not a live probe.
 - **Prompt bundles parked**: `opus_5_prompt_bundle`, `fable_5_mitigations`,
   `lean_prompt` capabilities are NOT set on custom entries (long default prompt
   everywhere). Per-section env vars exist for testing:
   `CLAUDE_CODE_BISON_CAIRN` (delivering-work), `CLAUDE_CODE_LARCH_CISTERN`
-  (corrections).
+  (corrections). **Backlog plan**: mine the system prompts Codex CLI uses for
+  the gpt-5.6 family and Kimi Code uses for k3 (fan out parallel Luna
+  subagents at xhigh to collate them), then attach CC prompt-bundle
+  capabilities to the custom catalog entries with our own prompts informed by
+  those native-CLI best practices.
+- **Gemini provider candidate**: Google AI Pro sub available; CLIProxyAPI
+  supports Gemini OAuth. Proxy-side addition only — the statusline renderer is
+  already provider-generic (§3.8) and CC-side needs only a new `customModels`
+  entry.
+- **`~/.claude/.credentials.json` is deliberately weird** (§4.7): epoch
+  `expiresAt`, no refresh token. Interactive sessions tolerate it (identity
+  anchor); headless must use `ANTHROPIC_AUTH_TOKEN`. Replacing it with a
+  healthy OAuth export would quiet the occasional in-session "OAuth expired"
+  blip, but test interactive startup before touching it.
 - **Pricing absent** on injected catalog entries — CC-side cost readout for
   custom models is absent/zero by design (proxy still tracks real usage).
 - **`gpt-5.4` 1M mode** advertised but untested; `gpt-5.4` not added to
@@ -386,7 +506,8 @@ out.js <binary>` to read it):
 - Catalog object: `Skl={schema_version:1,pricing_tiers:...,models:[...],
 aliases:{...},defaults:{},best:"fable",latest_per_family:{...},
 alias_migration:{}}` → `G8m()` Zod `.loose()` parse; failure → empty `W8m`.
-- `vi(e)` — model resolver; hardcoded alias cases only.
+- `vi(e)` — model resolver; built-in alias cases via `m1e` + switch; custom
+  aliases injected at its head by the `custom-model-alias` patch (§3.6).
 - `ww(e)` — catalog by-id lookup (`q8m().get`).
 - `lo(e)` — alias/[1m] → base id. `Wu(e)` — strips `[1m]` from wire model.
 - `mZc(e,t)` — context window (patched). `lst(e)` — max output (reads catalog).
