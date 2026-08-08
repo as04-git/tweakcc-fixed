@@ -36580,5 +36580,3407 @@
   },
   "cfdcbbd9329a1d03b80efff39c44a2478ec6a4c1": {
     "facing": "ui"
+  },
+  "f14282dbac963e5b56ae927769ec93c3110a36ae": {
+    "facing": "model",
+    "id": "tool-description-artifact-database-guidance",
+    "name": "Tool Description: Artifact database guidance",
+    "desc": "Appended to the Artifact tool description when the artifact-database capability is live, explaining read_db/write_db ops and that stored rows are untrusted viewer data."
+  },
+  "041b33fa50798618a5cfd810bb05ec8f7e004b42": {
+    "facing": "model",
+    "id": "tool-description-sendmessage-cross-session-guidance",
+    "name": "Tool Description: SendMessage cross-session guidance",
+    "desc": "Cross-session section appended to the SendMessage tool description explaining peer addressing, reply routing, disambiguation and the permission-laundering ban."
+  },
+  "c3bf4736cffdc4eaa3580c9e84997ad0e6f8e148": {
+    "facing": "model",
+    "id": "system-prompt-artifact-comment-decision-reformat-retry",
+    "name": "System Prompt: Artifact comment decision reformat retry",
+    "desc": "Retry instruction appended when the artifact-comment decision model returned a non-conforming response; reproduces the bad response inside randomized fences as untrusted data."
+  },
+  "a0ecffc250254ab3cd7ffeffaecf86b46cd1a25e": {
+    "facing": "model",
+    "id": "system-reminder-cloud-review-no-output",
+    "name": "System Reminder: Cloud review no output",
+    "desc": "Task-notification trailing text injected when a /code-review ultra cloud run finished with no findings output; reworded successor of the 2.1.221 id (now names \"plain /code-review\")."
+  },
+  "5b6b4b78f6f39ba8f2a2b8dd45e8b1625100db40": {
+    "facing": "model",
+    "id": "tool-description-self-hosted-runner-equivalent-ui-suffix",
+    "name": "Tool Description: Self-hosted runner equivalent-UI suffix",
+    "desc": "Shared suffix concatenated onto every self-hosted-runner admin tool description, telling the model to surface the equivalent.ui Admin-UI path and that auth is handled out of band."
+  },
+  "b2dc348142c7c09d06a369f2b3763353b40afaf4": {
+    "facing": "model",
+    "id": "system-prompt-coordinator-cross-session-peer-guidance",
+    "name": "System Prompt: Coordinator cross-session peer guidance",
+    "desc": "Bullet in the coordinator-mode system prompt describing peer Claude sessions as addressable but non-authoritative, injected when cross-session messaging is available."
+  },
+  "080c462d41a3f7eecd3cc04d32128f4eb6c0752c": {
+    "facing": "model",
+    "id": "system-prompt-memory-update-outdated-memories",
+    "name": "System Prompt: Update outdated memories",
+    "desc": "Memory-hygiene bullet in the \"# Memory\" system-prompt section instructing the model to revise or delete memories that turn out to be wrong."
+  },
+  "7d1fc7d4eccad1424f2f22f2f70eec9d418afcc8": {
+    "facing": "model",
+    "id": "system-prompt-memory-no-sensitive-data-in-shared",
+    "name": "System Prompt: No sensitive data in shared memories",
+    "desc": "Line in the \"# Memory\" system-prompt section forbidding API keys or credentials in shared/team memory stores."
+  },
+  "e7dc1f0ca9da42b4e8c54fed6eb0a3b1f69324f9": {
+    "facing": "internal"
+  },
+  "077c56b1b6c7738c49b6e578ff7ec9ff989257e4": {
+    "facing": "model",
+    "id": "tool-result-send-message-device-gated-reply-only",
+    "name": "Tool Result: SendMessage device-gated session reply-only",
+    "desc": "SendMessage tool result returned when the recipient name resolves to a device-gated (bridge reply-only) session that cannot be addressed by name from this machine."
+  },
+  "6d738e6e80de1253e3687c236fa9977ecec92318": {
+    "facing": "model",
+    "id": "tool-result-sendfile-device-gated-reply-only",
+    "name": "Tool Result: SendFile device-gated session reply-only",
+    "desc": "SendFile refusal text returned as the tool result when the target name resolves to a device-gated cloud/local session that cannot receive files by name from this machine."
+  },
+  "78914789fc2a7a347c0de09d8bd4e0d567cedd60": {
+    "facing": "ui"
+  },
+  "ce2a46c52e9672aabb291ea44733a72d6037014f": {
+    "facing": "ui"
+  },
+  "fcebbebedb5b9faadd37dc70425f60f764dd0609": {
+    "facing": "ui"
+  },
+  "d14d243dd03c4c40d90f29b3d416cfecc5122f9e": {
+    "facing": "internal"
+  },
+  "42c58f42cc8163ab05e9b89de152748ceca5dfbc": {
+    "facing": "ui"
+  },
+  "5417304814bba0d0031cdc071771402811fee88b": {
+    "facing": "ui"
+  },
+  "aa670749545d4a999da6f150bee8e3bc0fa18229": {
+    "facing": "ui"
+  },
+  "48b2f0579d650e4296ac6e2bab4f44605713e731": {
+    "facing": "model",
+    "id": "tool-result-memory-list-empty",
+    "name": "Tool Result: Memory list empty",
+    "desc": "Placeholder tool-result content returned by memory_list when the requested store or path contains no entries."
+  },
+  "62161f3eeea5a378c624fc7344237d5332961a92": {
+    "facing": "internal"
+  },
+  "b331873e9353982d10bb041ef6da99a523e7f57e": {
+    "facing": "model",
+    "id": "data-cross-session-delivery-notice-denied",
+    "name": "Data: Cross-session delivery notice (denied)",
+    "desc": "Meta prompt injected into the conversation when the recipient user declined one or more of this session's outbound cross-session messages."
+  },
+  "c399fff3d782e95fa5ac4cc26051210baa0740a4": {
+    "facing": "model",
+    "id": "data-cross-session-delivery-notice-held",
+    "name": "Data: Cross-session delivery notice (held)",
+    "desc": "Meta prompt injected when outbound cross-session messages are parked awaiting the recipient user's approval."
+  },
+  "2b9e5224f5c9600b01225656fa26a7628fd8ee49": {
+    "facing": "model",
+    "id": "data-cross-session-delivery-notice-expired",
+    "name": "Data: Cross-session delivery notice (expired)",
+    "desc": "Meta prompt injected when outbound cross-session messages expired before the recipient user approved them."
+  },
+  "e34fa8974d8052ab1c2d158b90dc8a791a3023c3": {
+    "facing": "ui"
+  },
+  "28ecc542fc5c2706569a8cffdcf160102c3e9180": {
+    "facing": "ui"
+  },
+  "44e759878bbced8f59216f6b119a3b85bdd8650e": {
+    "facing": "ui"
+  },
+  "208262f5610c31cbe4119baef759cca3078819e7": {
+    "facing": "ui"
+  },
+  "dcad4f5df41b48f42d51ffe935aa1ef7f3b78cd5": {
+    "facing": "ui"
+  },
+  "b7de6f8447c284ce7a86e735817585e9ced0ea2a": {
+    "facing": "ui"
+  },
+  "7f6ce1c1b0985a3be6cd0546bdfa098d37949143": {
+    "facing": "ui"
+  },
+  "bc6442b74e7f0f968100aff40e055af5cb5b9cdc": {
+    "facing": "ui"
+  },
+  "7c1d0a6ba28ee600b203024cd356ec0e5ad3b620": {
+    "facing": "ui"
+  },
+  "ad1577a27564a03e7000b486150ffd821cb02fce": {
+    "facing": "ui"
+  },
+  "ee18bd8e437d31926186fdfc2620f026cdc7d2e4": {
+    "facing": "ui"
+  },
+  "84f47f3fc6d45178382c74658956f1453a29e6b8": {
+    "facing": "ui"
+  },
+  "589fa341fb260fb8dce609f88cebe492fd7b65d8": {
+    "facing": "ui"
+  },
+  "890f5f1f728ffe388cb4949ef2dbdcc2c75af446": {
+    "facing": "ui"
+  },
+  "c80b248018926eea5ca1577e31ae2cbebb9d3694": {
+    "facing": "ui"
+  },
+  "3a6fe15ae75474086356126d1f3ecf031d237db7": {
+    "facing": "ui"
+  },
+  "1f02b43e3972d8fa04cfea9d0c401db587bd6109": {
+    "facing": "model",
+    "id": "system-prompt-memory-store-index-pointer-instructions",
+    "name": "System Prompt: Memory store index pointer instructions",
+    "desc": "Step-2 of the \"How to save memories\" section used when memories live in a memory-service store: tells the model to add a one-line pointer to the store's index document via memory_write."
+  },
+  "396a21b7e53ddde7459d342d7ff0e46eaae32c60": {
+    "facing": "model",
+    "id": "system-prompt-memory-index-pointer-instructions",
+    "name": "System Prompt: Memory index pointer instructions",
+    "desc": "Step-2 of the \"How to save memories\" section for the file-based memory directory: add a one-line pointer into the index file, never memory content."
+  },
+  "6cc330547c61d11a39d41b2d965b404c3ef9a4fa": {
+    "facing": "model",
+    "id": "data-teleport-not-available-in-session",
+    "name": "Data: /teleport unavailable in this session",
+    "desc": "Explanatory stdout returned for /teleport on a headless/cloud surface; wrapped in <local-command-stdout> and pushed into the conversation, so the model reads it and relays the instruction."
+  },
+  "0a6b2cfef7c46f15e3b7b90bd2aa879d35a3c8d3": {
+    "facing": "model",
+    "id": "data-self-hosted-orchestrator-pool-active-sessions-metric-help",
+    "name": "Data: Orchestrator pool_active_sessions metric help",
+    "desc": "Prometheus HELP line for the orchestrator pool_active_sessions gauge; reaches the model as part of the raw /metrics text returned by self_hosted_runner_read_metrics."
+  },
+  "17f4e0f496ed101998ad8778a61abe6d0f06d1ec": {
+    "facing": "model",
+    "id": "data-self-hosted-orchestrator-spawn-hooks-metric-help",
+    "name": "Data: Orchestrator spawn_hooks_total metric help",
+    "desc": "Prometheus HELP line for the orchestrator spawn_hooks_total counter, including its exit-code contract; reaches the model via the read_metrics raw payload."
+  },
+  "291377ae32cdba34fba3b4694d4743dcff87b01b": {
+    "facing": "model",
+    "id": "data-self-hosted-runner-session-metrics-help",
+    "name": "Data: Self-hosted runner session metrics help",
+    "desc": "Prometheus HELP text for the runner session lifecycle counters (started/completed/failed/interrupted); reaches the model via the read_metrics raw payload."
+  },
+  "9395278931a5b0acd662da57fdb14713776157e3": {
+    "facing": "model",
+    "id": "data-self-hosted-runner-poll-errors-metric-help",
+    "name": "Data: Runner poll_errors_total metric help",
+    "desc": "Prometheus HELP line for the runner PollWork error-kind counter; reaches the model via the read_metrics raw payload."
+  },
+  "8a88884ae53b100fd562ca6164ab644d62b0b950": {
+    "facing": "model",
+    "id": "data-self-hosted-runner-session-idle-metric-help",
+    "name": "Data: Runner session_idle_seconds metric help",
+    "desc": "Prometheus HELP line for the per-session idle gauge; reaches the model via the read_metrics raw payload."
+  },
+  "a4831fc48430d96b9662c47062fd9b2d276c70bb": {
+    "facing": "model",
+    "id": "data-self-hosted-orchestrator-poll-errors-metric-help",
+    "name": "Data: Orchestrator poll_errors_total metric help",
+    "desc": "Prometheus HELP line for the orchestrator PollSpawnHints error-kind counter; reaches the model via the read_metrics raw payload."
+  },
+  "73f17f44b28793180d33e5b5fcdc1d0919336a44": {
+    "facing": "model",
+    "id": "data-self-hosted-orchestrator-pool-pending-sessions-metric-help",
+    "name": "Data: Orchestrator pool_pending_sessions metric help",
+    "desc": "Prometheus HELP line for the environment-wide pending-session gauge used for autoscaling; reaches the model via the read_metrics raw payload."
+  },
+  "87645deea6cbfc024803bbcb18306812fc7848f6": {
+    "facing": "model",
+    "id": "data-self-hosted-orchestrator-queue-pending-sessions-metric-help",
+    "name": "Data: Orchestrator queue_pending_sessions metric help",
+    "desc": "Prometheus HELP line for the claimable spawn-hint queue gauge; reaches the model via the read_metrics raw payload."
+  },
+  "96f106bc1739130ca3411678534e5ba62aadb501": {
+    "facing": "model",
+    "id": "data-self-hosted-orchestrator-session-queue-wait-metric-help",
+    "name": "Data: Orchestrator session_queue_wait_seconds metric help",
+    "desc": "Prometheus HELP line for the session queue-wait histogram; reaches the model via the read_metrics raw payload."
+  },
+  "53121aca6fa7fb3db141a42686fbf78d11b00f79": {
+    "facing": "ui"
+  },
+  "e30a1fa88709d72ec07ccd97366de80e7080a75e": {
+    "facing": "internal"
+  },
+  "0fd39d10c47c244011fb93f7ee54abd9fe7ffcdc": {
+    "facing": "model",
+    "id": "skill-artifact-pr-review-html-template",
+    "name": "Skill: Artifact PR review HTML template",
+    "desc": "The bundled artifact-pr-review skill asset template.html that the model fills slot-by-slot when building a PR-review artifact; reworded/expanded successor of the 2.1.221 id."
+  },
+  "2cb83b8f92c8ba2f0e2688ba29eff1d3ef425f20": {
+    "facing": "model",
+    "id": "tool-result-tool-use-error-open-tag",
+    "name": "Tool Result: tool_use_error open tag",
+    "desc": "Wrapper tag opening the error payload of a tool_result block, e.g. the \"No such tool available\" result the model receives."
+  },
+  "ac75e46b98a953dbceeecbb53bf847133800941e": {
+    "facing": "model",
+    "id": "system-prompt-artifact-comment-list-framing",
+    "name": "System Prompt: Artifact comment list framing",
+    "desc": "Fence header wrapping the Artifact comment-list tool result, framing viewer comments as untrusted data and explaining the tool-emitted attribution brackets."
+  },
+  "c6d93691aaad377e4fbe67ae605c62b6622ad7b0": {
+    "facing": "model",
+    "id": "tool-result-subagent-notice-warning-prefix",
+    "name": "Tool Result: Subagent notice warning prefix",
+    "desc": "Warning-marked notice block prepended to a subagent's returned content (e.g. narrowed tool permissions) in the Agent tool result the parent model reads."
+  },
+  "e5951cc685541f2cc3af0d3d166fb785a0256cd2": {
+    "facing": "ui"
+  },
+  "b27b3e0cb4a10e8cd53fdc15a7a8471443ad8815": {
+    "facing": "ui"
+  },
+  "0c51aadf7d7e6f1dd01e89949abe4760c3befb99": {
+    "facing": "ui"
+  },
+  "b6ffb7c538d1e4b0a6da014418ffe5f279113a76": {
+    "facing": "ui"
+  },
+  "e666901d88558859a5880d6b00f641e6a642983c": {
+    "facing": "ui"
+  },
+  "4434fd73be7f935225c38b2247ed745a0abd48cb": {
+    "facing": "model",
+    "id": "tool-result-memory-list-entries-wrapper",
+    "name": "Tool Result: memory_list entries wrapper",
+    "desc": "Wrapper the memory_list tool result uses around the shared-store reference-data header, the listed document rows, and the 'call again with cursor' continuation note."
+  },
+  "8722e67ac4a00a3336f46f7923c79b0ccd3654d2": {
+    "facing": "model",
+    "id": "tool-result-memory-read-document-wrapper",
+    "name": "Tool Result: memory_read document wrapper",
+    "desc": "Wrapper the memory_read tool result uses around a fetched memory document \u2014 shared-store reference-data header, updated/version line, and the document body."
+  },
+  "878c87c9bcade7dc6a7a0dcb021e7205011ace08": {
+    "facing": "ui"
+  },
+  "c1f223e6c9811bfcef7799c2d6d4bc1cd1ce2514": {
+    "facing": "model",
+    "id": "tool-result-memory-write-path-missing",
+    "name": "Tool Result: memory_write path missing",
+    "desc": "Error returned to the model when memory_write targets a path that does not exist in the store and if_version was not set to new."
+  },
+  "5055a5fe50e7d167879c92801685c96e0b1d192a": {
+    "facing": "model",
+    "id": "tool-result-worktree-isolated-git-redirect-blocked",
+    "name": "Tool Result: Worktree-isolated git redirect blocked",
+    "desc": "Bash tool result emitted when a worktree-isolated session/agent runs a git command that redirects out of its worktree; reworded from the 2.1.221 id (noun/possessive now parameterised for sessions vs agents)."
+  },
+  "531487a6df4cba0a2ce4256a1d79e31580467745": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-isolation-escape-blocked",
+    "name": "Tool Result: Bash worktree isolation escape blocked",
+    "desc": "Bash tool result emitted when the resolved working directory of a command lands in the shared checkout instead of the session's isolation worktree; reworded from the 2.1.221 id (noun/possessive now parameterised)."
+  },
+  "0aa1c497f412c6644ec70352c25ee0f3971e8a7b": {
+    "facing": "model",
+    "id": "system-prompt-artifact-comment-thread-framing",
+    "name": "System Prompt: Artifact comment thread framing",
+    "desc": "Frames an Artifact comment thread and optional anchor context as untrusted viewer data using randomized fences; injected when Claude composes an auto-reply to artifact comments."
+  },
+  "4d06b0089253c46c4443ccf892028e31d40c36d4": {
+    "facing": "model",
+    "id": "data-import-skipped-skill-yaml-frontmatter",
+    "name": "Data: Codex skill import skipped for YAML frontmatter",
+    "desc": "Skip reason recorded when /import declines to copy a Codex skill whose SKILL.md begins with YAML frontmatter; surfaces to the model through the local /import command's <local-command-stdout>."
+  },
+  "fbea396effd59484af8d419ff22b22e050ff0dd8": {
+    "facing": "model",
+    "id": "slash-command-code-review-inline-assembly",
+    "name": "Slash Command: Code review inline assembly",
+    "desc": "Template that assembles the inline /code-review prompt from the target header, base review text, cell-specific block and the optional guidance tails; gained one extra appended slot in 2.1.224."
+  },
+  "33663d7928244b07c19321dc952fcef5ada2aca3": {
+    "facing": "model",
+    "id": "tool-parameter-sendmessage-summary-preview",
+    "name": "Tool Parameter: SendMessage summary preview",
+    "desc": "Description of SendMessage's `summary` parameter; reworded from the 2.1.221 id to add the truncation-not-rejection and first-line-only behaviour."
+  },
+  "6b909ca4f69f72c4ac4134fc17b17bb7a2d06645": {
+    "facing": "model",
+    "id": "system-prompt-artifact-comment-thread-activation-trigger",
+    "name": "System Prompt: Artifact comment thread activation trigger",
+    "desc": "Opening line of the artifact comment auto-reply prompt used when the trigger is a fresh human activation on a thread that already carries feedback."
+  },
+  "e0c0c68793402fd03b0e9c0c06b27d2d981eeb80": {
+    "facing": "model",
+    "id": "tool-parameter-selfhosted-runner-base-dir",
+    "name": "Tool Parameter: Self-hosted runner base_dir",
+    "desc": "Input-schema description of the self-hosted runner start tool's `base_dir` parameter."
+  },
+  "ad34fb5855be4ad2031253c34f53c041836ea496": {
+    "facing": "internal"
+  },
+  "516f9eb36bee4f19960caa6ac2272ead79155f9d": {
+    "facing": "model",
+    "id": "tool-result-artifact-login-required-remote-session",
+    "name": "Tool Result: Artifact login required (remote session)",
+    "desc": "Artifact tool validation/call error returned to the model when the remote session's launching machine is not signed in to claude.ai."
+  },
+  "66ae846bd294d08da988c8cb1370aee929cbfdfe": {
+    "facing": "model",
+    "id": "tool-result-artifact-login-required-host-managed",
+    "name": "Tool Result: Artifact login required (host-managed credential)",
+    "desc": "Artifact tool error returned to the model when a host-injected credential takes precedence and claude.ai login cannot be changed in-session."
+  },
+  "851be1bfb13a7f47fae3382cf3b3a67eb447a5c3": {
+    "facing": "model",
+    "id": "tool-result-artifact-login-required",
+    "name": "Tool Result: Artifact login required",
+    "desc": "Default Artifact tool error returned to the model when the session has no claude.ai credentials and needs /login."
+  },
+  "3756adbae401da4618df52c86b7802931a7bed5e": {
+    "facing": "model",
+    "id": "data-task-notification-artifact-auto-edit-patch-failed",
+    "name": "Data: Artifact auto-edit patch-failed notification",
+    "desc": "Task notification injected when an artifact comment auto-reply was posted but the requested automatic edit could not be applied to the artifact's current source."
+  },
+  "a9db894a9b0deacfb5affdee07cf492c177174e5": {
+    "facing": "model",
+    "id": "tool-description-memorylist-call-early-guidance",
+    "name": "Tool Description: memory_list call-early guidance",
+    "desc": "Trailing paragraph of the memory_list tool description telling Claude to list memories early and always before claiming it lacks information."
+  },
+  "fe921edfac53c045b9f295b5fea57764de27cf34": {
+    "facing": "internal"
+  },
+  "cbee61471758fe2b3951ba4d3f3211a49c38e9a9": {
+    "facing": "model",
+    "id": "tool-description-memorywrite-update-triggers-and-timing",
+    "name": "Tool Description: memory_write update triggers and timing",
+    "desc": "Defines mandatory memory update triggers for user corrections, durable preferences, and non-transient environment discoveries, and requires writing before proceeding or finishing the turn."
+  },
+  "ece629b2f5582bd5f349465353823f0544343d97": {
+    "facing": "model",
+    "id": "tool-result-memory-write-secret-refused",
+    "name": "Tool Result: memory_write secret refused",
+    "desc": "Refusal returned to the model when memory_write content trips the secret detector for a store shared across the organization's projects."
+  },
+  "ef94019641e9ad89c4cc51af2e0b41e019c43391": {
+    "facing": "ui"
+  },
+  "42d6997f7eca64ae26056a217b4307887cc5f981": {
+    "facing": "model",
+    "id": "tool-result-artifact-pr-review-republish-provenance-egress-blocked",
+    "name": "Tool Result: PR-review republish provenance read egress-blocked",
+    "desc": "Artifact tool error returned to the model when a PR-review republish cannot verify decision provenance because the environment's network allowlist blocks reading the published page."
+  },
+  "12e112450fb35d5a69a17e36a93a7fdfee459a6b": {
+    "facing": "model",
+    "id": "tool-result-artifact-pr-review-republish-provenance-http-failure",
+    "name": "Tool Result: PR-review republish provenance read HTTP failure",
+    "desc": "Artifact tool error returned to the model when the provenance read fails with a non-transient HTTP status, so retrying cannot help."
+  },
+  "45db83199e468e16e0ea17288eaa2ba028ea8fdb": {
+    "facing": "model",
+    "id": "tool-result-artifact-pr-review-republish-provenance-policy-deny",
+    "name": "Tool Result: PR-review republish provenance read policy deny",
+    "desc": "Artifact tool error returned to the model when the provenance read is denied with 403, advising at most one retry for the concurrent-republish race."
+  },
+  "30efdaedeadf6fc35d5424917d13c3b9b6ea1468": {
+    "facing": "model",
+    "id": "tool-result-artifact-pr-review-republish-provenance-unreachable",
+    "name": "Tool Result: PR-review republish provenance page unreachable",
+    "desc": "Artifact tool error returned to the model when the published page simply could not be reached for the provenance check, so a retry is worthwhile."
+  },
+  "afe09d22fe5222246bfc68aa701e94987c241974": {
+    "facing": "model",
+    "id": "tool-result-project-login-save-failed",
+    "name": "Tool Result: Project credential save failed",
+    "desc": "Projects tool error returned to the model when refreshed claude.ai credentials could not be persisted and the stored ones were already consumed."
+  },
+  "36247558fca4e93152d857c45a47ca0a30f11c73": {
+    "facing": "ui"
+  },
+  "c4c3aaff1e97ffa34f25e2386e7ff1e6d35e940b": {
+    "facing": "ui"
+  },
+  "fab5698a6c6fa39fc73e086124ca2413779bb483": {
+    "facing": "model",
+    "id": "tool-description-memorywrite-prompt",
+    "name": "Tool Description: memory_write prompt",
+    "desc": "Describes creating or replacing connected memory-store documents with version checks, conflict handling, and secret-safety requirements."
+  },
+  "ded51ce7a9e14306c1bdfe99bb5ec56605471ef2": {
+    "facing": "model",
+    "id": "tool-result-sendmessage-cross-machine-unavailable",
+    "name": "Tool Result: Cross-machine messaging unavailable",
+    "desc": "SendMessage tool result returned when a bridge/cloud-session recipient cannot be reached because relaying through Anthropic servers is disallowed on this provider or with nonessential traffic disabled."
+  },
+  "5df4cd06afaaf7af5c23fe3baa94dc5ec9d9087f": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-db-collection",
+    "name": "Tool Parameter: Artifact db collection",
+    "desc": "Artifact tool input-schema description of the `collection` parameter used by read_db and write_db."
+  },
+  "8a2b3767400632573baac08219025a6e4c3dd8d0": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-db-op",
+    "name": "Tool Parameter: Artifact db_op",
+    "desc": "Artifact tool input-schema description of the `db_op` parameter selecting the read_db/write_db database operation."
+  },
+  "87f1a65bb3cb34c60136c9e2cca867a0db32bf1b": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-write-plan-mode-no-consent-surface",
+    "name": "Tool Result: Artifact db write denied in plan mode",
+    "desc": "Permission denial returned to the model when an artifact database write is attempted in plan mode with no interactive consent surface available."
+  },
+  "9eef488461b44623f5ee00cc5d88d9274d1892e7": {
+    "facing": "model",
+    "id": "tool-parameter-selfhosted-runner-health-port-healthz",
+    "name": "Tool Parameter: Self-hosted runner start health_port",
+    "desc": "Input-schema description of the self-hosted runner start tool's `health_port` parameter."
+  },
+  "f722b5408b21b8f0aa031959fafd8c393f72e134": {
+    "facing": "model",
+    "id": "tool-parameter-selfhosted-runner-health-port",
+    "name": "Tool Parameter: Self-hosted runner probe health_port",
+    "desc": "Input-schema description of the `health_port` parameter on the self-hosted runner /healthz probe and /metrics tools."
+  },
+  "4864044f8f81841be739489f73c49900827a5713": {
+    "facing": "model",
+    "id": "tool-parameter-selfhosted-runner-capacity",
+    "name": "Tool Parameter: Self-hosted runner capacity",
+    "desc": "Input-schema description of the self-hosted runner start tool's `capacity` parameter."
+  },
+  "8635ad0c2ddb68d675397408ee22904220fcecbb": {
+    "facing": "model",
+    "id": "tool-parameter-selfhosted-runner-log-path",
+    "name": "Tool Parameter: Self-hosted runner log_path",
+    "desc": "Input-schema description of the self-hosted runner start tool's `log_path` parameter."
+  },
+  "9e33b88b5fc138d5a3d1c5846a2077653931fdd7": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-db-data",
+    "name": "Tool Parameter: Artifact db data",
+    "desc": "Artifact tool input-schema description of the `data` parameter carrying document fields for db_op set/update."
+  },
+  "5c75a322945a7c6b8bb5073564a56596e960fe85": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-db-doc-id",
+    "name": "Tool Parameter: Artifact db doc_id",
+    "desc": "Artifact tool input-schema description of the `doc_id` parameter identifying a single database document."
+  },
+  "757f9a6b0f2c31fabee1f1e508176eb6355b92d3": {
+    "facing": "internal"
+  },
+  "35e54824906b2be97a45428e3c5038b7d19bc637": {
+    "facing": "internal"
+  },
+  "bb128ff4fbd2ad86cad8f790f1fcff48d388f0e4": {
+    "facing": "internal"
+  },
+  "e23c94e45528a7a4ba4bf3657545f22bc4065660": {
+    "facing": "internal"
+  },
+  "0f7b5f60f0bcb3966f4938f8c808de21399f28e2": {
+    "facing": "internal"
+  },
+  "5a7fc0eb40fe687cfd1d1c6c24aa18e881b121db": {
+    "facing": "internal"
+  },
+  "8418d6476afc6d191ba6bbf14f74c984171fbf5b": {
+    "facing": "model",
+    "id": "tool-result-sendmessage-plan-approval-inbox-write-failed",
+    "name": "Tool Result: Plan approval inbox write failed",
+    "desc": "Team-messaging tool result returned when the plan approval could not be written to the teammate's mailbox."
+  },
+  "af6de546627f28dd074685e4ff68b92169f58cfe": {
+    "facing": "model",
+    "id": "tool-result-sendmessage-plan-rejection-inbox-write-failed",
+    "name": "Tool Result: Plan rejection inbox write failed",
+    "desc": "Team-messaging tool result returned when the plan rejection could not be written to the teammate's mailbox."
+  },
+  "0f3ad013922d657d3b7bbb1ae1f2895f1bf3b728": {
+    "facing": "model",
+    "id": "tool-result-sendmessage-shutdown-rejection-inbox-write-failed",
+    "name": "Tool Result: Shutdown rejection inbox write failed",
+    "desc": "Team-messaging tool result returned when a teammate's shutdown rejection could not be written to the team lead's mailbox."
+  },
+  "ab1d4dcaf1a5927942e73a1e8d26a7b9db4bc613": {
+    "facing": "model",
+    "id": "tool-result-sendmessage-inbox-write-failed",
+    "name": "Tool Result: Teammate inbox write failed",
+    "desc": "SendMessage tool result returned when the message could not be appended to the recipient teammate's mailbox file."
+  },
+  "74549362c4d1d48d07f4b7169772f0435f8ce5dd": {
+    "facing": "internal"
+  },
+  "ffd0d920336b20ec09e7e3aa3bca7675e0a0a168": {
+    "facing": "internal"
+  },
+  "ed27d7d447a4f717d7133e02a0cd63d2d6ddd185": {
+    "facing": "internal"
+  },
+  "2fcc9154626ea876817c1c3092260ea4643a103a": {
+    "facing": "internal"
+  },
+  "63294ddc5c2ccff60ef00d073f0eec8944bf74e8": {
+    "facing": "model",
+    "id": "tool-parameter-memory-write-content",
+    "name": "Tool Parameter: memory_write content",
+    "desc": "Input-schema description of the memory_write tool's `content` parameter, spelling out whole-document replacement, normalization, and the 100KB cap."
+  },
+  "f8af10d4d916ec006f423078e3d1a9748a8aeb32": {
+    "facing": "internal"
+  },
+  "fdeea321eeb428c108f347582ff5e795b460a5a0": {
+    "facing": "internal"
+  },
+  "4683e0f494d4f5c1aa299d19d51a41103b35277b": {
+    "facing": "model",
+    "id": "tool-parameter-selfhosted-runner-log-bytes",
+    "name": "Tool Parameter: Self-hosted runner log bytes",
+    "desc": "Input-schema description of the `bytes` parameter on the self-hosted runner log-tail tool."
+  },
+  "641a3288774d0b4f273d33995828ac8db4754dc0": {
+    "facing": "internal"
+  },
+  "eddf03b640416896674c6319990c0d8a5a90285f": {
+    "facing": "ui"
+  },
+  "ca9bc5f447f8f95e193b3bc324d9e76d63101c60": {
+    "facing": "ui"
+  },
+  "e43446b12959d56923d78d6a68f786ed044f19a9": {
+    "facing": "ui"
+  },
+  "2aa7c687d6fe3136205b7429e73649984987f542": {
+    "facing": "ui"
+  },
+  "80f7a6aa57d68024c9e4967020682426c9020c7a": {
+    "facing": "model",
+    "id": "tool-parameter-memory-list-store",
+    "name": "Tool Parameter: memory_list store",
+    "desc": "The `store` parameter description on the memory_list tool input schema, telling the model to omit it to enumerate the connected memory stores."
+  },
+  "7b453b377144bcd00b133edc423f89618709e53a": {
+    "facing": "model",
+    "id": "tool-parameter-memory-read-store",
+    "name": "Tool Parameter: memory_read store",
+    "desc": "The `store` parameter description on the memory_read tool input schema, naming the store id to read from."
+  },
+  "cc709ca1d6ac06b8df714dd44df6d2ff2da99823": {
+    "facing": "model",
+    "id": "tool-parameter-memory-write-store",
+    "name": "Tool Parameter: memory_write store",
+    "desc": "The `store` parameter description on the memory_write tool input schema, naming the store id to write to."
+  },
+  "765e477424e603176af70c6650d5c213358fbcba": {
+    "facing": "internal"
+  },
+  "ac7929514333bef4804c36b3d934143484c02d35": {
+    "facing": "internal"
+  },
+  "a09b3ce9bc3909265a36db15299a6e2bb7ee222e": {
+    "facing": "ui"
+  },
+  "8f73048fdf9e65204a1614d51170b984d790ef4f": {
+    "facing": "ui"
+  },
+  "ed1150d5ed6ba177e06e3dda737408a650c78758": {
+    "facing": "model",
+    "id": "tool-parameter-feedback-details",
+    "name": "Tool Parameter: SendFeedback details",
+    "desc": "Reworded successor of the dropped 2.1.221 `tool-parameter-feedback-details`: the `details` parameter description on the SendFeedback tool input schema, now prescribing labeled bullets."
+  },
+  "6d4798e55aef9974d95f2fd9732fe4d6f5d0a7f4": {
+    "facing": "model",
+    "id": "tool-description-self-hosted-runner-list-secrets",
+    "name": "Tool Description: Self-hosted runner list secrets",
+    "desc": "Description/prompt for the self_hosted_runner_list_secrets tool, covering metadata-only secret listing and the Admin-UI equivalent path."
+  },
+  "c7f35016d8769e18c2ae451c78312684dedb6cda": {
+    "facing": "model",
+    "id": "tool-description-self-hosted-runner-list-runners",
+    "name": "Tool Description: Self-hosted runner list runners",
+    "desc": "Description/prompt for the self_hosted_runner_list_runners tool, listing per-runner lease and assignment fields plus the Admin-UI equivalent."
+  },
+  "4b9952af7722bced5edaa570d5960e4e6cc19918": {
+    "facing": "model",
+    "id": "tool-description-self-hosted-runner-list-sessions",
+    "name": "Tool Description: Self-hosted runner list sessions",
+    "desc": "Description/prompt for the self_hosted_runner_list_sessions tool, covering queued/assigned session status fields and the Admin-UI equivalent."
+  },
+  "6a8aad358378c09ea6073a6b6bb717be79e8d276": {
+    "facing": "model",
+    "id": "slash-command-list-agents-description",
+    "name": "Slash Command: /list-agents description",
+    "desc": "One-line description of the /list-agents (/peers) command, shown in the command menu and injected into the claude-code-guide skill\u2019s \"Available commands\" build listing."
+  },
+  "c56d095680f6b04a8e61f9b6c448e5a72b937b4a": {
+    "facing": "model",
+    "id": "tool-description-memorylist-prompt",
+    "name": "Tool Description: memory_list prompt",
+    "desc": "Tool prompt for listing connected memory stores or store documents, paginating and narrowing listings, and directing content reads through memory_read"
+  },
+  "c03f9111601af43dec03dd7f30e345a08629e86d": {
+    "facing": "model",
+    "id": "tool-result-artifact-live-edit-certified-check-read-denied",
+    "name": "Tool Result: Artifact live-edit certified-page check read denied",
+    "desc": "Error returned to the model when Artifact live-edit cannot read the target page to prove it is not a certified page and the HTTP status is non-transient."
+  },
+  "6316040f2e19825d69902f7e23c0350922fc8159": {
+    "facing": "model",
+    "id": "tool-result-artifact-live-edit-certified-check-transient",
+    "name": "Tool Result: Artifact live-edit certified-page check transient failure",
+    "desc": "Error returned to the model when the Artifact live-edit certified-page precheck fails transiently and the call should be retried."
+  },
+  "2fb85e9958dfcac6efb9b72653c4b9faedfb7298": {
+    "facing": "internal"
+  },
+  "9402bdadca5cfa15ed0cd3e1b4e4d4ef661671cf": {
+    "facing": "ui"
+  },
+  "079accce91a2a48ffa43826165b3059804914411": {
+    "facing": "internal"
+  },
+  "c3a7fbe09a945dd897022838c0901b42c340f42a": {
+    "facing": "internal"
+  },
+  "a13c80a0a5609bf76f16975866e5d3fa21d40417": {
+    "facing": "internal"
+  },
+  "92d3e9be894eeacec71fe670df7503247b788642": {
+    "facing": "internal"
+  },
+  "fa3ed15d26be03cf1df3bdd1e378ec3f74aa4693": {
+    "facing": "internal"
+  },
+  "c388e025f6d4654c41fd000511a87a6f8f0e4c19": {
+    "facing": "internal"
+  },
+  "ecfb54c1216ffb63dbd86dd5c966cda5de3a2b8b": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-document-not-found",
+    "name": "Tool Result: Artifact DB document not found",
+    "desc": "Tool result returned to the model when an Artifact read_db `get` finds no document with the requested id in the collection."
+  },
+  "158060ffb5c124bab0033165f0e8cf76a8f95e05": {
+    "facing": "model",
+    "id": "tool-parameter-listagents-unavailable-in-build",
+    "name": "Tool Parameter: ListAgents unavailable parameter",
+    "desc": "Placeholder description on the ListAgents tool\u2019s `channel` and `q` parameters telling the model the option is inert in this build."
+  },
+  "4e3303cba7352834c1ff63126bab6ee33d11bc7e": {
+    "facing": "ui"
+  },
+  "483ae00c843141080d8f8e38c2561055644d4aa5": {
+    "facing": "internal"
+  },
+  "cfde3a4663c1d1c02c2bde2ce6b3bb230216b0e0": {
+    "facing": "model",
+    "id": "tool-parameter-memory-list-path-prefix",
+    "name": "Tool Parameter: memory_list path_prefix",
+    "desc": "The `path_prefix` parameter description on the memory_list tool input schema, explaining directory-aligned prefix filtering."
+  },
+  "6955f5b59b6323e94fde736e13437600d17169c2": {
+    "facing": "internal"
+  },
+  "23b05190eca15f00fb1cf4fd1c85f925058e83de": {
+    "facing": "internal"
+  },
+  "c6774a30ea4dac58ce4451a2853ff4dd114a1ebb": {
+    "facing": "internal"
+  },
+  "83ab8aa02358f626ee9245fb5fdaf708231fff37": {
+    "facing": "internal"
+  },
+  "e6f4196bcc0119f3593bf19abbd1df63513ade25": {
+    "facing": "model",
+    "id": "tool-parameter-self-hosted-runner-status-filter",
+    "name": "Tool Parameter: Self-hosted runner status filter",
+    "desc": "The `status_filter` parameter description on the self_hosted_runner_list_sessions tool input schema."
+  },
+  "d3658be9ad4205cfec716d4ad9565f00c3f82bba": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-db-query-options",
+    "name": "Tool Parameter: Artifact db query options",
+    "desc": "The `query` parameter description on the Artifact tool input schema, covering paging, where clauses and ordering for read_db list/query."
+  },
+  "232c463036ce5779188e4f33afb96c88fa76f0fa": {
+    "facing": "internal"
+  },
+  "6652563c566b778ee0bdf351211780de50ff3f08": {
+    "facing": "model",
+    "id": "tool-parameter-memory-write-if-version",
+    "name": "Tool Parameter: memory_write if_version",
+    "desc": "The `if_version` parameter description on the memory_write tool input schema, telling the model where the version token comes from and to pass `new` for a new file."
+  },
+  "1660c3d62769308785510a05b4fd234729ea6683": {
+    "facing": "internal"
+  },
+  "f680577b5b208c0c846843822b11f8b033d02fdc": {
+    "facing": "model",
+    "id": "tool-parameter-memory-write-path",
+    "name": "Tool Parameter: memory_write path",
+    "desc": "The `path` parameter description on the memory_write tool input schema, giving the document path convention."
+  },
+  "1bd1fa2c16848db18ac4d5368dc9b8f718fcc939": {
+    "facing": "model",
+    "id": "tool-parameter-memory-list-cursor",
+    "name": "Tool Parameter: memory_list cursor",
+    "desc": "The `cursor` parameter description on the memory_list tool input schema, used to continue a long listing."
+  },
+  "de964020a4e8f302eb1a4568304b4d8e7b72fd09": {
+    "facing": "model",
+    "id": "tool-parameter-memory-read-path",
+    "name": "Tool Parameter: memory_read path",
+    "desc": "The `path` parameter description on the memory_read tool input schema, giving the document path to read."
+  },
+  "27bf870792631022f069ab7f136f72030ba9922b": {
+    "facing": "model",
+    "id": "tool-parameter-self-hosted-runner-secret-file-path",
+    "name": "Tool Parameter: Self-hosted runner secret file path",
+    "desc": "The `secret_file_path` parameter description on the self_hosted_runner_spawn_local tool input schema."
+  },
+  "b6569a43674baec0311fbc9ffc7290894f9ed660": {
+    "facing": "model",
+    "id": "tool-parameter-self-hosted-runner-log-path",
+    "name": "Tool Parameter: Self-hosted runner log path",
+    "desc": "The `log_path` parameter description on the self_hosted_runner_tail_log tool input schema."
+  },
+  "97de58a417d75af63de83c2d28c83f6c01d24903": {
+    "facing": "internal"
+  },
+  "015c641b35b1a2ad48e7f5cac1233f9b8247f0e1": {
+    "facing": "model",
+    "id": "tool-description-edit",
+    "name": "Tool Description: Edit",
+    "desc": "Tool for performing exact string replacements in files"
+  },
+  "3290bba056a250379411f88abb179941ae73648a": {
+    "facing": "model",
+    "id": "tool-result-permission-denied-no-interactive-approval",
+    "name": "Tool Result: Permission denied, no interactive approval",
+    "desc": "Denial result returned to the model when a tool needs interactive approval but the session has no permission prompts, telling it not to claim success or retry."
+  },
+  "da52701c603bb7a81127dae73f2e8153146f7bad": {
+    "facing": "internal"
+  },
+  "44c5e9803ae660eb6089d6f1218a96a1f852dc4c": {
+    "facing": "internal"
+  },
+  "bce927a89ca2f771f67f4a5432ab7ca1cda8bdac": {
+    "facing": "internal"
+  },
+  "a2ef1a88e975b463299e51643fc782a70ee1e12e": {
+    "facing": "internal"
+  },
+  "0731d142e2d277ca9b90106c6869b6f8eba07838": {
+    "facing": "internal"
+  },
+  "23bf2accbb47fc5c293243ae5517f774e8858413": {
+    "facing": "internal"
+  },
+  "09491b1ccec49752a06a1d2c5a4ac426d11f068e": {
+    "facing": "internal"
+  },
+  "250ebb0f6fb77fd0e09315093f87dd401a5342e5": {
+    "facing": "model",
+    "id": "system-prompt-memory-private-belongs-in-personal-dir",
+    "name": "System Prompt: Private memories belong in the personal directory",
+    "desc": "Memory-scope note stating that private memories go in the personal directory and the shared stores are for teammate-visible content, with the no-secrets rule"
+  },
+  "36945f3e3abf6641d172cc05bd4d2477c8019fba": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-review-check-read-denied",
+    "name": "Tool Result: Artifact publish review-page check read denied",
+    "desc": "Error returned to the model when an Artifact publish cannot read the target page to prove it is not a certified review page and the HTTP status is non-transient."
+  },
+  "9b8645d9a6edc120dfafe73545f0738b073066ec": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-review-check-transient",
+    "name": "Tool Result: Artifact publish review-page check transient failure",
+    "desc": "Error returned to the model when the Artifact publish review-page precheck fails transiently and the publish should be retried."
+  },
+  "b254619a8bc3ecc0e958ba7f57f46b072a4d8ba6": {
+    "facing": "ui"
+  },
+  "89e90c6ec67206c4ef9a92ad18ff59b75bd99584": {
+    "facing": "ui"
+  },
+  "6cf13d63bf6c37052418e427471dcb605e954130": {
+    "facing": "internal"
+  },
+  "bc6de4b68fa70041c083794dda21ebc68e898bae": {
+    "facing": "model",
+    "id": "tool-description-self-hosted-runner-get-pool",
+    "name": "Tool Description: Self-hosted runner get pool",
+    "desc": "Description/prompt of the self_hosted_runner_get_pool tool; injected as that tool's description when the self-hosted runner doctor toolset is enabled."
+  },
+  "18ebf5af2f6e3a63df7321a06931c4718374b5b9": {
+    "facing": "model",
+    "id": "tool-description-memory-read-refresh-often",
+    "name": "Tool Description: Memory read refresh often",
+    "desc": "Guidance line joined into the memory Read tool prompt telling Claude to re-read/update memory often and treat memories as past snapshots."
+  },
+  "e35a675344df1d801cd9c0d150472351864589bb": {
+    "facing": "model",
+    "id": "tool-description-memory-read-document",
+    "name": "Tool Description: Memory read document",
+    "desc": "Opening line of the memory Read tool prompt, describing reading one document by store id and path and the returned version token."
+  },
+  "f40e4317d1c8ef9bd2207c3668de940f66ab0657": {
+    "facing": "model",
+    "id": "tool-result-artifact-read-db-plan-mode-no-consent",
+    "name": "Tool Result: Artifact database read blocked in plan mode",
+    "desc": "Permission denial returned to the model when the Artifact tool tries to read another person's artifact database in plan mode with no live consent surface."
+  },
+  "34193a1afae9455e077dc480a9c0a2bf64cd0518": {
+    "facing": "ui"
+  },
+  "5240e377e6a6b49272dcce8b4ed6b3b09fab94a3": {
+    "facing": "internal"
+  },
+  "931bf404f8b3ac8d53c73985347dae4955028710": {
+    "facing": "model",
+    "id": "system-reminder-artifact-comment-reply-activation-failure",
+    "name": "System Reminder: Artifact comment reply activation failure",
+    "desc": "Explains that an Artifact comment reply was not posted because Claude is not currently activated for the thread and requires reactivation before retrying."
+  },
+  "8aed3b1022e98884e6a1b029f04035e27c629b2e": {
+    "facing": "model",
+    "id": "tool-description-self-hosted-runner-requeue-session",
+    "name": "Tool Description: Self-hosted runner requeue session",
+    "desc": "Describes requeuing an assigned self-hosted runner session away from a failing runner and surfacing the equivalent Admin UI path."
+  },
+  "0e78326098d11baf60c7860cdfbae0514bedb19a": {
+    "facing": "model",
+    "id": "tool-description-code-review-command",
+    "name": "Tool Description: Code review command",
+    "desc": "Describes the code review command and its effort levels, PR comment mode, and fix mode; injected as the model-facing description of the /code-review slash command."
+  },
+  "df63b4d5d39043d16fbdd4d88315a65e49702498": {
+    "facing": "internal"
+  },
+  "2148d1816ceb1e68d9c81d77a53aec80211d026c": {
+    "facing": "ui"
+  },
+  "607e9a8596b713c56302415bf4016baccf85f9e4": {
+    "facing": "model",
+    "id": "system-prompt-memory-save-team-scoped-writable-store",
+    "name": "System Prompt: Save team-scoped memories in writable store",
+    "desc": "Memory-section line of the system prompt instructing Claude to save new team-scoped memories in the writable store and keep its index current."
+  },
+  "348264dee7898ba7819a333733e636dbc731fcba": {
+    "facing": "internal"
+  },
+  "69b9fc58c741576a5df81675df6e268aecd6b76e": {
+    "facing": "internal"
+  },
+  "c6478d52cd19eb6d9aaab14812c82b5c73a81b8c": {
+    "facing": "internal"
+  },
+  "6eb8fb2e7e75a90ac8db6ad47f9aee9d7c9a59ed": {
+    "facing": "model",
+    "id": "tool-description-self-hosted-runner-spawn-local",
+    "name": "Tool Description: Self-hosted runner spawn local",
+    "desc": "Describes the self_hosted_runner_spawn_local tool that detaches a local runner process and returns {pid, log_path, health_port, command}."
+  },
+  "5dc5a2076157f21d755d367571e8219f4f1e71b7": {
+    "facing": "internal"
+  },
+  "4b04045d7a34a4ab622356740b06f277a0535342": {
+    "facing": "model",
+    "id": "tool-parameter-self-hosted-runner-pool-id",
+    "name": "Tool Parameter: Self-hosted runner pool id",
+    "desc": "Input-schema description of the pool_id parameter shared by the self-hosted runner get-pool / list-sessions / list-runners / list-secrets tools."
+  },
+  "b31bae35952f994fd3da31c882063013fe2225e5": {
+    "facing": "model",
+    "id": "tool-parameter-self-hosted-runner-requeue-runner-id",
+    "name": "Tool Parameter: Self-hosted runner requeue runner id",
+    "desc": "Input-schema description of the runner_id parameter of the self_hosted_runner_requeue_session tool."
+  },
+  "dcc80c810e9ebcb027910459454970a47b50f71a": {
+    "facing": "model",
+    "id": "tool-parameter-self-hosted-runner-requeue-session-id",
+    "name": "Tool Parameter: Self-hosted runner requeue session id",
+    "desc": "Input-schema description of the session_id parameter of the self_hosted_runner_requeue_session tool."
+  },
+  "3fcd66c150bed9c9d3c171ccd70d6d0f5aaafbdc": {
+    "facing": "model",
+    "id": "tool-result-send-message-teammate-inbox-write-failed",
+    "name": "Tool Result: SendMessage teammate inbox write failed",
+    "desc": "SendMessage tool result telling the model the running teammate's inbox write failed and nothing was queued."
+  },
+  "4bd7d6308a8d5a643872d82f53f640683d9b2516": {
+    "facing": "ui"
+  },
+  "0163cf5784cc74b0b9a78141dbbd0c33cce1d555": {
+    "facing": "model",
+    "id": "agent-prompt-automemory-shared-memory-tools-unavailable",
+    "name": "Agent Prompt: Auto-memory shared memory tools unavailable",
+    "desc": "Line appended to the auto-memory extraction subagent prompt when the shared memory-store tools are unavailable, restricting it to personal-directory saves."
+  },
+  "ab52461d32caeba12f292d52d07dd0d91d299e2a": {
+    "facing": "model",
+    "id": "tool-result-design-project-no-refresh",
+    "name": "Tool Result: Projects claude.ai login cannot be refreshed",
+    "desc": "Projects tool error returned to the model when the claude.ai OAuth token cannot be refreshed (CLAUDE_CODE_OAUTH_TOKEN or expired/revoked refresh token). Reworded successor of the 2.1.221 id of the same name."
+  },
+  "4f056323312003ba3b51e7b046a9c7ad0744cefd": {
+    "facing": "model",
+    "id": "tool-result-projects-auth-custom-oauth-client",
+    "name": "Tool Result: Projects auth custom OAuth client",
+    "desc": "Projects tool error returned to the model when the claude.ai login uses a custom OAuth client that cannot be granted project scopes."
+  },
+  "6a9a3de47d323f0fc8b7af8c52840fa8df74beb4": {
+    "facing": "model",
+    "id": "tool-result-memory-shared-store-content-is-data",
+    "name": "Tool Result: Memory shared-store content is data",
+    "desc": "Preamble prefixed to memory tool results carrying shared-store document content, marking it as reference data rather than instructions."
+  },
+  "9559db8ea92b6535bf37a19600d50e63604e0918": {
+    "facing": "model",
+    "id": "system-reminder-fork-separate-session-coordination",
+    "name": "System Reminder: Fork runs as a separate session",
+    "desc": "Meta message injected after /fork explaining the fork is an independent session and how to coordinate with it through the roster and messaging tools."
+  },
+  "0e9ee25c0626818f5e3fc60efdf94b1e25f3440b": {
+    "facing": "model",
+    "id": "tool-result-memory-store-connection-unavailable",
+    "name": "Tool Result: Memory store connection unavailable",
+    "desc": "Memory tool refusal telling the model the memory-store connection is unavailable this session so reads and writes are refused."
+  },
+  "5361b5d131ce8ed99da88a01d883c30edf65e632": {
+    "facing": "model",
+    "id": "tool-result-memory-store-temporarily-unavailable",
+    "name": "Tool Result: Memory store temporarily unavailable",
+    "desc": "Memory tool failure result telling the model the store is temporarily unavailable and to retry later."
+  },
+  "86348c5ae3db630a154406a58fd99d6064643e06": {
+    "facing": "model",
+    "id": "tool-result-memory-write-repeated-spurious-conflict",
+    "name": "Tool Result: Memory write repeated spurious conflict",
+    "desc": "Memory write tool failure returned when the store rejects an unchanged document twice with a spurious conflict."
+  },
+  "de38c20de5a0c57cfec341f5ff256ac3f464aafd": {
+    "facing": "model",
+    "id": "tool-result-memory-store-concurrent-change",
+    "name": "Tool Result: Memory store concurrent change",
+    "desc": "Memory tool conflict result telling the model to re-read the document and retry with a fresh version token."
+  },
+  "28c11c2c90708c96f5affd23d4b44df2ba609477": {
+    "facing": "model",
+    "id": "tool-result-memory-store-request-failed",
+    "name": "Tool Result: Memory store request failed",
+    "desc": "Generic memory tool failure result returned to the model when the store request errors out."
+  },
+  "ecc2393cd75ae1bf350b350fdaa165a8d5b4f745": {
+    "facing": "model",
+    "id": "tool-result-permission-forward-mailbox-failed-ask-lead",
+    "name": "Tool Result: Permission forward mailbox failed (ask lead)",
+    "desc": "Terminal permission decision returned to the model when forwarding a permission request to the team lead's mailbox fails, in the worker path that also suggests asking the lead directly."
+  },
+  "eef366b8e4a3085f9453f448fbaefba9c54790f3": {
+    "facing": "model",
+    "id": "tool-result-permission-forward-mailbox-failed",
+    "name": "Tool Result: Permission forward mailbox failed",
+    "desc": "Terminal permission decision returned to the model when the in-process runner cannot deliver a permission request to the team lead's mailbox."
+  },
+  "e2a925a4aca6c6542b3446a5b2ae0bf37c27b9fc": {
+    "facing": "ui"
+  },
+  "5ee490f527c5681c5d6babafceebc629e55c7c83": {
+    "facing": "model",
+    "id": "system-prompt-artifact-comment-edit-composer-source-fence",
+    "name": "System Prompt: Artifact edit composer source fence",
+    "desc": "Fence preamble wrapping the artifact's current HTML source in the edit-capable comment-composer prompt, marking the fenced text as editable-but-untrusted content."
+  },
+  "8d93fccf07055301065f393b76596a5edd263914": {
+    "facing": "ui"
+  },
+  "c836b34d71cba4b6ea31514cf8e914e70c221017": {
+    "facing": "ui"
+  },
+  "8f6d8eced11de16ce74a33e1cb830496c4c21e70": {
+    "facing": "ui"
+  },
+  "4dfc39228871eab626bc50ee24fe07141b921626": {
+    "facing": "model",
+    "id": "system-reminder-memory-write-unsynced-local-store-leftover",
+    "name": "System Reminder: Memory write to leftover unsynced store copy",
+    "desc": "PostToolUse additionalContext injected after an Edit/Write into a leftover local copy of a project memory store that is no longer synced."
+  },
+  "24aae18b89c7e463421773bfb1a00f21d03a9514": {
+    "facing": "model",
+    "id": "system-reminder-cross-session-peer-message-wrapper-terse",
+    "name": "System Reminder: Cross-session peer message wrapper (terse)",
+    "desc": "Terse guidance suffix appended to a cross-session peer message injected into the conversation. Reworded successor of the 2.1.221 id of the same name (leading newlines dropped)."
+  },
+  "a4982ff67e744f8fac6624978e14269e6ee2091d": {
+    "facing": "ui"
+  },
+  "9dff164e7d72ddc1e202a4a8062510acf3b25a0c": {
+    "facing": "ui"
+  },
+  "448c49083409f7ce4d85d9f2c12a4b090c848a4f": {
+    "facing": "ui"
+  },
+  "49564089f9b67dc52fff3886f3efe8c3208fc37f": {
+    "facing": "internal"
+  },
+  "fca21f38f7d406071293d0184e8db05272c93eae": {
+    "facing": "ui"
+  },
+  "1ab6b70de90b9e54d00c0ef810296ee51b908aeb": {
+    "facing": "model",
+    "id": "tool-description-sendfeedback-drafting-guidance",
+    "name": "Tool Description: SendFeedback drafting guidance",
+    "desc": "Instructs when and how to queue concise, factual Claude Code feedback drafts with prescribed evidence bullets, field-selection rules, privacy constraints, and no user interruption or duplication."
+  },
+  "9a713ba1a5c164e5a8893e5d42ce3d048480b0e1": {
+    "facing": "internal"
+  },
+  "e18b8018d043f30d950e4d37a435cf336b6b5ea0": {
+    "facing": "internal"
+  },
+  "ee3972173f19effc6f2e8674a8ea096288ae1dc6": {
+    "facing": "internal"
+  },
+  "c7b7920cda69b70022abdbd1072374190c231d11": {
+    "facing": "model",
+    "id": "tool-parameter-sendfeedback-task-category",
+    "name": "Tool Parameter: SendFeedback task category",
+    "desc": "Input-schema description of the SendFeedback tool's task_category parameter."
+  },
+  "1bd9debc4fc0625c372b4a800897d8cc7771e381": {
+    "facing": "internal"
+  },
+  "580e1724ec8d9b255710d270902d97f15d3ac936": {
+    "facing": "internal"
+  },
+  "d1e77eb197f995511413446ddf6d0f355f8f487c": {
+    "facing": "model",
+    "id": "tool-parameter-sendfeedback-failure-mode",
+    "name": "Tool Parameter: SendFeedback failure mode",
+    "desc": "Input-schema description of the SendFeedback tool's failure_mode parameter."
+  },
+  "99f01e8e59791e608b6085b9f9573e053c2923d8": {
+    "facing": "internal"
+  },
+  "2d4ad08e011e73f3789c4f74617595e838b46640": {
+    "facing": "internal"
+  },
+  "1e3ae99df8d725546a424a8219ffb2db93638bcb": {
+    "facing": "internal"
+  },
+  "b3550d9d91405b8debfdacf8bb8285ad8c9a1473": {
+    "facing": "ui"
+  },
+  "9bc30c3c1fcbb3fd18d834aaef2840a2f67584b4": {
+    "facing": "internal"
+  },
+  "584b7d2ca48e84b567cbd5162cf6ad693f42cf69": {
+    "facing": "model",
+    "id": "system-prompt-self-hosted-runner-doctor",
+    "name": "System Prompt: Self-hosted runner doctor",
+    "desc": "Exact body match in pieb-bodymap; appended via --append-system-prompt to the `claude self-hosted-runner doctor` child session to drive the runner diagnostic decision tree."
+  },
+  "f8d3dcaab002672ff2e032ecc25964140ffcafa7": {
+    "facing": "model",
+    "id": "system-prompt-self-hosted-runner-setup",
+    "name": "System Prompt: Self-hosted runner setup",
+    "desc": "Exact body match in pieb-bodymap; appended via --append-system-prompt to the `claude self-hosted-runner setup` wizard session."
+  },
+  "8ebc6e1434552e0043a2c5c9c89d545e244b9893": {
+    "facing": "model",
+    "id": "system-prompt-memory-store-index-empty-writable",
+    "name": "System Prompt: Empty writable memory-store index",
+    "desc": "Memory system-prompt line injected when a connected writable memory store has an empty prompt index, telling Claude to create the index with memory_write."
+  },
+  "527f97e79af542f518da7d752d09854f423e3a41": {
+    "facing": "model",
+    "id": "system-prompt-memory-shared-stores-intro",
+    "name": "System Prompt: Shared memory stores intro",
+    "desc": "Opening line of the \"# Memory\" system-prompt section when connected (memory_list/read/write) shared stores are available."
+  },
+  "66ecd6fac8bbef4917e16972bee832221b231927": {
+    "facing": "ui"
+  },
+  "a0070aa4ed29a01c4c6f1f0bcfec37e8d73f9a0d": {
+    "facing": "ui"
+  },
+  "121745312cb74f70f4f085fb9b47b9031b520c1a": {
+    "facing": "ui"
+  },
+  "41ed588620178d998ad2020f059f4506b2c75949": {
+    "facing": "ui"
+  },
+  "1299ab191f31c9b58f93da7b07272a6b2805da6b": {
+    "facing": "ui"
+  },
+  "b1f9c9b776930cde1dfd124461b385093f60d50f": {
+    "facing": "internal"
+  },
+  "8c4fdea234578f01094d8d16fbcef1d4724570c9": {
+    "facing": "ui"
+  },
+  "62971b6c02cbad02791f97587d1ab6870450126e": {
+    "facing": "ui"
+  },
+  "81f79c64bc13aecbf7767817bb5a1a206a331108": {
+    "facing": "ui"
+  },
+  "d7309ee0c4ef8ee1371b4d643cec781a189ab613": {
+    "facing": "ui"
+  },
+  "1dae043d0f9eb1cc2d0bceef1248c934c25a0374": {
+    "facing": "ui"
+  },
+  "8872309fa687799d0821c4c9048c1bef86ed2941": {
+    "facing": "ui"
+  },
+  "c97162c4407530dc26d3e44600d1f398c2547373": {
+    "facing": "internal"
+  },
+  "ed7926dc4379b3c570c51aa5c15ef6d85f21f927": {
+    "facing": "internal"
+  },
+  "db11bd17e41b8a5ad4a7b40e6d8db65803f75023": {
+    "facing": "model",
+    "id": "system-prompt-memory-type-privacy-defaults",
+    "name": "System Prompt: Memory type privacy defaults",
+    "desc": "Parameterized memory system-prompt line stating which memory types default to private vs. the shared/team destination."
+  },
+  "1de1dfe5bae9fbe7759c580c42231a2b5d4a3412": {
+    "facing": "model",
+    "id": "system-prompt-memory-save-step1-example-names",
+    "name": "System Prompt: Memory save step 1",
+    "desc": "Reworded/parameterized successor of the 2.1.221 id (the file-name examples moved into the ${file} parameter): step 1 of the two-step memory-save instructions."
+  },
+  "0d1d3e02db645737bbbd01675edb583259b65a72": {
+    "facing": "model",
+    "id": "system-prompt-memory-save-hygiene-and-exclusions",
+    "name": "System Prompt: Memory save hygiene and exclusions",
+    "desc": "Condensed memory-system-prompt line telling Claude to update rather than duplicate memories and listing what not to save."
+  },
+  "ee16e6e0470692116dcfb70689485a2176252c7f": {
+    "facing": "model",
+    "id": "system-prompt-memory-cite-cc-memory-tags",
+    "name": "System Prompt: Cite memories with cc-memory tags",
+    "desc": "Reworded version of the 2.1.221 id: gated memory-section line requiring <cc-memory> wrapping when citing a memory to the user."
+  },
+  "5f7d5cce5752cb5c1d61592c60a0612ae83d2c13": {
+    "facing": "model",
+    "id": "system-prompt-memory-type-definitions-line",
+    "name": "System Prompt: Memory type definitions line",
+    "desc": "One-line definition of the four memory types (user/feedback/project/reference) inlined into the \"# Memory\" system-prompt section."
+  },
+  "a6b69457d7994d982a5b9a29d4ea4090dd6f62bc": {
+    "facing": "model",
+    "id": "system-prompt-memory-recalled-reminders-are-context",
+    "name": "System Prompt: Recalled memories are background context",
+    "desc": "Memory-section line telling Claude to treat memories delivered in <system-reminder> blocks as dated background context, not instructions."
+  },
+  "f134ba4ab6835fddd569ddcad0eb4b2dc8fce32f": {
+    "facing": "model",
+    "id": "system-prompt-memory-shared-not-mirrored-locally",
+    "name": "System Prompt: Shared memories not mirrored locally",
+    "desc": "Clause in the memory system prompt clarifying that connected shared stores are not mirrored to the personal on-disk memory directory."
+  },
+  "299505280194931dbec45c6779ed2dbca7507b59": {
+    "facing": "model",
+    "id": "system-prompt-memory-connected-stores-all-read-only",
+    "name": "System Prompt: All connected memory stores read-only",
+    "desc": "Memory-section variant injected when every connected shared store is read-only, warning that memory_write calls are refused."
+  },
+  "486d7d93e07bfb51e8be00857c4532233bd8244f": {
+    "facing": "model",
+    "id": "system-prompt-memory-connected-stores-list-intro",
+    "name": "System Prompt: Connected memory stores list intro",
+    "desc": "Header line preceding the enumerated list of connected memory stores in the \"# Memory\" system-prompt section."
+  },
+  "cf1987289ba89144ae7c91c2436ffba03126c239": {
+    "facing": "model",
+    "id": "system-prompt-memory-tools-deferred-load",
+    "name": "System Prompt: Load deferred memory tools",
+    "desc": "Prefix injected into the memory system-prompt section when the memory tools are deferred, telling Claude to load them via ToolSearch first."
+  },
+  "05e55f577e5ac7c05f7f0925739fb3274c321464": {
+    "facing": "model",
+    "id": "system-prompt-memory-read-shared-persist-personal",
+    "name": "System Prompt: Read shared memory, persist personally",
+    "desc": "Memory-section usage line used when all shared stores are read-only: read shared memory, write new learnings to the personal directory."
+  },
+  "4d1b18f00a08a95cf2038d9970bbc6b79b76492c": {
+    "facing": "model",
+    "id": "system-prompt-memory-check-each-reply-and-save",
+    "name": "System Prompt: Check each reply for memories",
+    "desc": "Memory-section usage line used when a writable shared store exists: scan each user reply for content worth saving with memory_write."
+  },
+  "873220591b8091bd277cfc3ce8e406e171fc32fe": {
+    "facing": "model",
+    "id": "system-prompt-memory-personal-dir-all-types-lean",
+    "name": "System Prompt: Personal directory holds all types (lean)",
+    "desc": "Lean-variant memory-section line: with all shared stores read-only, save every memory type into the personal memory directory."
+  },
+  "9f90f12d3f855c0ba8fbda852e8120f90400b392": {
+    "facing": "model",
+    "id": "system-prompt-memory-each-memory-has-a-type",
+    "name": "System Prompt: Each memory has a type",
+    "desc": "Memory-section line introducing the memory type list and, when a writable store exists, its privacy defaults."
+  },
+  "c103ece75a3d351b026df16dcd35e3f217592344": {
+    "facing": "model",
+    "id": "system-prompt-memory-private-only-team-readonly-session",
+    "name": "System Prompt: All types to personal dir this session",
+    "desc": "Reworded successor of the 2.1.221 id (\"private directory\"/\"team memory\" -> \"personal memory directory\"/\"shared stores\"): everything goes to the personal directory while the shared stores are read-only."
+  },
+  "bc87596e645ef9c81bf0df1f947ae7c921797fb2": {
+    "facing": "model",
+    "id": "system-prompt-memory-build-over-time-shared-stores",
+    "name": "System Prompt: Build up memory over time (shared stores)",
+    "desc": "Connected-shared-stores variant of the \"build up this memory system over time\" line in the \"# Memory\" system-prompt section."
+  },
+  "82920fc432940797b9956c1a57cc283eb680c728": {
+    "facing": "model",
+    "id": "system-prompt-memory-private-alongside-team-scopes",
+    "name": "System Prompt: Personal directory alongside shared stores",
+    "desc": "Reworded successor of the 2.1.221 id: split-destination guidance \u2014 private types to the personal directory, team-scoped memories to the writable shared store."
+  },
+  "a75b0b879fa413a3e8ff2cde42f5f65a8ecb70e0": {
+    "facing": "model",
+    "id": "system-prompt-memory-index-document-loaded",
+    "name": "System Prompt: Memory index document loaded",
+    "desc": "Memory-section line noting the writable store's index document is already in context and that memory_write's prompt explains how to maintain it."
+  },
+  "ff6b9e214464a7448ee1fae0e4213fa8eee464b7": {
+    "facing": "model",
+    "id": "system-prompt-memory-scope-privacy-defaults",
+    "name": "System Prompt: Memory scope privacy defaults",
+    "desc": "Same emission site and rendered text as the 2.1.221 id (the first sentence was factored out into the Ayo() helper): per-type privacy defaults plus the no-secrets-in-team rule."
+  },
+  "6db115ed08e71e34ad152c3cd80f8b39b91a76cf": {
+    "facing": "model",
+    "id": "system-prompt-memory-read-only-session-2",
+    "name": "System Prompt: Read-only file memory session",
+    "desc": "Reworded successor of the 2.1.221 id (the trailing paragraph is now the ${qrn} interpolation): the whole \"# Memory\" section used when file-based memory is read-only this session."
+  },
+  "9bef0e1800c57537f66a78fbcd992712226d07df": {
+    "facing": "model",
+    "id": "system-prompt-memory-store-index-empty-readonly",
+    "name": "System Prompt: Empty read-only memory-store index",
+    "desc": "Memory system-prompt line injected when a connected read-only memory store has an empty prompt index."
+  },
+  "aeebbba077e728f110b397a730b472ea8aacf2a0": {
+    "facing": "model",
+    "id": "system-prompt-memory-index-reference-data",
+    "name": "System Prompt: Memory index is reference data",
+    "desc": "Reworded successor of the 2.1.221 id (the index descriptor is now the ${k} variable): framing header wrapped around the fetched memory index injected into context."
+  },
+  "5f60f3e599787ae54b8f35b2d273f43563288aea": {
+    "facing": "internal"
+  },
+  "2b517db9c8d7d501bfaa1505e98bf1073a6edfa5": {
+    "facing": "internal"
+  },
+  "127479f0ef92c322e738c8ff43602619f263c23f": {
+    "facing": "internal"
+  },
+  "b358cbd287761096971dfd2ae895b582faf3abf8": {
+    "facing": "internal"
+  },
+  "b9025fc9f160c498c87a8874dffc0dace4913cf3": {
+    "facing": "internal"
+  },
+  "389e49b6967d065c80b2f4d7ec98f6314a79ae47": {
+    "facing": "internal"
+  },
+  "fbc8aa108c9e8584dd4e55621e3b360b2e4eb1db": {
+    "facing": "internal"
+  },
+  "d20e665edb1b6552e6ab2955bf7b7565d1105c06": {
+    "facing": "internal"
+  },
+  "658820356be8753b94dc3c39aab6a51708a33e64": {
+    "facing": "internal"
+  },
+  "4dc463cde589c99eea255d5b14e03204fd0f7b2a": {
+    "facing": "internal"
+  },
+  "b9a96afa8ea0a959a7389b2f80dd6fd4b9d27c58": {
+    "facing": "internal"
+  },
+  "7e42e2e41dc3205cd3f0488ff7597f389adb0374": {
+    "facing": "internal"
+  },
+  "2b7269ce2a6af5a2a87655738507232ff2ca554c": {
+    "facing": "internal"
+  },
+  "84ce5b205a6ceb585f4cdadd6216ae1c1e19c630": {
+    "facing": "internal"
+  },
+  "b7dbad445717a97be51e9af798fcebaf8381005c": {
+    "facing": "internal"
+  },
+  "3079ec6f00d0371188c95ddc3d5a3342319262cc": {
+    "facing": "internal"
+  },
+  "b583fa081329de9173ca8ba6807ba6094f589b55": {
+    "facing": "internal"
+  },
+  "3abb4a7fb628d2297ca27c7723eef95b4cb4c87b": {
+    "facing": "internal"
+  },
+  "4fae1e270008b903b9945a6ebfefa3a17d73c842": {
+    "facing": "internal"
+  },
+  "890b97e7504510369afc4e94b4ca928d408b40e5": {
+    "facing": "internal"
+  },
+  "fc71513da99519263bb0c01733f1f054fd51301b": {
+    "facing": "internal"
+  },
+  "7260e753a441f1effd4cb1847c8c272f952457ca": {
+    "facing": "internal"
+  },
+  "385ebb26c1cc771bcf18703a9ca5decadf5153a6": {
+    "facing": "internal"
+  },
+  "4e0059831fda4cfc4d280c62044d3279b159e959": {
+    "facing": "internal"
+  },
+  "ad71b9366541b46920079c1a379cd42da48e5434": {
+    "facing": "internal"
+  },
+  "b2c98f4369b101684595ef3613b871b6831d9e61": {
+    "facing": "internal"
+  },
+  "facd79907ad8b8a9b8626bb4331d386b15b8f50b": {
+    "facing": "internal"
+  },
+  "b0e795ab462aeeed1f4318d0d9fe1e9592bf015e": {
+    "facing": "internal"
+  },
+  "dba7edf8e2772787e1735463610263228fbf7036": {
+    "facing": "internal"
+  },
+  "8840e3a6e75777269c623584e1239fc18191a2d9": {
+    "facing": "internal"
+  },
+  "47dde60f47e2d12e1446097a527d2724a15adccf": {
+    "facing": "internal"
+  },
+  "7cf0868db3da63331570e28b039c392c0f47bdfa": {
+    "facing": "internal"
+  },
+  "d3f9646b1fbb72ca80faac8b3dcb157597056159": {
+    "facing": "internal"
+  },
+  "c6f0dd3d4167ac0c43f2ac1eda7501ced87015ea": {
+    "facing": "internal"
+  },
+  "ed1f0c71be95106c16d33bee85801f7cbf6ed577": {
+    "facing": "internal"
+  },
+  "ef4a73075a597471000b1af3f9f5fd11378a02df": {
+    "facing": "internal"
+  },
+  "85c875f2bd744f50cdf82c4f4c1bddbbee497613": {
+    "facing": "model",
+    "id": "tool-result-bash-cond-pattern-standalone-closer-too-complex",
+    "name": "Tool Result: Bash [[ ]] pattern leaf standalone ]] closer",
+    "desc": "Permission-analysis reason returned when a [[ ]] conditional pattern leaf may contain a standalone `]]` closer; surfaced to the model as the Bash tool_result when the resulting ask is not granted."
+  },
+  "8084c3bcc699f7cfef271c6464d49c9078dc8f61": {
+    "facing": "model",
+    "id": "tool-result-worktree-isolation-unverifiable-symlink",
+    "name": "Tool Result: Isolation worktree is a symlink",
+    "desc": "Reason fragment inserted into the \"isolation refused\" EnterWorktree error when the candidate worktree path is itself a symbolic link."
+  },
+  "c14eaf6b21b6ee789e510b00f172b952b50603ba": {
+    "facing": "model",
+    "id": "tool-result-worktree-isolation-unverifiable-bare-repo",
+    "name": "Tool Result: Isolation worktree is a bare repository",
+    "desc": "Reason fragment inserted into the \"isolation refused\" EnterWorktree error when the candidate path is a bare git repository rather than a working tree."
+  },
+  "2933d9a02ec174d58c01aed729294b37df40b94e": {
+    "facing": "model",
+    "id": "tool-result-worktree-isolation-contains-protected-checkout",
+    "name": "Tool Result: Isolation worktree contains protected checkout",
+    "desc": "EnterWorktree error returned when the requested isolation worktree encloses the protected checkout, which would disarm every isolation check."
+  },
+  "ef86b8ea46955e1345aa6ed44f9e93a80cb56303": {
+    "facing": "model",
+    "id": "tool-result-worktree-isolation-resume-from-non-git-dir",
+    "name": "Tool Result: Worktree resume started from non-git directory",
+    "desc": "EnterWorktree/resume error returned when the resume was launched from a non-git directory so the worktree cannot be confirmed as a separate isolation tree."
+  },
+  "3996b4fbbbd23e2d4112042b4cb8676e42fd5a21": {
+    "facing": "model",
+    "id": "tool-result-worktree-isolation-symlinked-ref-store",
+    "name": "Tool Result: Isolation worktree has symlinked ref storage",
+    "desc": "EnterWorktree error returned when the candidate worktree's git metadata replaces ref storage with symlinks that alias another repository's refs."
+  },
+  "cf114a4053fcb420ebd43063a88a56bfee9ad14d": {
+    "facing": "model",
+    "id": "tool-result-worktree-isolation-unverifiable-ref-store",
+    "name": "Tool Result: Isolation worktree ref storage unexaminable",
+    "desc": "Reason fragment inserted into the \"isolation refused\" EnterWorktree error when the candidate worktree's ref storage could not be fully examined."
+  },
+  "8e3c86209b5cc4adf35eaad5cc5636962aec1d48": {
+    "facing": "model",
+    "id": "tool-result-worktree-isolation-unverifiable-top-level",
+    "name": "Tool Result: Isolation worktree top-level not comparable",
+    "desc": "Reason fragment inserted into the \"isolation refused\" EnterWorktree error when the worktree's resolved working-tree path cannot be safely compared."
+  },
+  "ae96aedfa8215455e005586644363a6f3eb042e2": {
+    "facing": "model",
+    "id": "tool-result-worktree-isolation-work-tree-elsewhere",
+    "name": "Tool Result: Isolation worktree resolves elsewhere",
+    "desc": "EnterWorktree error returned when git resolves the candidate worktree's working tree to a different path (core.worktree redirect or a checkout above it)."
+  },
+  "443a7dfabf5f99a99f4bb31d92205c663e72beea": {
+    "facing": "model",
+    "id": "tool-result-worktree-isolation-own-launch-tree",
+    "name": "Tool Result: Isolation worktree is the launch checkout",
+    "desc": "EnterWorktree error returned when the requested worktree is the checkout this session launched from, so an honest and a forged record are indistinguishable."
+  },
+  "525eb58aa281cf5badc4f54ec6fc790246aaecca": {
+    "facing": "model",
+    "id": "tool-result-worktree-isolation-resume-from-own-repo",
+    "name": "Tool Result: Worktree resume started from its own repository",
+    "desc": "EnterWorktree/resume error returned when the resume ran from inside a directory that is its own repository, so it cannot be confirmed as a separate isolation worktree."
+  },
+  "305b1babb4797adde89517894080140d54813b6c": {
+    "facing": "model",
+    "id": "tool-result-worktree-isolation-unverifiable-git-dir",
+    "name": "Tool Result: Isolation worktree git dir not comparable",
+    "desc": "Reason fragment inserted into the \"isolation refused\" EnterWorktree error when the worktree's git directory cannot be safely compared with the protected checkout's."
+  },
+  "79b798e99a88e968a4bef79737c1157b39b55464": {
+    "facing": "model",
+    "id": "tool-result-worktree-isolation-shared-git-dir",
+    "name": "Tool Result: Isolation worktree shares the protected git dir",
+    "desc": "EnterWorktree error returned when the candidate worktree's git directory is the shared checkout's own, so git commands there would move the protected checkout's refs."
+  },
+  "a398dd5b94a3c430b59d7335d002f23732efe3c6": {
+    "facing": "model",
+    "id": "tool-result-worktree-isolation-unverifiable-common-dir",
+    "name": "Tool Result: Isolation worktree common dir not comparable",
+    "desc": "Reason fragment inserted into the \"isolation refused\" EnterWorktree error when the worktree's git common directory cannot be safely compared."
+  },
+  "72c9e5af5f5f9d52bd774a72bda224a2137aeee5": {
+    "facing": "model",
+    "id": "tool-result-worktree-isolation-invalid-linked-worktree",
+    "name": "Tool Result: Isolation worktree not a registered linked worktree",
+    "desc": "EnterWorktree error returned when the candidate uses another repository's refs without being a registered worktree of it."
+  },
+  "10bf1ed6b9dc1309ee7a81aa514d319cfa2f6eb1": {
+    "facing": "model",
+    "id": "tool-result-worktree-isolation-unverifiable",
+    "name": "Tool Result: Isolation worktree identity unverifiable",
+    "desc": "Wrapper template for every \"unverifiable\" EnterWorktree isolation refusal; the specific reason fragment is interpolated into it."
+  },
+  "bd06b4dd8f9cdfcf7da51a849cd52b131e0ddc8b": {
+    "facing": "model",
+    "id": "tool-description-write-overwrite-unread-fails",
+    "name": "Tool Description: Write overwrite-unread warning",
+    "desc": "Optional sentence appended to the Write tool description warning that overwriting a file the model has not Read will fail; included when the read-before-write gate is active."
+  },
+  "92067c3a59fcc65d5261a0b51d43a8b4403b33fb": {
+    "facing": "model",
+    "id": "tool-description-listagents-reply-only-fragment",
+    "name": "Tool Description: ListAgents remote bridge reply-only",
+    "desc": "Fragment interpolated into the ListAgents tool description explaining that Remote Control bridge sessions are reply-only."
+  },
+  "f4345e99137fbd85501c344139a33f2f2b08f84f": {
+    "facing": "model",
+    "id": "tool-result-artifact-login-blocked-by-credential",
+    "name": "Tool Result: Artifact login blocked by credential source",
+    "desc": "Artifact tool error returned when the session authenticates with a credential (API key, apiKeyHelper, OAuth token) that outranks a claude.ai account, telling the model how to get the user to re-login."
+  },
+  "35495445225af10a109fc93a0f2a99b6ac1bc3d2": {
+    "facing": "model",
+    "id": "data-memory-index-listing-cap-note",
+    "name": "Data: Memory index listing cap note",
+    "desc": "Trailing line appended to the assembled memory-directory index injected into context, stating how many memories were omitted by the recency cap."
+  },
+  "7061d60b61d4231d1626b037c56b034abfef006a": {
+    "facing": "model",
+    "id": "data-automem-memory-index-header",
+    "name": "Data: AutoMem memory index header",
+    "desc": "Header wrapped around the assembled memory-file index that is injected into the model's context as the AutoMem entry."
+  },
+  "ab04f07bc89c60521cc3dc7b200fd2e69fd7657f": {
+    "facing": "internal"
+  },
+  "bf3d3499581ef67d7f23aacc0fd421badac18c8f": {
+    "facing": "internal"
+  },
+  "f3132ce86c3f3fedf7a1898098839293ea7f734b": {
+    "facing": "internal"
+  },
+  "4025e6f2edc6b6a1fe63ea41227c79b5c2fcc312": {
+    "facing": "internal"
+  },
+  "02195b1aecb48e11e4fbb262e3fcd6832c08fc39": {
+    "facing": "ui"
+  },
+  "b78b14061fe8d7489fe1c22c69b0a5e7aafdc186": {
+    "facing": "ui"
+  },
+  "b4bf2eccf47a5ff4cfae9d03b11420b35154d5d6": {
+    "facing": "ui"
+  },
+  "51f652a8cae7af5dd3767b227518987193581966": {
+    "facing": "ui"
+  },
+  "949040306444464dd72a075ba854864fd84bddc7": {
+    "facing": "ui"
+  },
+  "0b7fe38a2ad5dc1b01f75a246e97d947941562a7": {
+    "facing": "internal"
+  },
+  "44821716e4e801803f5291576bdeafdfe78d0308": {
+    "facing": "internal"
+  },
+  "d1c005fb2aa0fd5aa94c212fdaa1360f1399a4bf": {
+    "facing": "internal"
+  },
+  "5aca605d5eddfd7bb43dd9e298ab0010dfabb1f1": {
+    "facing": "internal"
+  },
+  "b1a519ff578edbb27bb226d0c4a42319a2bd7656": {
+    "facing": "internal"
+  },
+  "904011be67bf36edd29eae92ab6a6e273d4ad8d4": {
+    "facing": "internal"
+  },
+  "17b9b39895a63695632c6ef8786bb96d2fac48be": {
+    "facing": "internal"
+  },
+  "094040db80ad00a951e2a1f24a93eedc0f040b9f": {
+    "facing": "internal"
+  },
+  "c6e76960eb283ed2b6930d1d0a9f5ab5dc5cf56d": {
+    "facing": "internal"
+  },
+  "11fcbdb5c6f26e45b1f7422e4b23d3587d3ff0c2": {
+    "facing": "internal"
+  },
+  "d27ff2ee9d6b25baf81754a48fd043550824c44e": {
+    "facing": "model",
+    "id": "tool-result-agent-worktree-isolation-guard",
+    "name": "Tool Result: Worktree isolation edit guard",
+    "desc": "Reworded/merged successor of the dropped tool-result-agent-worktree-isolation-guard (and its session twin): the Edit/Write/NotebookEdit validateInput rejection telling the model to edit the worktree copy instead of the shared-checkout path. Id reused to preserve the user override."
+  },
+  "d9bcc88a3df44b90e87a88d09e0754b89e109b92": {
+    "facing": "model",
+    "id": "tool-result-tool-input-schema-reference",
+    "name": "Tool Result: Undiscovered tool input-schema reference",
+    "desc": "Reworded successor of the dropped tool-result-tool-input-schema-reference: the trailing sentence of the \"schema was not sent to the API\" tool_use_error that inlines the tool's JSON input schema so the model can retry. Id reused to preserve the user override."
+  },
+  "5341dfdd20dc6418d13e3bb8e93263e994fdb15d": {
+    "facing": "internal"
+  },
+  "18927de139eae2e62f7ff25c73905fd4a59a63ce": {
+    "facing": "internal"
+  },
+  "86bd445d0b70e9580e21265eb1a5b78815d017d9": {
+    "facing": "internal"
+  },
+  "66203dd949708d88ac9176a4583ace4c9f7f0eb9": {
+    "facing": "model",
+    "id": "data-memory-sync-oversize-file-conflict-notice",
+    "name": "Data: Memory Sync Oversize File Notice",
+    "desc": "Injected as PostToolUse additionalContext after Read/Edit/Write on a synced memory file that exceeds the per-file sync limit, telling Claude the file is saved locally but not synced to shared memory."
+  },
+  "575a9142750f5e49cefbbc3eaad5ecea4b6fe641": {
+    "facing": "model",
+    "id": "data-memory-sync-oversize-file-remedy",
+    "name": "Data: Memory Sync Oversize File Remedy",
+    "desc": "Remedy sentence appended to the oversize-memory-file sync notice injected as PostToolUse additionalContext; instructs Claude to split the file and tell the user it is not being persisted."
+  },
+  "c7c1d5e894483de06d87564199e82ced9543d232": {
+    "facing": "internal"
+  },
+  "9cd07ae60116581dddd5de4a91647e9505bab453": {
+    "facing": "internal"
+  },
+  "e722632ab36f6a270e5418c68b68bc1c883ef95e": {
+    "facing": "internal"
+  },
+  "f7ff34be2af8d49b3cfa88eb6fae35ca8ca39f1b": {
+    "facing": "model",
+    "id": "system-reminder-coordinator-message",
+    "name": "System Reminder: Coordinator Message",
+    "desc": "Wrapper placed around a mid-turn message relayed from the coordinator session; reworded form of the 2.1.221 id (the \"The coordinator sent a message\" label is now the oqy variable), id kept stable to preserve the override."
+  },
+  "90be6b4612d78b25125ec15a0876b566f3753338": {
+    "facing": "model",
+    "id": "system-reminder-peer-session-message",
+    "name": "System Reminder: Peer Session Message",
+    "desc": "Header line prefixing a message relayed from another Claude session mid-turn; reworded successor to the 2.1.221 \"Another Claude session sent a message while you were working:\" literal, id kept stable to preserve the override."
+  },
+  "3993d6befae68c4a0a28dbb2b9a6d9bebb8bda87": {
+    "facing": "model",
+    "id": "system-reminder-cross-session-peer-message-respond-note",
+    "name": "System Reminder: Cross-Session Peer Message Respond Note",
+    "desc": "Sentence appended to a mid-turn peer message telling Claude to finish its current task first and then reply via SendMessage to the from= address."
+  },
+  "59b7658c89e423ed3fd0341b809f3f8a064e123a": {
+    "facing": "internal"
+  },
+  "baaa6dec2bf084114a1caed7e390de8c8fe310a0": {
+    "facing": "internal"
+  },
+  "4d068b85d4d124184d81774dc24b97425c9ee44b": {
+    "facing": "internal"
+  },
+  "809f9574b532cb5aa8fb4c9cb07b3cb0fc26b8e9": {
+    "facing": "model",
+    "id": "slash-command-autocompact-window-status",
+    "name": "Slash Command: Autocompact Window Status",
+    "desc": "Text /autocompact prints (and which enters the transcript as local-command-stdout) describing the current auto-compact window and where its value came from."
+  },
+  "1247bc76922a4fc3677d82909fade9fa19c52e1c": {
+    "facing": "model",
+    "id": "data-import-warning-skill-copied-as-is",
+    "name": "Data: Import Warning Skill Copied As-Is",
+    "desc": "Warning attached to an importable Codex skill item, surfaced in the /import preview/apply output; reworded version of the 2.1.221 id (now mentions bundled scripts and body instructions rather than allowed-tools frontmatter)."
+  },
+  "22f4dac02f55269186b6d59480a631d347592bf4": {
+    "facing": "model",
+    "id": "data-import-skill-md-over-size-limit",
+    "name": "Data: Import Skill SKILL.md Over Size Limit",
+    "desc": "Skip reason reported in /import output when a Codex skill's SKILL.md is larger than the byte limit Claude Code will load."
+  },
+  "ce0dd3820464a3c39af5a2d9f2f444471072f63f": {
+    "facing": "model",
+    "id": "data-import-skill-md-over-size-limit-after-reencoding",
+    "name": "Data: Import Skill Over Size Limit After Re-encoding",
+    "desc": "Skip reason reported in /import output when a Codex skill's SKILL.md would exceed the loadable byte limit once re-encoded as UTF-8."
+  },
+  "d853f8d7673615c78b461d8a7c9d15f61b353ea8": {
+    "facing": "model",
+    "id": "data-import-skill-directory-has-plugin-dirs",
+    "name": "Data: Import Skill Directory Has Plugin Dirs",
+    "desc": "Skip reason reported in /import output when a Codex skill directory contains subdirectories Claude Code would adopt as plugin surfaces."
+  },
+  "a8c343c9600a052c14bb22f58cd2b7ea412db8a5": {
+    "facing": "ui"
+  },
+  "7424c2ad35b2621fd903a6e51ab745334c8d7b66": {
+    "facing": "internal"
+  },
+  "05ca4b1f16472229cabafeff871d673f25ee7a05": {
+    "facing": "internal"
+  },
+  "f0c37278dc834c29da15d4c19a11e834a761a4b5": {
+    "facing": "internal"
+  },
+  "d7eeb0849eea29ce19abb8a3e68b6ad94b1234c6": {
+    "facing": "internal"
+  },
+  "9ed1a9fb4a2c57dd85fab00e92ab016edcb3786d": {
+    "facing": "model",
+    "id": "slash-command-mcp-status-see-terminal-for-details",
+    "name": "Slash Command: MCP Status See Terminal For Details",
+    "desc": "Suffix on the inline /mcp status summary pointing at the terminal /mcp view; appears in the transcript as local-command-stdout."
+  },
+  "e45b357abb766df1ae371e43dd53173e51e00ab0": {
+    "facing": "model",
+    "id": "slash-command-mcp-actions-unavailable-in-session",
+    "name": "Slash Command: MCP Actions Unavailable In Session",
+    "desc": "Reply from inline /mcp when reconnect/enable/disable cannot run in the current (non-terminal) session."
+  },
+  "a8d3dd93a341872e64058f3fa8e8fa8197018be5": {
+    "facing": "ui"
+  },
+  "63ed257c9a52d7b3321677a15effdda7b1f9e7b1": {
+    "facing": "ui"
+  },
+  "3237a44503e2064cd999b9295756ccbeb0f419af": {
+    "facing": "ui"
+  },
+  "e9453423aef629c504f7f6b3ea3dd8aab566ec76": {
+    "facing": "ui"
+  },
+  "6d3e6cda71d07934bc07fcc791008938339e1d3a": {
+    "facing": "ui"
+  },
+  "f9b63eb007bb5f62b2bcbfb6cb4cbee03d38b2e2": {
+    "facing": "ui"
+  },
+  "8d33f3eb8bb550dfac5400f4358fd9f4b4b5aa93": {
+    "facing": "internal"
+  },
+  "5e40730fa9c9692c2fd1c1d451d854e0788825b7": {
+    "facing": "model",
+    "id": "slash-command-code-review-ultrareview-tip",
+    "name": "Slash Command: Code Review Ultrareview Tip",
+    "desc": "Awareness tip appended to the /code-review prompt with an instruction for Claude to end its review response with this exact line."
+  },
+  "bb34e1c6ed03edc21e4354158e0381a6ee0b2f90": {
+    "facing": "ui"
+  },
+  "3b931cc116999f685958ddfd3adda49140eaa4d5": {
+    "facing": "model",
+    "id": "slash-command-terminal-setup-description-native-shift-enter",
+    "name": "Slash Command: Terminal Setup Description (Native Shift+Enter)",
+    "desc": "/terminal-setup description used on terminals that already support Shift+Enter natively; surfaced in the \"Available commands\" listing given to the model and in the slash menu."
+  },
+  "bb791a88d3b99803d32954c3f9145606d08d5a02": {
+    "facing": "internal"
+  },
+  "ba6c88da726a5c56d057c7c2dbf5bfb7cb367ce9": {
+    "facing": "internal"
+  },
+  "3cb23c1b579e05b5fac87e6ebfe63f3cf9b79d52": {
+    "facing": "ui"
+  },
+  "b3a386c5330ce2f7ed1d5274cc745a811b08e4c0": {
+    "facing": "ui"
+  },
+  "51423b154255ea27c152201a55a43d1342874234": {
+    "facing": "ui"
+  },
+  "042bfd1f697aa5b535c3d950670bdf880834f42e": {
+    "facing": "ui"
+  },
+  "b96a7a109d2743d10723e41562bdf8b5c3575146": {
+    "facing": "model",
+    "id": "slash-command-remote-control-unavailable-in-web-session",
+    "name": "Slash Command: Remote Control Unavailable In Web Session",
+    "desc": "Reply emitted as local-command-stdout when /remote-control is invoked from a session already running in Claude Code on the web."
+  },
+  "f46699d42567728f969b95b721d32a659aca1cd1": {
+    "facing": "internal"
+  },
+  "eb1803d08c24bd1ca602c908571b9da10a5ff82b": {
+    "facing": "internal"
+  },
+  "6c1a01d5eec1132d88c692f18feaa20fbd49f9cb": {
+    "facing": "internal"
+  },
+  "0978bf7c5bcc6ad692bc7ec26f7ec798d88b5e51": {
+    "facing": "internal"
+  },
+  "ce1eac038a9f81c9dadfb60621e4301a1c1082ef": {
+    "facing": "internal"
+  },
+  "9c2eb711306c7c149e9d8359c5b2b74cd648ee89": {
+    "facing": "internal"
+  },
+  "0ce5202c1cbb20b4e4d7d0cbafefde3884f8058a": {
+    "facing": "model",
+    "id": "data-environment-version-build-line",
+    "name": "Data: Environment Version Build Line",
+    "desc": "Version-plus-build-timestamp line produced by /version and carried into the transcript as local-command-stdout; identical body to the id lost at this bump, reused to preserve the override."
+  },
+  "0be4cfcf0d44db2e9548c5bf30cd1f553557185d": {
+    "facing": "internal"
+  },
+  "da4bf6c32af5c192b490708597a634ab93b561bb": {
+    "facing": "ui"
+  },
+  "94f2465644f3c2859b5832213734e83f770d8bd1": {
+    "facing": "internal"
+  },
+  "9add693952721f17b04e746f07167ac9c938166c": {
+    "facing": "ui"
+  },
+  "0d0bcb78761046118cd4bff99e066c9423c16a06": {
+    "facing": "internal"
+  },
+  "756d5e929adc12798e46003f62b915212ef12cb9": {
+    "facing": "ui"
+  },
+  "a58bc8acf765791db66d61f52794b029929f3e77": {
+    "facing": "ui"
+  },
+  "3eb3f51b8d797d217c892870722fa74449bc4af6": {
+    "facing": "internal"
+  },
+  "d1cee398e59552c4a3d620220fe4f32825b8ea90": {
+    "facing": "internal"
+  },
+  "acfc0871e57dfd18e5849497bbfa866b9e5ceba7": {
+    "facing": "internal"
+  },
+  "f68eaa1ec85e284f683dc98e8b4fa1a1954f9a64": {
+    "facing": "internal"
+  },
+  "de3cdf60a56ac4eb5e6e9de0552b29b87e21c44d": {
+    "facing": "model",
+    "id": "tool-description-self-hosted-runner-read-health",
+    "name": "Tool Description: Self-hosted runner read health",
+    "desc": "Description and prompt for the self_hosted_runner_read_health tool; sent to the model whenever the self-hosted-runner toolset is exposed."
+  },
+  "ef102c77ea17b67bdded40abd73ab3d6be93e9e2": {
+    "facing": "model",
+    "id": "tool-description-self-hosted-runner-read-metrics",
+    "name": "Tool Description: Self-hosted runner read metrics",
+    "desc": "Description and prompt for the self_hosted_runner_read_metrics tool, telling the model it parses the runner's Prometheus gauges; sent with the self-hosted-runner toolset."
+  },
+  "4c2582a9d32dd3db2ca501b2a47303272fc3e960": {
+    "facing": "model",
+    "id": "tool-description-self-hosted-runner-tail-log",
+    "name": "Tool Description: Self-hosted runner tail log",
+    "desc": "Description and prompt for the self_hosted_runner_tail_log tool, telling the model the runner log is secret-redacted before it reaches model context; sent with the self-hosted-runner toolset."
+  },
+  "6e28f75c32d2df5d70dbdea3e631cc8f2d1b66ec": {
+    "facing": "internal"
+  },
+  "497c05c50ce1b9fc2c27894b6cb75b51f42a19f5": {
+    "facing": "internal"
+  },
+  "dc34c8c478575e05a32964f02428477f70cd8d98": {
+    "facing": "internal"
+  },
+  "286b5e76ad1c7d46be70a245c8ebd929b0a249f8": {
+    "facing": "model",
+    "id": "tool-result-skill-disable-model-invocation",
+    "name": "Tool Result: Skill blocked by disable-model-invocation",
+    "desc": "Skill-tool validateInput rejection returned to the model when it tries to invoke a skill marked disable-model-invocation; surfaced as <tool_use_error> content."
+  },
+  "bb9673d08f8f04c54d186e44f4d7c9825ebd98e7": {
+    "facing": "model",
+    "id": "tool-result-artifact-asset-egress-blocked",
+    "name": "Artifact asset egress blocked",
+    "desc": "Reworded 2.1.224 version of the dropped 2.1.221 id (added the 'not reachable through this environment's network allowlist' clause) \u2014 the Artifact/WebFetch asset-read error handed back to the model when the egress proxy blocks the artifact frame host."
+  },
+  "6d3ce97a9c11906f7cc3068402d683d992e20ab1": {
+    "facing": "internal"
+  },
+  "09c0a84fd987b11ae879f691e6459fa1409dc3d5": {
+    "facing": "model",
+    "id": "tool-result-attachment-upload-disabled-api-provider",
+    "name": "Tool Result: Attachment upload disabled (API provider)",
+    "desc": "Per-attachment upload_error text the model reads in the SendMessage/SendUserFile tool result when file upload is refused because the session is not on the first-party Anthropic API provider."
+  },
+  "ba0db8bff9a02aa9c72ed8ba2b73275ff102184d": {
+    "facing": "model",
+    "id": "tool-result-attachment-upload-disabled-privacy-config",
+    "name": "Tool Result: Attachment upload disabled (privacy configuration)",
+    "desc": "Per-attachment upload_error text the model reads in the SendMessage/SendUserFile tool result when file upload is refused by the essential-traffic/privacy configuration."
+  },
+  "04dcd49c038980c52b8b1970e3285c73a1a88108": {
+    "facing": "model",
+    "id": "tool-result-sendmessage-attachments-not-delivered",
+    "name": "Tool Result: SendMessage attachments not delivered",
+    "desc": "Header of the SendMessage error tool_result telling the model the message reached the user but N attachments failed to upload."
+  },
+  "b61892fec990aa40dbff11d30cf810dc01f3318e": {
+    "facing": "model",
+    "id": "tool-result-sendmessage-attachments-not-delivered-tail",
+    "name": "Tool Result: SendMessage undelivered attachments follow-up",
+    "desc": "Trailing instruction on the SendMessage failed-attachment tool_result telling the model to tell the user which attachments were not delivered and why."
+  },
+  "dd3c6db8a5edacc00d2e504fcfc6711dda7df638": {
+    "facing": "model",
+    "id": "tool-result-memory-store-trust-pending",
+    "name": "Tool Result: Memory stores blocked by pending workspace trust",
+    "desc": "Refusal returned by every memory-store tool when the workspace has not been trusted yet, telling the model to have the trust dialog accepted first."
+  },
+  "4eba5b9bc6361b3894bc46802de83ac4c1f2792d": {
+    "facing": "model",
+    "id": "tool-result-memory-no-store-connected",
+    "name": "Tool Result: No memory store connected",
+    "desc": "Refusal returned by the memory tools when no memory store is bound to the session (non-connecting case)."
+  },
+  "807b444c3652c739cfbac78993906f0d373c0731": {
+    "facing": "model",
+    "id": "tool-result-memory-unknown-store",
+    "name": "Tool Result: Unknown memory store id",
+    "desc": "Refusal returned when the model passes a store id that is not connected; lists the connected ids and points at memory_list."
+  },
+  "5232d8cf0cc9c48ef573d3ebd5787dbbc161c97e": {
+    "facing": "model",
+    "id": "tool-result-memory-store-read-only",
+    "name": "Tool Result: Memory store is read-only",
+    "desc": "Refusal returned on a memory_write to a read-only store, naming the writable stores instead."
+  },
+  "d8b67f157cab9009e468c9b777726fe1aa53b7ba": {
+    "facing": "model",
+    "id": "tool-result-memory-path-must-be-absolute",
+    "name": "Tool Result: Memory path must be absolute",
+    "desc": "Refusal returned when the model passes a relative memory path, suggesting the absolute form and the store's root prefix."
+  },
+  "78feeede06b082346b337272118121c6c62f14d5": {
+    "facing": "model",
+    "id": "tool-result-memory-content-too-large",
+    "name": "Tool Result: Memory document over size cap",
+    "desc": "Refusal returned on memory_write when the content exceeds the per-document byte cap, telling the model to split it up."
+  },
+  "f73f084ccdea00dbbefe260a8a73d05f1548ded5": {
+    "facing": "model",
+    "id": "tool-result-memory-reserved-path-segments",
+    "name": "Tool Result: Memory reserved path segments clause",
+    "desc": "Clause spliced into the invalid-memory-path refusal when reserved-name checking is on, telling the model that skills/commands/agents/hooks directories are read-only."
+  },
+  "a0df1a1264ed3cc87d9bac5dfff5a0c25b7eb319": {
+    "facing": "model",
+    "id": "tool-result-memory-invalid-path",
+    "name": "Tool Result: Invalid memory path",
+    "desc": "Refusal returned when a memory path fails validation, spelling out the length, segment, extension and character rules for the model."
+  },
+  "6fbf26d20d8661bbd906f338dd76c6ab611f6982": {
+    "facing": "model",
+    "id": "tool-result-memory-session-ended-reason",
+    "name": "Tool Result: Memory session ended reason",
+    "desc": "Reason fragment interpolated into the 'memory store rejected the request' tool_result when the memory session ended because the account changed or the user logged out."
+  },
+  "aba7680f584d59ad7aa727ec6f70e46bea366f15": {
+    "facing": "model",
+    "id": "tool-result-memory-server-error-reason",
+    "name": "Tool Result: Memory server error reason",
+    "desc": "Reason fragment interpolated into the 'memory store rejected the request' tool_result for an http_NNN failure code."
+  },
+  "be397506d6dc8c8cdb4d477069cfac676c37d7a3": {
+    "facing": "model",
+    "id": "tool-result-memory-document-not-found",
+    "name": "Tool Result: Memory document not found",
+    "desc": "Failure message returned to the model when the requested memory document does not exist in the store."
+  },
+  "2aad2aaf3fa1f6b2fe4d9e23236513c21db472c4": {
+    "facing": "model",
+    "id": "tool-result-memory-store-not-found",
+    "name": "Tool Result: Memory store not found",
+    "desc": "Failure message returned to the model when the memory store itself is missing/not yet provisioned."
+  },
+  "196331dc30782d9578b61036d2ac28ea9eae73a0": {
+    "facing": "model",
+    "id": "tool-result-memory-store-rejected-request",
+    "name": "Tool Result: Memory store rejected the request",
+    "desc": "Failure wrapper returned to the model when the memory backend refuses the request, with the reason phrase appended."
+  },
+  "bfe354161ba0d349795cee2a0cfb0422926726ca": {
+    "facing": "model",
+    "id": "tool-result-memory-store-still-connecting",
+    "name": "Tool Result: Project memory store still connecting",
+    "desc": "Refusal/notice returned to the model when the project memory store has not finished connecting yet."
+  },
+  "2ed55ccddf7631faa83937a75b2f0213e1908fdd": {
+    "facing": "model",
+    "id": "tool-description-memory-write-good-memory-criteria",
+    "name": "Tool Description: What makes a good memory",
+    "desc": "The applicable/durable/legible rubric block joined into the memory_write tool prompt, teaching the model what is worth saving."
+  },
+  "3dea2cc2c0822e31eb58d6a7a97c8926f156e0cb": {
+    "facing": "model",
+    "id": "tool-description-memory-list-store",
+    "name": "Tool Description: memory_list",
+    "desc": "Short description of the memory_list tool (listing documents or, with no arguments, the connected stores); returned from the tool's description() to the model."
+  },
+  "9044007dc5db09023b26821a8228d081c17b5a3c": {
+    "facing": "model",
+    "id": "tool-description-memory-read-store",
+    "name": "Tool Description: memory_read",
+    "desc": "Short description of the memory_read tool; returned from the read tool's description() to the model."
+  },
+  "1e1cb6f65b87cd6ca61a903a7379bec95bc85a97": {
+    "facing": "model",
+    "id": "tool-result-memory-version-token-hint",
+    "name": "Tool Result: Memory version token hint",
+    "desc": "Suffix appended to the memory_read and memory_write success tool_results reminding the model to pass the printed version token as if_version."
+  },
+  "6667e6097db878b2f3e8a67973002846dd02e9a4": {
+    "facing": "model",
+    "id": "tool-description-memory-when-to-access-call-list-early",
+    "name": "Tool Description: Call memory_list early",
+    "desc": "Bullet in the 'When to access memories' block of the memory tool prompts telling the model to list memory early and read anything relevant."
+  },
+  "877aceabe0572a64f0c91f82362c19b88737197e": {
+    "facing": "model",
+    "id": "tool-description-memory-version-token-requirement",
+    "name": "Tool Description: Memory version token requirement",
+    "desc": "Version-tokens section of the memory_write prompt telling the model every write needs if_version and never to invent a token."
+  },
+  "413bb1f30c4c0a8f083f3bf23a430468bb6303e9": {
+    "facing": "model",
+    "id": "tool-description-memory-version-conflict-merge",
+    "name": "Tool Description: Memory version conflict merge guidance",
+    "desc": "Second version-tokens paragraph of the memory_write prompt explaining that a rejected write returns the current content to merge and retry."
+  },
+  "a7d34207eab8553832191d49653a9fe3dd7aed54": {
+    "facing": "model",
+    "id": "tool-description-memory-save-step1-store",
+    "name": "Tool Description: Memory save step 1 (store document)",
+    "desc": "Step 1 of the two-step save procedure in the memory_write prompt (store-document variant of the dropped file-based system-prompt-memory-save-step1-example-names); tells the model to write the memory as its own document with the frontmatter template."
+  },
+  "36fbfd5e02f7fb62cbe0e5d047b5c0631ccc27cb": {
+    "facing": "model",
+    "id": "tool-description-memory-index-truncation-store",
+    "name": "Tool Description: Memory index truncation warning",
+    "desc": "Bullet in the memory_write prompt warning the model that the index document is loaded into context and truncated past a line cap."
+  },
+  "7ad54513d4b300fdff1316d23dd2a862808cbe71": {
+    "facing": "model",
+    "id": "tool-description-memory-keep-fields-updated-store",
+    "name": "Tool Description: Keep memory document fields updated",
+    "desc": "Bullet in the memory_write prompt telling the model to keep the name/description/type frontmatter fields in sync with the document body."
+  },
+  "5a0e074232b53d4fe3cf9940a4e502fd9c93eba5": {
+    "facing": "model",
+    "id": "tool-description-memory-organize-by-topic-store",
+    "name": "Tool Description: Organize memory by topic (store)",
+    "desc": "Bullet in the memory_write prompt telling the model to organize memory semantically, one subject per document."
+  },
+  "661dd2597ee01788466b30932bb43fb2657dc93e": {
+    "facing": "model",
+    "id": "tool-description-memory-update-obsolete-documents",
+    "name": "Tool Description: Update or obsolete memory documents",
+    "desc": "Bullet in the memory_write prompt telling the model how to rewrite wrong/outdated memories and how to retire a document plus its index entry."
+  },
+  "4bd93a29d124448c24a4d801c1d87a135c069813": {
+    "facing": "model",
+    "id": "tool-description-memory-write-store",
+    "name": "Tool Description: memory_write (prompt lead)",
+    "desc": "Opening paragraph of the memory_write tool prompt telling the model that content replaces the whole document."
+  },
+  "190758d76dabba9ef4eec00b3171a67cb0541306": {
+    "facing": "model",
+    "id": "tool-result-memory-list-no-stores-connected",
+    "name": "Tool Result: No memory stores connected",
+    "desc": "memory_list tool_result content when the no-argument store listing comes back empty."
+  },
+  "dea3c60a9494e2e783bed8e0c430d2624a15ffc9": {
+    "facing": "model",
+    "id": "tool-result-memory-list-connected-stores",
+    "name": "Tool Result: Connected memory stores listing",
+    "desc": "memory_list tool_result header and per-store rows returned to the model when called with no arguments."
+  },
+  "d6e2c4a8af34ffc23c8c05028183ddddbc9d9bad": {
+    "facing": "model",
+    "id": "tool-result-memory-list-cursor-continuation",
+    "name": "Tool Result: Memory listing cursor continuation",
+    "desc": "Trailer appended to a capped memory_list tool_result telling the model how many entries remain and which cursor to pass next."
+  },
+  "d8139cfc76e6c84dc83f74db521d2a8e866fc986": {
+    "facing": "model",
+    "id": "tool-result-memory-read-over-cap",
+    "name": "Tool Result: Memory document over read cap",
+    "desc": "memory_read refusal returned to the model when the stored document exceeds the read cap, so its content is withheld."
+  },
+  "f60abdf171dbfec60edca865507f85b7af49b7a9": {
+    "facing": "model",
+    "id": "tool-result-memory-conflict-content-withheld",
+    "name": "Tool Result: Memory conflict with oversized content withheld",
+    "desc": "Clause appended to a memory_write conflict tool_result when the current document is over the read cap, telling the model to replace it wholesale or leave it."
+  },
+  "2d42b610a4444447aeb96715536fb34fdbc808d3": {
+    "facing": "model",
+    "id": "tool-result-memory-conflict-merge-and-retry",
+    "name": "Tool Result: Memory conflict merge and retry",
+    "desc": "Clause appended to a memory_write conflict tool_result when the current content is returned, telling the model to merge and retry with the given if_version."
+  },
+  "b3cc40568c44e0adfa31ac0cdbb53979858cd5b6": {
+    "facing": "model",
+    "id": "tool-result-memory-write-if-version-new-exists",
+    "name": "Tool Result: if_version=new but document exists",
+    "desc": "memory_write conflict lead returned to the model when it passed if_version=new for a path that already exists."
+  },
+  "4c18f8c0393c01577b6a5daa734e061657cd2361": {
+    "facing": "model",
+    "id": "tool-result-memory-write-stale-version",
+    "name": "Tool Result: Memory write stale version",
+    "desc": "memory_write conflict lead returned to the model when the document changed since it was read and the supplied if_version is stale."
+  },
+  "ebb603b814f6cca11f7dca514dc7631b6af70f73": {
+    "facing": "model",
+    "id": "tool-result-memory-write-bad-version-token",
+    "name": "Tool Result: Memory write malformed if_version",
+    "desc": "memory_write conflict lead returned to the model when if_version is neither a 12-character version token nor the literal word new."
+  },
+  "07406f5eb045ef75a094c112835b2c0dfeb5f9bb": {
+    "facing": "model",
+    "id": "tool-result-memory-write-bad-version-missing-doc",
+    "name": "Tool Result: Bad if_version on a nonexistent document",
+    "desc": "Tail of the malformed-if_version memory_write conflict when the path does not exist yet, telling the model to pass if_version=new."
+  },
+  "f0ef6abbaf39f9b279d1c1911d5110e2094dc88b": {
+    "facing": "model",
+    "id": "tool-result-memory-write-bad-version-current",
+    "name": "Tool Result: Bad if_version with current version",
+    "desc": "Tail of the malformed-if_version memory_write conflict when the document does exist, naming its current version token."
+  },
+  "d14ea4fe155669bac3ebf3ab1a128d91102c8752": {
+    "facing": "model",
+    "id": "tool-result-memory-store-path-conflict",
+    "name": "Tool Result: Memory document path conflict",
+    "desc": "memory_write failure returned to the model when the requested path collides with an existing document or one of its ancestors."
+  },
+  "de2037ac7ea43874ee88970bf57cf4195ae73bf9": {
+    "facing": "model",
+    "id": "tool-description-sendfeedback",
+    "name": "Tool Description: SendFeedback",
+    "desc": "Reworded 2.1.224 version of the dropped 2.1.221 id \u2014 the SendFeedback tool description, now covering the model's own behavior as well as the product; sent to the model whenever SendFeedback is exposed."
+  },
+  "140eb9f63f62c3abc3480d1bddacfb2092864992": {
+    "facing": "internal"
+  },
+  "790e865ff490ff3ae719b759783ed49e5485ebdf": {
+    "facing": "model",
+    "id": "tool-result-self-hosted-runner-first-party-only",
+    "name": "Tool Result: Self-hosted runner first-party only",
+    "desc": "Error thrown by the self-hosted-runner tools' provider gate; runToolUse wraps it as <tool_use_error> tool_result content telling the model the toolset only works on the first-party Anthropic API."
+  },
+  "de766843c0fbe203879798c3b1ebc65b07a69bea": {
+    "facing": "model",
+    "id": "tool-result-self-hosted-runner-not-logged-in",
+    "name": "Tool Result: Self-hosted runner not logged in",
+    "desc": "Error thrown by the self-hosted-runner API auth helper; reaches the model as <tool_use_error> content telling it to run `claude login` because ANTHROPIC_API_KEY will not work."
+  },
+  "23969c98c985b1de8c81180b6d7bf28c727ed905": {
+    "facing": "model",
+    "id": "tool-result-self-hosted-runner-auth-error-hint",
+    "name": "Tool Result: Self-hosted runner auth error hint",
+    "desc": "Suffix appended to 401/403 self-hosted-runner HTTP errors, reaching the model in the <tool_use_error> tool result with the re-login / base-URL hint."
+  },
+  "014ab2e311d6ffe5460f29653669366cf60f327d": {
+    "facing": "model",
+    "id": "tool-result-self-hosted-runner-requeue-ask",
+    "name": "Tool Result: Requeue runner session ask message",
+    "desc": "The requeue tool's ask-permission message; the TUI dialog never renders permissionResult.message (it renders the tool description and decisionReason), so this text only ever reaches the model as the tool_result when the ask goes unresolved."
+  },
+  "5218135dd21484efbae1f20408732d056c852760": {
+    "facing": "model",
+    "id": "tool-result-self-hosted-runner-spawn-local-ask",
+    "name": "Tool Result: Spawn local runner ask message",
+    "desc": "The spawn-local-runner tool's ask-permission message; not rendered by the permission dialog, so it reaches the model as the tool_result content when the ask is not resolved into an allow."
+  },
+  "505080898f19dd062128330cb10d86501c76ceaf": {
+    "facing": "internal"
+  },
+  "6110f8573efda7a2523e8d4ad8704c93cf2519b6": {
+    "facing": "internal"
+  },
+  "3d78d0844865a732583a16663a7be8aad27192ed": {
+    "facing": "internal"
+  },
+  "656651c26b85bb14217233adbcc67834f888d0e5": {
+    "facing": "model",
+    "id": "tool-result-agent-resume-worktree-fences-uncovered-retry",
+    "name": "Tool Result: Agent Resume Worktree Fences Uncovered (Retry)",
+    "desc": "Transient AgentResumeTransientError thrown by resumeAgentBackground when a parked agent's worktree is gone and the fallback dir is outside the session's isolation fences; its message is surfaced to the model inside the SendMessage tool result (`Agent \"X\" is stopped and could not be resumed: ${ue(T)}`)."
+  },
+  "0a3baaf0d2a43863ef8351c876a39bf953df04a5": {
+    "facing": "model",
+    "id": "tool-result-agent-resume-worktree-fences-uncovered-refused",
+    "name": "Tool Result: Agent Resume Permanently Refused (Fences Uncovered)",
+    "desc": "Permanent AgentResumePermanentlyRefusedError for the same uncovered-fences condition; delivered to the model in the SendMessage resume tool result when the agent can never be resumed here."
+  },
+  "5ccbb43ce4ce5bbefd71a60d6b965709989899db": {
+    "facing": "model",
+    "id": "tool-result-agent-resume-worktree-stat-failed",
+    "name": "Tool Result: Agent Resume Worktree Not Examinable",
+    "desc": "Transient resume error when stat() on the parked agent's worktree fails with something other than ENOENT/ENOTDIR; reaches the model through the SendMessage resume tool result."
+  },
+  "31ec4ac8166b389721ab676a291a8ad4e7ce044c": {
+    "facing": "model",
+    "id": "tool-result-agent-resume-worktree-root-refused",
+    "name": "Tool Result: Agent Resume Worktree Root Refused",
+    "desc": "Permanent resume refusal when the worktree-root containment check rejects the parked agent's worktree; surfaced to the model via the SendMessage resume tool result."
+  },
+  "28166469e6d29e88e63a3def67267adce60d16a8": {
+    "facing": "model",
+    "id": "tool-result-agent-resume-worktree-verify-unavailable",
+    "name": "Tool Result: Agent Resume Worktree Unverifiable",
+    "desc": "Transient resume error when the worktree containment check is 'unverifiable' this attempt; the model reads it in the SendMessage resume tool result and can retry."
+  },
+  "9581e6354b235f26a4bdfb00b781a28a247f14cd": {
+    "facing": "model",
+    "id": "tool-result-agent-resume-worktree-touch-failed",
+    "name": "Tool Result: Agent Resume Worktree Not Touchable",
+    "desc": "Transient resume error when utimes() on the verified worktree fails with a non-ENOENT errno; delivered to the model in the SendMessage resume tool result."
+  },
+  "262adfed46c534891c6231a1c3246fdcba9b971a": {
+    "facing": "model",
+    "id": "tool-description-sendmessage-worker-recipient-rows",
+    "name": "Tool Description: SendMessage Worker Recipient Rows",
+    "desc": "Two recipient-table rows appended to the SendMessage tool prompt when cross-session messaging is on, explaining the bare-name and name-plus-[ref] address forms."
+  },
+  "dce419955b4a5d277380633748d346fde8fb2ab0": {
+    "facing": "model",
+    "id": "tool-parameter-sendmessage-recipient-cross-session",
+    "name": "Tool Parameter: SendMessage Recipient (Cross-Session)",
+    "desc": "zod .describe() for SendMessage's `to` parameter in the cross-session build, naming the listing/[ref]/teammate/main/agentId address forms."
+  },
+  "a1e4cf972ff117d93fcf12a6c1814e465ccaf975": {
+    "facing": "model",
+    "id": "tool-result-send-message-teammate-running-queued",
+    "name": "Tool Result: Teammate Running, Message Queued",
+    "desc": "SendMessage success result when the target teammate is already running and the message was written to its inbox for the next turn. Reworded/reparameterized form of the 2.1.221 id tool-result-send-message-teammate-running-queued, whose id is reused to preserve the user override."
+  },
+  "06eb5053f830c801b9d5417125d66d014f107e5d": {
+    "facing": "model",
+    "id": "tool-result-send-message-shutdown-request-write-failed",
+    "name": "Tool Result: Shutdown Request Inbox Write Failed",
+    "desc": "SendMessage failure result when a structured shutdown_request could not be written to the target agent's mailbox."
+  },
+  "7005f371b10ae9fdd6b8b4837bb51af9486ab4ae": {
+    "facing": "model",
+    "id": "tool-result-send-message-shutdown-confirmation-write-failed",
+    "name": "Tool Result: Shutdown Confirmation Write Failed",
+    "desc": "Fragment spliced into the SendMessage shutdown-approval tool result when the confirmation could not be written to the team lead's inbox."
+  },
+  "ab4a45082a0dfb281c7c97dd4281281a29351ab8": {
+    "facing": "model",
+    "id": "tool-result-send-message-cross-session-unavailable",
+    "name": "Tool Result: Cross-Session Messaging Unavailable",
+    "desc": "SendMessage refusal returned when a uds:/bridge:/peer-session recipient is addressed but cross-session messaging is disabled in this session."
+  },
+  "1687ef119aed05202104411ec31f4fa8fa6c7b74": {
+    "facing": "ui"
+  },
+  "39f392951a30b1f7988f4f4dc1dbfcddbdbed64d": {
+    "facing": "ui"
+  },
+  "e0175f5eaa354a5d42fd2db73fae53b3ae7c9ddc": {
+    "facing": "ui"
+  },
+  "2115227cabe292b87a865c00cbb905b6b89cf078": {
+    "facing": "model",
+    "id": "tool-result-send-message-bridge-sent-one-way",
+    "name": "Tool Result: Bridge Message Sent One-Way",
+    "desc": "SendMessage success result for a bridge (Remote Control) send, noting the send was one-way because Remote Control is not connected locally."
+  },
+  "a35aa0be91035c6c885b8923445494cb17aae205": {
+    "facing": "model",
+    "id": "tool-result-send-message-bridge-send-failed",
+    "name": "Tool Result: Bridge Send Failed",
+    "desc": "SendMessage failure result when postInterClaudeMessage rejects a bridge send, with an optional stale-bridge-ID hint appended."
+  },
+  "58cdadbb3c062f601be6d5daab096f4b6dbc9e10": {
+    "facing": "model",
+    "id": "tool-result-send-message-use-listing-hint",
+    "name": "Tool Result: Use Peer Listing To Find Recipients",
+    "desc": "Trailing hint spliced into SendMessage's not-reachable / rebound tool results when the peer-listing tool is available."
+  },
+  "b8ebc885bde96f510f5f71bd6eed2709298cd003": {
+    "facing": "model",
+    "id": "tool-result-send-message-bridge-sessions-unchecked",
+    "name": "Tool Result: Bridge Sessions Could Not Be Checked",
+    "desc": "Note appended to SendMessage's not-reachable result when the cloud/bridge session list could not be fetched, explaining those sessions are reply-only from here."
+  },
+  "aaa6b43ac4032a2652c1f29056c252cad2381933": {
+    "facing": "model",
+    "id": "tool-result-sendmessage-agent-not-reachable",
+    "name": "Tool Result: SendMessage Agent Not Reachable",
+    "desc": "SendMessage failure result assembled when no agent, teammate, peer session or cloud session matches the requested recipient. Same prompt as the 2.1.221 id tool-result-sendmessage-agent-not-reachable with one extra interpolated note slot, so the id is reused."
+  },
+  "4abf8a706e9167c4f5ceda29de5fc93c6482b059": {
+    "facing": "model",
+    "id": "tool-result-send-message-rebound-recipient",
+    "name": "Tool Result: Rebound Recipient Explanation",
+    "desc": "Explains, in the SendMessage rebound refusal, that the name previously addressed a cloud or local peer session and now names an in-session agent. Reworded 2.1.221 tool-result-send-message-rebound-recipient (a trailing listing hint was added), id reused."
+  },
+  "715bb372d8ae79fa362d0a1db049d140671c0ac6": {
+    "facing": "model",
+    "id": "tool-result-send-message-rebound-earlier-session-listing-hint",
+    "name": "Tool Result: Rebound Earlier-Session Listing Hint",
+    "desc": "Optional tail on the SendMessage rebound explanation pointing at the peer-listing tool for reaching the earlier session."
+  },
+  "de953befbe64146408cc46c7f7b007dfeef92307": {
+    "facing": "model",
+    "id": "tool-result-send-message-samename-session-note",
+    "name": "Tool Result: Same-Named Peer Session Note",
+    "desc": "Note appended to a successful local-peer-session SendMessage result when other live sessions share the recipient's display name. Same prompt as the 2.1.221 id with an added listing-tool clause; id reused."
+  },
+  "04901cfe6a131a2b3e173d4b37f9373b2d30842d": {
+    "facing": "model",
+    "id": "tool-result-send-message-uds-exited-listing-hint",
+    "name": "Tool Result: Peer Socket Gone Listing Hint",
+    "desc": "Tail appended to the SendMessage local-socket failure result when ENOENT/ECONNREFUSED suggests the peer session exited."
+  },
+  "3507ac74f7b474136b38cc071c34a4458365ccbf": {
+    "facing": "model",
+    "id": "tool-result-send-message-cloud-approval-required",
+    "name": "Tool Result: Cloud Send Needs Approval",
+    "desc": "SendMessage failure result when isolatePeerMachines is on and the user did not approve the cross-machine send to a cloud session."
+  },
+  "deecd96a1a9682633578bd6d1beedffaf95b90dc": {
+    "facing": "model",
+    "id": "tool-result-send-message-samename-agent-note",
+    "name": "Tool Result: Same-Named Cloud Agent Note",
+    "desc": "Note appended to a successful cloud-session SendMessage result when other agents share the recipient's display name. Same prompt as the 2.1.221 id with an added listing-tool clause; id reused."
+  },
+  "a339a7ab39449fc8f408c7bd32f3a8156b559ac1": {
+    "facing": "model",
+    "id": "data-sendfile-transfer-copy-unreadable",
+    "name": "Data: SendFile Transfer Copy Unreadable",
+    "desc": "Failure reason folded into the `[SendFile: \"x\" was not delivered \u2014 \u2026]` marker that is prefixed onto the incoming peer message text the model reads."
+  },
+  "d84859f3d977f59e1e9a697d4b4619fd677683cb": {
+    "facing": "model",
+    "id": "tool-result-sendfile-bridge-sessions-unchecked",
+    "name": "Tool Result: SendFile Bridge Sessions Unchecked",
+    "desc": "Note appended to SendFile's no-peer-session-reachable refusal when the cloud/bridge session list could not be fetched."
+  },
+  "7c306526494f6f91bb28bdf705735ee17863e7c1": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-not-found",
+    "name": "Tool Result: Artifact DB Not Found",
+    "desc": "Artifact read_db/write_db error message for a 403/404 from the artifact database backend."
+  },
+  "e4cf9b2d578a92329d46bb2754d8fbf14fdf33e6": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-invalid-argument",
+    "name": "Tool Result: Artifact DB Invalid Argument",
+    "desc": "Artifact read_db/write_db error message for a 400/413/422 from the artifact database backend."
+  },
+  "e2280894ed48313cc25aa6a7524931d4ff980353": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-quota-or-rate",
+    "name": "Tool Result: Artifact DB Rate Or Storage Limit",
+    "desc": "Artifact read_db/write_db error message for a 429 from the artifact database backend."
+  },
+  "55d50feec1692a469764a317345371dda0c862e4": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-busy",
+    "name": "Tool Result: Artifact DB Concurrent Change",
+    "desc": "Artifact read_db/write_db error message for a 409/412 optimistic-concurrency loss."
+  },
+  "c862e49cba4651d557d12c13226b748f6f7d5aff": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-upstream-auth",
+    "name": "Tool Result: Artifact DB Auth Failure",
+    "desc": "Artifact read_db/write_db error message for a 401 from the artifact database backend."
+  },
+  "e46322eb1d32406ea369e1b105bbd6495adae053": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-store-unavailable",
+    "name": "Tool Result: Artifact DB Store Unavailable",
+    "desc": "Artifact read_db/write_db error message for any other backend status (store down)."
+  },
+  "ea4baf7dc1969ce986293574a84c958c4e1f00e8": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-capability-not-declared",
+    "name": "Tool Result: Artifact DB Capability Not Declared",
+    "desc": "Artifact read_db/write_db error telling the model to republish the artifact with the db capability declared."
+  },
+  "bc66d8753b7aedabd4ad21a22d47655aff5c5ea8": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-invalid-path-segments",
+    "name": "Tool Result: Artifact DB Invalid Path Segments",
+    "desc": "Artifact db error returned when `collection`/`doc_id` fail the path-segment regex, spelling out the allowed segment grammar."
+  },
+  "370458aff43e40cd9fe758dee20f23eb473e0b5a": {
+    "facing": "model",
+    "id": "data-task-notification-artifact-auto-reply-hourly-cap",
+    "name": "Data: Artifact Auto-Reply Paused (Hourly Cap)",
+    "desc": "Task notification injected into the conversation when artifact comment auto-reply is paused by the hourly cap. Same prompt as 2.1.221's data-task-notification-artifact-auto-reply-hourly-cap, now built from a shared lead fragment, so the id is reused."
+  },
+  "eff09f9273e34039bc6f87633f5081c688b3d503": {
+    "facing": "model",
+    "id": "data-task-notification-artifact-auto-reply-plan-mode",
+    "name": "Data: Artifact Auto-Reply Paused (Plan Mode)",
+    "desc": "Task notification injected when artifact comment auto-reply is suppressed because the session is in plan mode. Reworded/reparameterized 2.1.221 id, reused to keep the override."
+  },
+  "05343b1982e8ee7b71d52a92dc12f550409b524e": {
+    "facing": "model",
+    "id": "data-task-notification-artifact-auto-reply-notify-only",
+    "name": "Data: Artifact Auto-Reply Notify-Only",
+    "desc": "Task notification injected when the permission mode makes artifact auto-reply notify-only. Reworded/reparameterized 2.1.221 id (activation and new-comment leads merged into one builder), reused."
+  },
+  "bda5d99beafcea8a6975942b31ce5f6820163f3f": {
+    "facing": "model",
+    "id": "data-task-notification-artifact-auto-edit-noop",
+    "name": "Data: Artifact Auto-Edit Was A No-Op",
+    "desc": "Task notification injected after an auto-reply reports the requested artifact change was already present, so nothing was modified."
+  },
+  "e66fa4a673d91e8b1583646102c48cf9a2944f25": {
+    "facing": "model",
+    "id": "system-prompt-artifact-comment-thread-redesignated-framing",
+    "name": "System Prompt: Artifact Comment Thread Redesignated Framing",
+    "desc": "Opening framing sentence of the artifact comment-thread responder prompt for the 'redesignated' trigger \u2014 existing comments newly toggled/re-sent to Claude rather than new ones."
+  },
+  "3574e7a47d26edeacfccc451f659b938067677d9": {
+    "facing": "model",
+    "id": "system-prompt-artifact-comment-thread-new-comment-intro",
+    "name": "System Prompt: Artifact comment thread new-comment intro",
+    "desc": "Opening line injected when a new human comment arrives on a published artifact thread (the non-activation arm of the thread-framing conditional)"
+  },
+  "d118a2a1d713c92523dda54b4a9c2b0311352d87": {
+    "facing": "model",
+    "id": "system-prompt-artifact-comment-summoning-rows-guidance",
+    "name": "System Prompt: Artifact Comment Summoning Rows Guidance",
+    "desc": "Clause added to the artifact comment-thread responder prompt when summoning comments exist, distinguishing '[human, sent to you]' rows from plain '[human]' viewer chatter."
+  },
+  "8ccda16fc3b1f636defc04a0e12a090e7e74b202": {
+    "facing": "model",
+    "id": "data-artifact-auto-edit-patch-find-not-found",
+    "name": "Data: Auto-Edit Patch Find Text Not Found",
+    "desc": "Reason fragment interpolated into the artifact auto-edit patch-retry prompt when an edit's `find` text does not occur at apply time."
+  },
+  "bfae3e26df8f224885d8ac37e8dd0f2261bf5848": {
+    "facing": "model",
+    "id": "data-artifact-auto-edit-patch-find-ambiguous",
+    "name": "Data: Auto-Edit Patch Find Text Ambiguous",
+    "desc": "Reason fragment interpolated into the artifact auto-edit patch-retry prompt when an edit's `find` text matches more than once at apply time."
+  },
+  "2e48606f3de920ab080135d11e00de8fc553ff3d": {
+    "facing": "model",
+    "id": "system-prompt-artifact-auto-edit-patch-retry",
+    "name": "System Prompt: Artifact Auto-Edit Patch Retry",
+    "desc": "Retry instruction appended to the artifact auto-edit composer's user message after a patch failed to apply, echoing the offending `find` text inside nonce fences as data."
+  },
+  "53325673119704b2716567ccebc7596574e7ccaf": {
+    "facing": "ui"
+  },
+  "6087f8f49c89d830c1707038611cc570a5fa0912": {
+    "facing": "model",
+    "id": "tool-result-artifact-pr-review-stamp-input-value-not-pr-identifier",
+    "name": "Tool Result: PR-Review Stamp Input Value Not A PR Identifier",
+    "desc": "Refusal returned by the artifact PR-review approve-stamp validator when a stamp.input value is not one of the anchored PR's identifiers, an approve word, or the create method word. Reworded 2.1.221 id (the create-method word was added to the allowed set); id reused."
+  },
+  "d9f9307b14ec7a988916830f1573e9ecd1ecaf2a": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-action-read-write-db",
+    "name": "Tool Parameter: Artifact Action read_db / write_db",
+    "desc": "Segment of the Artifact tool's `action` enum description covering read_db and write_db, their db_op values, cursor paging, and the shared-state/untrusted-rows caveat."
+  },
+  "bdf9b418f04554f91531696192461b4859f5d8d1": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-action-comments-reply",
+    "name": "Tool Parameter: Artifact Action comments / reply",
+    "desc": "Segment of the Artifact tool's `action` description covering 'comments' and 'reply', including thread activation semantics. Expanded rewording of the 2.1.221 id tool-parameter-artifact-action-comments-reply, so the id is reused."
+  },
+  "f70eb04d44c80f9dc43382a34c2f06acc9431cc1": {
+    "facing": "model",
+    "id": "tool-result-artifact-read-db-invalid-url",
+    "name": "Tool Result: Artifact read_db Invalid URL",
+    "desc": "Permission-layer deny for Artifact read_db when `url` does not parse as an artifact url; the deny message is returned to the model as the tool_result."
+  },
+  "201a719d6046ae261348acc95e89b40c98fc98ac": {
+    "facing": "ui"
+  },
+  "25a4d4e1a9f099afc3e30e3319b4be234b467371": {
+    "facing": "ui"
+  },
+  "1a17a327d0972621a22d8d43bd79616faa49feb7": {
+    "facing": "ui"
+  },
+  "4e9ea7c5a8c5530ab6f7e92c02eff504040d9bd3": {
+    "facing": "ui"
+  },
+  "025d969358179e9c214d30b759bf5d3a76400765": {
+    "facing": "model",
+    "id": "tool-result-artifact-write-db-invalid-url",
+    "name": "Tool Result: Artifact write_db Invalid URL",
+    "desc": "Permission-layer deny for Artifact write_db when `url` does not parse as an artifact url; returned to the model as the tool_result."
+  },
+  "c18e427a9fa77b39d6fcce9cd2b8e369afefdd8c": {
+    "facing": "ui"
+  },
+  "c8b41de12d06e5edca1a2da2b9f4db2da7b0a507": {
+    "facing": "ui"
+  },
+  "75eb3f1f202210578607bb352aec4f57fcf1a8bd": {
+    "facing": "ui"
+  },
+  "10aee83b604a234cd594a7c5ebc433894d7e96e2": {
+    "facing": "ui"
+  },
+  "e6317af8e13ca621b1e4ffbdbfce6bd2d0c454fe": {
+    "facing": "ui"
+  },
+  "084410848646e3f8d0b976d77ec7c99581575530": {
+    "facing": "ui"
+  },
+  "1c61d10ccbb8bb491ed377866c5bd0a45e875227": {
+    "facing": "ui"
+  },
+  "a0997e6c1bfcaf350eb7dd9dc7c8008eb3979f1f": {
+    "facing": "model",
+    "id": "data-artifact-read-db-auto-classifier-unattended-note",
+    "name": "Artifact read_db Auto-Classifier Unattended-Notification Note",
+    "desc": "Clause appended to the Artifact tool's read_db toAutoClassifierInput() string when the read follows an unattended auto-reply notification; it enters the auto-mode permission classifier model's prompt."
+  },
+  "04131643aec4187aa9fd220b39a5f870e9629c04": {
+    "facing": "model",
+    "id": "data-artifact-write-db-auto-classifier-input",
+    "name": "Artifact write_db Auto-Classifier Input",
+    "desc": "The Artifact tool's write_db toAutoClassifierInput() line describing the pending database write (op, collection, doc id, data, target url); sent to the auto-mode permission classifier model."
+  },
+  "9c3e8effdd330002e1768243be9a47f767d88f73": {
+    "facing": "ui"
+  },
+  "527d3e324c7a0208ad2713e218371104ebd352ff": {
+    "facing": "ui"
+  },
+  "3775747422b9b3338642c97d233c31b4a22373e5": {
+    "facing": "ui"
+  },
+  "e0703c1dc9f6b947245b725bca824bac2fc3a6f9": {
+    "facing": "ui"
+  },
+  "2143ee16f4aef5ad5542c7bc11138f550ee0b796": {
+    "facing": "ui"
+  },
+  "c9fa9766794c78193c079c918e36e2b4473ed5ef": {
+    "facing": "ui"
+  },
+  "b40c6f5a0b64e3443eb9a181049069b48d6ab7ce": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-collection-doc-id-format",
+    "name": "Tool Result: Artifact DB Collection/Doc Id Format",
+    "desc": "Artifact tool validateInput rejection returned to the model when `collection` or `doc_id` violate the segment grammar for a database path."
+  },
+  "80cd71743b7b61904ab86e1e543d0d0829ba68df": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-document-path-too-long",
+    "name": "Tool Result: Artifact DB Document Path Too Long",
+    "desc": "Artifact tool validateInput rejection returned to the model when the composed `collection`/`doc_id` path exceeds the byte cap."
+  },
+  "2c8a7d5080b129919b7e60a4d4744bb7e5e10492": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-op-not-valid-for-action",
+    "name": "Tool Result: Artifact db_op Not Valid For Action",
+    "desc": "Artifact tool validateInput rejection returned to the model when `db_op` is not one of the operations the chosen read_db/write_db action accepts."
+  },
+  "0298a2d8e18821eddf75b702d21872bb99621c9b": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-doc-id-not-accepted",
+    "name": "Tool Result: Artifact DB doc_id Not Accepted",
+    "desc": "Artifact tool validateInput rejection returned to the model when `doc_id` is passed with a collection-addressing db_op (query/list)."
+  },
+  "2f6087f1f740c92b7c0abf3eaf1a83a7bda4203e": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-list-query-fields-rejected",
+    "name": "Tool Result: Artifact DB List Rejects where/order_by",
+    "desc": "Artifact tool validateInput rejection returned to the model when `query.where` or `query.order_by` are passed with db_op \"list\"."
+  },
+  "b4445f0168663a49c037a60ab906ab788a614468": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-cursor-with-order-by-rejected",
+    "name": "Tool Result: Artifact DB Cursor With order_by Rejected",
+    "desc": "Artifact tool validateInput rejection returned to the model when `query.cursor` is combined with `query.order_by` (an ordered query is a single page)."
+  },
+  "614a31a9ae97edd9ae656fa206f95c6fb13a4506": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-data-too-large",
+    "name": "Tool Result: Artifact DB Data Too Large",
+    "desc": "Artifact tool validateInput rejection returned to the model when the serialized `data` object exceeds the per-document UTF-8 byte cap."
+  },
+  "b9e564f94f445cb21092e935fb00e357f21d85c6": {
+    "facing": "model",
+    "id": "tool-result-artifact-comments-other-comments-elided",
+    "name": "Artifact Comments Other Comments Elided",
+    "desc": "Placeholder row substituted for the non-addressed comments of a thread when the comments tool_result is compacted to fit its size cap."
+  },
+  "6b7ca4b9a0a34bb2564e2446b91c75279c4c4198": {
+    "facing": "model",
+    "id": "tool-result-artifact-comments-thread-comments-elided",
+    "name": "Artifact Comments Thread Comments Elided",
+    "desc": "Placeholder row substituted for a thread's entire comment body when the comments tool_result hits its size cap; reworded from the 2.1.221 id of the same name to add the sent-to-Claude/unreadable counts."
+  },
+  "5e703c4bea763ecfd894f2e5d666578e5381e0dd": {
+    "facing": "model",
+    "id": "tool-result-artifact-comments-threads-not-listed",
+    "name": "Artifact Comments Threads Not Listed",
+    "desc": "Trailer row telling the model how many comment threads were omitted entirely from the tool_result because of the size cap; reworded from the 2.1.221 id of the same name to add the sent-to-Claude count."
+  },
+  "5d4b98a5a13be003529bf9001ffb76a4a71ea2a6": {
+    "facing": "model",
+    "id": "tool-result-artifact-comments-threads-not-listed-sent-count",
+    "name": "Artifact Comments Not-Listed Sent-To-Claude Count",
+    "desc": "Parenthetical inside the not-listed-threads trailer row of the comments tool_result naming how many omitted threads carry comments sent to Claude."
+  },
+  "b9be9e813cf53368e08b7ed2d8cddf4d89cc702c": {
+    "facing": "model",
+    "id": "tool-result-artifact-comments-size-cap-summary",
+    "name": "Artifact Comments Size-Cap Summary",
+    "desc": "Sentence appended to the comments tool_result header summarising how many threads had text elided and how many were not listed; reworded from the 2.1.221 id of the same name."
+  },
+  "37da5cbbf435c33b283ba29374c4b160111a0f6e": {
+    "facing": "model",
+    "id": "tool-result-artifact-comments-size-cap-not-listed-clause",
+    "name": "Artifact Comments Size-Cap Not-Listed Clause",
+    "desc": "Clause inside the comments tool_result size-cap summary naming how many threads were dropped entirely and how many of those carry Claude-addressed comments."
+  },
+  "bfe43df96051bf0606c0742a847cdb908274d5c8": {
+    "facing": "model",
+    "id": "tool-result-artifact-comments-sent-to-you-ordering-note",
+    "name": "Artifact Comments Ordering Note",
+    "desc": "Sentence appended to the comments tool_result header telling the model that Claude-addressed threads are sorted first and the list is not chronological."
+  },
+  "57b0d8f979db603a551cbdbf4dc9ddacf205b8aa": {
+    "facing": "model",
+    "id": "tool-result-artifact-comments-header-counts",
+    "name": "Artifact Comments Header Counts",
+    "desc": "Opening line of the action=comments tool_result giving total thread count plus open, Claude-activated, sent-to-you and unreadable-status counts; reworded from the 2.1.221 id of the same name."
+  },
+  "09535bf6e5bd30282f99e6627e38241e809174ee": {
+    "facing": "model",
+    "id": "tool-result-artifact-comments-header-sent-to-you-count",
+    "name": "Artifact Comments Header Sent-To-You Count",
+    "desc": "Clause inside the comments tool_result header line counting threads that carry comments addressed to Claude."
+  },
+  "a8ecee5dbc9afc872b9f2d7cbff6d4b83aeb7eb9": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-next-cursor",
+    "name": "Tool Result: Artifact DB Next Cursor",
+    "desc": "Trailer appended to the artifact read_db tool_result handing the model the continuation cursor for the next page of documents."
+  },
+  "8be9ef60c80b602cf96378aa6f95d54dee621344": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-cursor-unreadable",
+    "name": "Tool Result: Artifact DB Cursor Unreadable",
+    "desc": "Trailer on the artifact read_db tool_result telling the model more documents exist but the continuation cursor was malformed, so the read must be re-run."
+  },
+  "524278071f7d02323e33819a46583054b38243a1": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-next-cursor-past-elided",
+    "name": "Tool Result: Artifact DB Cursor Past Elided Documents",
+    "desc": "Trailer used when the read_db tool_result had documents elided by the size cap, warning the model that the cursor skips past them unless query.limit is lowered."
+  },
+  "0033badcabbcccc63b9e8c27f3fef0314613ef14": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-fence-header",
+    "name": "Tool Result: Artifact DB Fence Header",
+    "desc": "Opening randomized fence wrapping collaborator-written artifact database documents in the read_db tool_result, marking them as untrusted data rather than instructions."
+  },
+  "ae9eb73033bf24b4bd6dde9513b1a653f95dc794": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-documents-elided",
+    "name": "Tool Result: Artifact DB Documents Elided",
+    "desc": "Row substituted into the read_db tool_result for documents dropped by the result size cap, telling the model an over-cap document can only be read on the artifact page."
+  },
+  "6071266045a719c045b5998c7c9e45c4abd58e61": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-write-committed",
+    "name": "Tool Result: Artifact DB Write Committed",
+    "desc": "Success line of the artifact write_db tool_result confirming the document was committed and that every viewer of the artifact sees the change."
+  },
+  "e4f7acf73208c7adffd83a3b2c3760de8470c06f": {
+    "facing": "internal"
+  },
+  "63dd2ea4c58707071dbc84f3b25775a8fc0998a9": {
+    "facing": "internal"
+  },
+  "00a12ac4f9bd567ef5c40cbd2d29c5cddc69a7f3": {
+    "facing": "internal"
+  },
+  "e3abc27ad99aba30bcc7013fae402db7fa492eb5": {
+    "facing": "internal"
+  },
+  "e45296c7baaa3acbb6e9d4551d03d9052ff74267": {
+    "facing": "internal"
+  },
+  "93ad9bd4354ed928cf4eb8104646b3dff9e30ecd": {
+    "facing": "internal"
+  },
+  "5ca5c1a9ad4d39e5e4660f48b1070dbb4fa271d5": {
+    "facing": "internal"
+  },
+  "a50fc17cd542c18f473855be00cc736c510883d6": {
+    "facing": "internal"
+  },
+  "a672c2d6e6341517b53d569e0e2221ce7c95ffb8": {
+    "facing": "ui"
+  },
+  "bf5e7f83c09de853ba829d612d62aab573a90725": {
+    "facing": "ui"
+  },
+  "7c19615743031c4d2e30b74dd00158c02c6435c6": {
+    "facing": "internal"
+  },
+  "49cf265b20bc793d0d6edc89d404a16bc0c6c1d3": {
+    "facing": "internal"
+  },
+  "a08d266a43ea26e34c757b9060414e5cfd9ca0d6": {
+    "facing": "internal"
+  },
+  "52dbe061af27d3a75e81b6125c553aa519a6b247": {
+    "facing": "internal"
+  },
+  "9f8faca8d0b41dbf46f7c6fd850d8132c33f7512": {
+    "facing": "internal"
+  },
+  "e873cbfe3fed7987fa38d2a91c34d4b1e86377be": {
+    "facing": "internal"
+  },
+  "ba6cd9e7ed5fc4bb7f53d3c59f17e49c00b4fc40": {
+    "facing": "internal"
+  },
+  "eeeca97608d1fc80a35830542788421fdda38fbe": {
+    "facing": "ui"
+  },
+  "254d40cf2fc99ad4b4c793b8f78820ba9968c3e1": {
+    "facing": "ui"
+  },
+  "d2eaf8696a6f059f49840f3038a8ffc2371944ed": {
+    "facing": "ui"
+  },
+  "623d8eb92268cae252bdc8c2d51dbd3c50401a69": {
+    "facing": "ui"
+  },
+  "c185aef31b38af32c832147cade7d3f7199b03c8": {
+    "facing": "ui"
+  },
+  "e531ed0d3387945a2bff00138d707bd50c651455": {
+    "facing": "ui"
+  },
+  "a9f50f04a7bda907523c0afcf2692e048a7ff33e": {
+    "facing": "ui"
+  },
+  "b53eca8cf025de4b352a680d78ae9348be01367b": {
+    "facing": "ui"
+  },
+  "a2766622b116f0133f7d2f5a1f5ac751329ba389": {
+    "facing": "ui"
+  },
+  "d0d3c7b1ad7d866047fc99afb1b839d027ad3e54": {
+    "facing": "ui"
+  },
+  "1aa5ad57d7c3db7971fc0c3de9c0964f35043a11": {
+    "facing": "ui"
+  },
+  "e2af57ade792c88e2c286091ecc81344fb8cd1d8": {
+    "facing": "internal"
+  },
+  "0676488fa5c8467f6596b526c7ba36337b94d0c7": {
+    "facing": "internal"
+  },
+  "7b2b4e672bebfec6b6011a67bf1ebf8de6ba0f66": {
+    "facing": "ui"
+  },
+  "4eb0ecdce2bf2ce97c3c5fd99da7eecc95bbf27f": {
+    "facing": "ui"
+  },
+  "2d9a10ed229300016bfe8ac5b42c94897cc4d927": {
+    "facing": "internal"
+  },
+  "0a2776df5547c261329400d66aa0a0383d982f89": {
+    "facing": "internal"
+  },
+  "035707b5b5b0193897ac9a84ec63a79d6791a24e": {
+    "facing": "internal"
+  },
+  "9f326736dd54e65c06c85831138e4b0013a5eb3f": {
+    "facing": "internal"
+  },
+  "85a4d3d425704ce83fdf90840237fab773b646fd": {
+    "facing": "internal"
+  },
+  "3f3f7fc625396a5205ce5c8c9a2422a86f14c738": {
+    "facing": "internal"
+  },
+  "967f3caedc5ad72b07920597ee04f45dc37f486a": {
+    "facing": "ui"
+  },
+  "2a973d49b9973daf4d6e1970d9e6e3e76c1d0550": {
+    "facing": "ui"
+  },
+  "1f3417b13a745bee7ba22753ea0c914247beafb3": {
+    "facing": "ui"
+  },
+  "dd127bfae15822cf883674083da27359f57b2492": {
+    "facing": "ui"
+  },
+  "9cb064c59a062911cbefddefc216d573fcde0d14": {
+    "facing": "ui"
+  },
+  "8f3c9acf6730ee2d8374fbf92506bc49c66f4d14": {
+    "facing": "ui"
+  },
+  "800df5c801c7854f90f17a6d4a5c1fac03292689": {
+    "facing": "internal"
+  },
+  "02d5d9129a90ac28de6889ecba6a0ecc44e855a7": {
+    "facing": "internal"
+  },
+  "726fc171c2ec9b7964925544485f8ccd21fab7a2": {
+    "facing": "ui"
+  },
+  "8f663a194020bf0bcd19c3ffc85078b735d9fa9b": {
+    "facing": "internal"
+  },
+  "47d48587fea4909fb0a335fd9ddda373fed7f0b2": {
+    "facing": "internal"
+  },
+  "b9c264a46da58584779fbf5a8f930c641b90c26b": {
+    "facing": "ui"
+  },
+  "32694e2f73e04e9681c3e463465fa54cd471a9cf": {
+    "facing": "ui"
+  },
+  "b66f0bb06e65be48a8dfa34f69a95f31839afdcd": {
+    "facing": "ui"
+  },
+  "87945b8c9a8e1887ebde3fcafc9da3e5549a212d": {
+    "facing": "ui"
+  },
+  "33052dc8451478fbf0a67337e46392adc9c929e8": {
+    "facing": "model",
+    "id": "slash-command-code-review-end-with-marker-line",
+    "name": "Slash Command: Code Review End-With-Marker Line",
+    "desc": "Trailing instruction appended to the inline /code-review prompt telling the model to end its response with an exact marker line; injected only when RCp() supplies a marker for a non-fork, non-ultra inline review."
+  },
+  "7ac2a3d40be4bc02644ff57fac97af574434b0bf": {
+    "facing": "model",
+    "id": "slash-command-code-review-level-change-hint",
+    "name": "Slash Command: Code Review Level-Change Hint",
+    "desc": "Sentence fragment interpolated into the /code-review effort-notice preamble telling the model to mention that typing a level changes the review effort; part of the model-facing prompt prefix."
+  },
+  "0c635765d4e92ad0467de2e13718dc5f20d1fe79": {
+    "facing": "model",
+    "id": "slash-command-code-review-effort-notice-fork",
+    "name": "Slash Command: Code Review Effort Notice (Forked Run)",
+    "desc": "Parenthetical instruction prepended to the /code-review prompt when the review runs as a fork, telling the model to open its report with one line disclosing the effort level it used."
+  },
+  "ca6818a6f00d77a9b20cfc0beb846c24ad7da5e2": {
+    "facing": "model",
+    "id": "slash-command-code-review-effort-notice-inline",
+    "name": "Slash Command: Code Review Effort Notice (Inline Run)",
+    "desc": "Parenthetical instruction prepended to the inline /code-review prompt telling the model to state the effort level to the user in one short line as it begins."
+  },
+  "f345dca0eb3c65ef2d3e8b7487a98ab838042cad": {
+    "facing": "model",
+    "id": "slash-command-code-review-unrecognized-effort-notice",
+    "name": "Slash Command: Code Review Unrecognized Effort Notice",
+    "desc": "Notice injected into the /code-review prompt when the user typed an effort level the command does not recognize, naming the valid levels and the level actually used."
+  },
+  "232ff4d51df501b83ec655d268a102f5a7ecf27a": {
+    "facing": "model",
+    "id": "slash-command-code-review-reused-effort-notice",
+    "name": "Slash Command: Code Review Reused Effort Notice",
+    "desc": "Notice injected into the /code-review prompt when no level was typed and the command reuses the level the user last chose, optionally naming the level actually running."
+  },
+  "bd3f0b741d820e18d31a0a8223a28cb34870acf2": {
+    "facing": "model",
+    "id": "data-environment-recent-releases",
+    "name": "Data: Recent releases block",
+    "desc": "Environment block listing the last ten Claude Code releases and the running version, injected into the model context; same prompt as the 2.1.221 id data-environment-recent-releases (reused to preserve the override)."
+  },
+  "fb4ecd3bda41debb9db475d4827a7c14e9e4ad00": {
+    "facing": "model",
+    "id": "system-reminder-fork-source-parent-locator-named",
+    "name": "System Reminder: Fork-Source Parent Locator (Named)",
+    "desc": "Locator clause interpolated into the fork-source system reminder telling the model how to find the still-running parent session in the sessions listing when that parent reports a name."
+  },
+  "c473687f8009ecd919745927c404e6282e411ccd": {
+    "facing": "model",
+    "id": "system-reminder-fork-source-live-parent",
+    "name": "System Reminder: Fork-Source Live Parent",
+    "desc": "System reminder injected as a task notification at the start of a forked session, telling the model it is a copy of a still-running parent session and how to coordinate with it."
+  },
+  "b25e2585d97ba527d62068099c7f1f52692eb8a0": {
+    "facing": "internal"
+  },
+  "cee7d0b37dcc6bc1beb86ddf41b0c367849ab8b3": {
+    "facing": "ui"
+  },
+  "9fe8e3e61839425250bdb3b13cfb7938ecb6a1a4": {
+    "facing": "ui"
+  },
+  "a8636c5bc4976993071892493d6e7896917d26c9": {
+    "facing": "ui"
+  },
+  "e29e6358767544d40bcc09e4c768d5a70908eda6": {
+    "facing": "ui"
+  },
+  "ead12c1ba62b299c15d9c342f5c109d0228ee12b": {
+    "facing": "ui"
+  },
+  "6c0f82e6ca2d88d969925e85ca5a7120b48f5131": {
+    "facing": "ui"
+  },
+  "96bd7d4b72e419c7d77c99d9ca205f165ea1b28b": {
+    "facing": "ui"
+  },
+  "663722ed557600207e57bfb07819d7768d0ae232": {
+    "facing": "ui"
+  },
+  "4177a8485420c42c5f37a03ac364341aae8a2cba": {
+    "facing": "ui"
+  },
+  "e101a9131ab51c51aca4777b79d348c6612455f7": {
+    "facing": "ui"
+  },
+  "f5e69a0bd212757445c07be8f8ca18d13f3f1307": {
+    "facing": "ui"
+  },
+  "0125d02adc2ed0aea97238983f119a94921af94a": {
+    "facing": "model",
+    "id": "data-cross-session-delivery-notice-delivered",
+    "name": "Data: Cross-Session Delivery Notice (Delivered)",
+    "desc": "Meta prompt queued into the model context when messages this session sent to another session were approved and released to that session\u2019s Claude."
+  },
+  "92c00323151c5107611ac69497b224b84517551a": {
+    "facing": "internal"
+  },
+  "b38eef40a58acba297cc299ae99d0c9c383250c4": {
+    "facing": "ui"
+  },
+  "7d6c766a3c22f5fe034577775228dfe756e22f14": {
+    "facing": "ui"
+  },
+  "2816aaf876770496dd342756fd2f6bcb470727c8": {
+    "facing": "ui"
+  },
+  "0041aef7a609f5ecc1673ec8a84f098315a85dda": {
+    "facing": "ui"
+  },
+  "bbab8b0bb0b4b2b41a6ab6f892f71ecc52ff1e43": {
+    "facing": "ui"
+  },
+  "a6a0a530896d254c4427c4496742f14ec62ae625": {
+    "facing": "ui"
+  },
+  "462d00ff2f98a1c5df1379fcb10e82785f0f385a": {
+    "facing": "ui"
+  },
+  "3a951e910251defebcbf13d9684eaa36f5fc53d9": {
+    "facing": "ui"
+  },
+  "3508a653237d8b2f68db6541e8c061297678b1bc": {
+    "facing": "ui"
+  },
+  "0bdec81ea4c9476f430948b39eed9fbab1f0f67c": {
+    "facing": "ui"
+  },
+  "4a307758e13ccc9b5073cb7900f4a722c1bf8a3a": {
+    "facing": "ui"
+  },
+  "e17db1135f8c6cadfdc09c5e80a36a81fdce9b38": {
+    "facing": "ui"
+  },
+  "c637b16a5c0e6293224a596d0a21cb6510811c6b": {
+    "facing": "ui"
+  },
+  "68e90e7291981138b9a30144e757981d0cda7c1e": {
+    "facing": "ui"
+  },
+  "22fa887d2311913cc62d475ee07d3d3d792a600c": {
+    "facing": "ui"
+  },
+  "a034fa5e584c115e1f8b3cb956537aebccc986e4": {
+    "facing": "ui"
+  },
+  "1d07a7a9994b5dfe635bb74872e1a9a05f61246d": {
+    "facing": "ui"
+  },
+  "37ba7e92a7dfed64beff80d23640f94e2ebdd33c": {
+    "facing": "ui"
+  },
+  "4d3dfed55ac8191ee98db58dbd45b9e1a3c50dc1": {
+    "facing": "ui"
+  },
+  "a181b8bf150d5ec7305467d7125bfb7091aff99c": {
+    "facing": "internal"
+  },
+  "e6af7b13e67a8613788387de92fa438f59192b0a": {
+    "facing": "internal"
+  },
+  "c6f7fc320cd08a475265f2062aa8281b20605566": {
+    "facing": "ui"
+  },
+  "2a5e114ecffa6bd0c7b4a62f81413ae69c2914ca": {
+    "facing": "ui"
+  },
+  "e28bfce05602ab72e9e1cc853b169a98b03766c0": {
+    "facing": "ui"
+  },
+  "7a07d4dd7fa0e6a3e61a7b31c161855396621989": {
+    "facing": "ui"
+  },
+  "a1dcf281ed8e3ff4a91060f5669e6340525290cd": {
+    "facing": "ui"
+  },
+  "46bab2bc3dae5b1e0243387584bc157545bba6f3": {
+    "facing": "ui"
+  },
+  "ff6bc19e747aae103d0d87b8953fc53a9e71be00": {
+    "facing": "ui"
+  },
+  "1c57baee1287cc0c2790c42e0e2772b2000b6af5": {
+    "facing": "ui"
+  },
+  "fbf969e0bfaec70b1c4aab53b67efce5277f3b4c": {
+    "facing": "ui"
+  },
+  "31e853f7750d9fa67c861f5e3f43c0ae95f87ec8": {
+    "facing": "ui"
+  },
+  "47d41af6520a33ddee54cea99bb175c5da5d4087": {
+    "facing": "ui"
+  },
+  "082b9d2d65c7db5c0b133fc337783667c0babee7": {
+    "facing": "ui"
+  },
+  "d3ccedd31b12445c828f4ebdb60234145ff56639": {
+    "facing": "internal"
+  },
+  "dae453444160c588df8855898749f142710de36f": {
+    "facing": "ui"
+  },
+  "0088e7c11f9e00349a5bfbfe9931efe002b6cd0e": {
+    "facing": "ui"
+  },
+  "bf67be09228f0c972311986607f8c218c8caa0af": {
+    "facing": "ui"
+  },
+  "e887e3899848dbe20a0ffe239a21ff26d2684ee5": {
+    "facing": "ui"
+  },
+  "8f4f486bf6a56ca0d0860d60e113c53503588654": {
+    "facing": "ui"
+  },
+  "7f1b692600a9dd9ee51de08039b04d50e8347fbb": {
+    "facing": "ui"
+  },
+  "bbbbc52d9f61777ed1b297b82fd8b07e1ffe9b3e": {
+    "facing": "ui"
+  },
+  "d1d141f9e20274936982c8e6052af7143ceebd22": {
+    "facing": "ui"
+  },
+  "018d9cd6bdbd113da6979b3a0145c6b834c53b6e": {
+    "facing": "internal"
+  },
+  "7234b291661fa2a135122aebcf83bfe9d66cc8a2": {
+    "facing": "internal"
+  },
+  "1bc530a4864481509ecef32edfd7b40ef35ff089": {
+    "facing": "internal"
+  },
+  "038e6ca26b00d006b1caed883d2edd0120dd0e00": {
+    "facing": "internal"
+  },
+  "b5bbc38ba9fcb8a4a735ede96314a87efc1ece72": {
+    "facing": "internal"
+  },
+  "00cc3ed0b00c24fa67b17a8a03b6387fc36ec6bb": {
+    "facing": "internal"
+  },
+  "a02e2e706eda481c45039ca973fd9fe6dec4c866": {
+    "facing": "internal"
+  },
+  "ac5838618a229058ed77fc8477b0185542d3240c": {
+    "facing": "internal"
+  },
+  "600b200bc3b3b54f0b9bbf121007c337dcc90473": {
+    "facing": "internal"
+  },
+  "60033485ff75e9fa8f94c83a46624c608eba8c3b": {
+    "facing": "internal"
+  },
+  "b22de9d2bba19241546d904c2dd1b35db8bffa9e": {
+    "facing": "internal"
+  },
+  "2e35e86a7713d8f112cf27a6c9644c71199faa9a": {
+    "facing": "internal"
+  },
+  "9a071636da368a28b61730884243fb1ee8de8f77": {
+    "facing": "internal"
+  },
+  "86c1ce4054c0ef95b62329991a30f15976c7968e": {
+    "facing": "internal"
+  },
+  "2eb87167a09c797c8bea7f284a2bd172b54c5d5e": {
+    "facing": "internal"
+  },
+  "6be8baa1784ea08653894b44cd5d8485ecda2143": {
+    "facing": "internal"
+  },
+  "2c642323f46d13f6c85592d4569538469b83025a": {
+    "facing": "internal"
+  },
+  "6b3a2bcd5aeeaa9c1522e2747c1674647d2a04e9": {
+    "facing": "internal"
+  },
+  "655f8b5f58cd821af735ae1616a07d99a38e9843": {
+    "facing": "internal"
+  },
+  "e58c49c5423c913f3108a0629a27a218d02fa756": {
+    "facing": "internal"
+  },
+  "f11b101b319b8ce3350f2c42083e8df55ae044b0": {
+    "facing": "model",
+    "id": "agent-prompt-self-hosted-runner-setup-wizard-start",
+    "name": "Agent Prompt: Self-Hosted Runner Setup Wizard Start",
+    "desc": "Initial user turn passed to the child Claude Code session spawned by `claude self-hosted-runner setup`, telling the model to greet the user and begin Phase 1 of the runner setup wizard."
+  },
+  "3ddbe9c7361037f8c6ea2035c2702ea47817db85": {
+    "facing": "model",
+    "id": "agent-prompt-self-hosted-runner-doctor-wizard-start",
+    "name": "Agent Prompt: Self-Hosted Runner Doctor Wizard Start",
+    "desc": "Initial user turn passed to the child Claude Code session spawned by `claude self-hosted-runner doctor`, telling the model to greet the user and start the 8-category diagnostic walkthrough."
+  },
+  "1c36364361b9594c9a357fa59bb3e07c8e976eeb": {
+    "facing": "internal"
+  },
+  "37d91abaaa16cbfdd8b62386d21ee13ed8b05174": {
+    "facing": "internal"
+  },
+  "faba728fabbff1da2693419d8eb4aa28ac91abd8": {
+    "facing": "internal"
+  },
+  "40ef6e03d3e805ff24ea3c200bfba9095cfc0b1f": {
+    "facing": "internal"
+  },
+  "8091689c6f45bc450941672d60f4599d64f245b8": {
+    "facing": "internal"
+  },
+  "fcfd3387c5c9e40726b2c3e5fefe7d3843b843a7": {
+    "facing": "internal"
+  },
+  "050e89036fccb92b016fdab2fd7c5ec8c5791b7a": {
+    "facing": "internal"
+  },
+  "35b18c45bd7e38e7b1cdcab2d1715eb0246239fc": {
+    "facing": "internal"
+  },
+  "02d5bf0c439dde3701df29780d0d7d0cd0705703": {
+    "facing": "internal"
+  },
+  "f3a6eb9144dd1c3d68e4a021c3b754d61a32fa80": {
+    "facing": "internal"
+  },
+  "b7d1b67dcbd50385456f9f4431e713275ed1b347": {
+    "facing": "internal"
+  },
+  "a1a05f16def6f52daa71e8499f28a4c4cd1fd2b8": {
+    "facing": "internal"
+  },
+  "4206ced24a48fff73c488132bfb3161db9d67280": {
+    "facing": "internal"
+  },
+  "f8a2d8a148964d1b0fd26ab48f2da4d317245201": {
+    "facing": "internal"
+  },
+  "0986c25f247dffe953032f01ae36376c603bfdc1": {
+    "facing": "internal"
+  },
+  "1e83fdcccebdeaebbea91482ccd57d1e3b63638a": {
+    "facing": "internal"
+  },
+  "d4e8288e7b88167dd57aa10851e8c6c120c19f3c": {
+    "facing": "internal"
+  },
+  "ce0ddb066e39a2b64a0b80a54149f0d357ce5e3f": {
+    "facing": "internal"
+  },
+  "089f7b399226dbeca651bac86531f8d6874dc806": {
+    "facing": "internal"
+  },
+  "1332dddf025d6e72de62af360ba9cc3154c6c3b6": {
+    "facing": "ui"
+  },
+  "3e58600faf2f1a78704739175756d6819f09f185": {
+    "facing": "internal"
+  },
+  "aa0b356a559f40cdf2749b196cf28c6be25b29d3": {
+    "facing": "internal"
+  },
+  "f92aea09bbd7de5672f9c3909aba29abe1933640": {
+    "facing": "internal"
+  },
+  "136627b14f27eae5eb5f2de5a7fa6b114f1a7964": {
+    "facing": "internal"
+  },
+  "82d18d68203792aff7997c69134fa859af406bc5": {
+    "facing": "internal"
+  },
+  "2d642b34d664acc28a094480bd97160d9e59d1f1": {
+    "facing": "internal"
+  },
+  "d2ece4e217b926907919ea184d78ba0081f93336": {
+    "facing": "internal"
+  },
+  "82d6048950e468062faca98ca17b19038df1d3f2": {
+    "facing": "internal"
+  },
+  "c81a9e295264d8f57067b152f3743be3c45c0b88": {
+    "facing": "internal"
+  },
+  "f3174441af6829cb46f5419686165eeeaa5830f5": {
+    "facing": "internal"
+  },
+  "37581c84f15180b873ebacac1185395ea4eeca2d": {
+    "facing": "internal"
+  },
+  "ee0f1579ad5f41e91055b257e9841b57db734480": {
+    "facing": "internal"
+  },
+  "8340ab0438fb97764d6a38084b503f7f027a955a": {
+    "facing": "internal"
+  },
+  "e4c50f1eb9f3bd8fa0c1e5631fc301d879083d8d": {
+    "facing": "internal"
+  },
+  "491e6906a1cff7b8b2ac27ff88c5d49fb321cfd1": {
+    "facing": "internal"
+  },
+  "82034eacd7dd5e83d8a852ad379a72dabe1e7111": {
+    "facing": "internal"
+  },
+  "8e24bc4d7d123932f5c74e08b274979194cea4ea": {
+    "facing": "internal"
+  },
+  "e61a821ab89c2f0885df80b3db1779844f4554b3": {
+    "facing": "internal"
+  },
+  "ffa505381e38f59c22af2dbdaa1e7150ba5301bb": {
+    "facing": "internal"
+  },
+  "2f839d6c4cf57b71806f0dadaea04fd3a4656cae": {
+    "facing": "internal"
+  },
+  "ff6cfcfaa4adfa34ed4caf8ce63239ffa566f362": {
+    "facing": "internal"
+  },
+  "cf9e68e156a0b96433b4e85438a84ce3a8294b37": {
+    "facing": "internal"
+  },
+  "cae42a764836c2d02ff4427c891e9bd03465bcf5": {
+    "facing": "internal"
+  },
+  "c62dd1598a3dae871d336c1fa713109df9a45101": {
+    "facing": "internal"
+  },
+  "f53770912c0f0283bc7d31730c0b999ec9755ee0": {
+    "facing": "internal"
+  },
+  "844730889889020810e1ad3c00684ee4a8de2cc1": {
+    "facing": "internal"
+  },
+  "2c49fb480d8f47e0c03b891927c0afdabc3e550f": {
+    "facing": "internal"
+  },
+  "977c4b2bdc59843a1e1909c95328f1f497966294": {
+    "facing": "internal"
+  },
+  "f4019587314ddec1782f8c8cdae5ff5c8ce005ad": {
+    "facing": "internal"
+  },
+  "08a39976be4594ec11aad46f9be57c5168a9a10c": {
+    "facing": "internal"
+  },
+  "38d87ef7ebaaa08f87faebb47c18beeba1192e6b": {
+    "facing": "internal"
+  },
+  "bb3cdeadd52d50874e317c240c8fbab31c636167": {
+    "facing": "internal"
+  },
+  "8e7b81db5097704a5e4a9c79432b1e9b238d540e": {
+    "facing": "internal"
+  },
+  "af765993d0b317d0bdd5b621bf7e29c751649c61": {
+    "facing": "internal"
+  },
+  "227959e06cbda620135b50f52cb639290fc53bae": {
+    "facing": "internal"
+  },
+  "e24ff1efe4799f95adabbaa0c4695b55e8684887": {
+    "facing": "internal"
+  },
+  "e5e78d31f0ae17e90a72118c91d0805b5923d71b": {
+    "facing": "internal"
+  },
+  "97dd13549fb1bd8cddc14469614346397cdcb12e": {
+    "facing": "internal"
+  },
+  "d1566d90861e2947d1a55eaaba07c3b10e01eb40": {
+    "facing": "internal"
+  },
+  "ad28e61bb5576d904aa0d67cce1476b6a069e838": {
+    "facing": "internal"
+  },
+  "22f8a086cc72f35a61ba95320ec98389ed059562": {
+    "facing": "internal"
+  },
+  "f133d4eb67aacff0724866679c2418c98e49bd0b": {
+    "facing": "internal"
+  },
+  "bd1268e2fe04f082e92b1190d22bf4597d368f20": {
+    "facing": "internal"
+  },
+  "f55e36e265dd4c11a5a096e875610b3b6d71bb24": {
+    "facing": "internal"
+  },
+  "a7cfa16f7dec69e8c4ce2afcc33dcbfb499babdd": {
+    "facing": "internal"
+  },
+  "ef9e1d0d300c8f1782abba6760575375b5097fd4": {
+    "facing": "internal"
+  },
+  "73dad9d72583316cba1126aa71971dc2ad86eef4": {
+    "facing": "internal"
+  },
+  "b2266f39ad1df41bbc28fbfe2e0e4f6e9c031f02": {
+    "facing": "internal"
+  },
+  "dc7e2ccfebc3754a6e7c10f8b2da59dfc57bbc26": {
+    "facing": "internal"
+  },
+  "b4074b6f270a57d9b3f5822855ce897c1a035021": {
+    "facing": "internal"
+  },
+  "bba6f90b5dd3976b101210730d133aa1b4b46251": {
+    "facing": "internal"
+  },
+  "f33d7f27f0fd7209720d2d74663d21a65a13e31c": {
+    "facing": "internal"
+  },
+  "a9878b110561524a3c38b490a28a9a4059296d08": {
+    "facing": "internal"
+  },
+  "9eeedea945dc28f49b4fe8a8240ef0b7ab7de19b": {
+    "facing": "internal"
+  },
+  "ac93c72a2ad08110826e532825c11353a05a2117": {
+    "facing": "internal"
+  },
+  "ff3acf584c0f3475291593e44241a837808431ff": {
+    "facing": "internal"
+  },
+  "c126b8957bddfd053a30037851dad5d2fb534ad7": {
+    "facing": "internal"
+  },
+  "df8d200ebac2176351d23b13c07a6dd95a719fba": {
+    "facing": "internal"
+  },
+  "8c46a4a63ec83c01065d172cb8f1ea943cf54ddc": {
+    "facing": "internal"
+  },
+  "6392d8b45c844c0251a2049dd70ff72591488687": {
+    "facing": "internal"
+  },
+  "0c57265db429e7bfcf396f93e444cec61793f604": {
+    "facing": "internal"
+  },
+  "8fda7b983a9548b27635628a9e123b8f967b873b": {
+    "facing": "internal"
+  },
+  "4aa8e853efe60078feb95b45d1ece3f05dd41ab3": {
+    "facing": "internal"
+  },
+  "aab1e0945f491eb0c640ec8097d28cb3d6b7f2a9": {
+    "facing": "internal"
+  },
+  "0085307ae407c131269386b6b996bef91ca726fc": {
+    "facing": "internal"
+  },
+  "2e53b51f126aeea59d904c7b79afd44b77ad3fc5": {
+    "facing": "internal"
+  },
+  "347e572fa435ffe2563322a25c15a52ecfc1ea21": {
+    "facing": "internal"
   }
 }
