@@ -597,10 +597,27 @@ const NEW_PROMPT_ASSIGNMENTS = [
     description: "Model-facing type-suffix label appended to a project CLAUDE.md path in the memory/context injection (\"Contents of ${path} (project instructions, checked into the codebase):\"); conditional on a Project-type memory item being present.",
   },
   {
-    matcher: t => t.includes("<command-name>"),
-    name: "Slash-Command Name Framing Tag",
-    id: "system-prompt-command-name-framing-tag",
-    description: "Model-facing framing tag wrapping a slash-command invocation into a user-role message sent to the model (\"<command-name>...</command-name>\"); present whenever a slash command is expanded into the conversation.",
+    // Anchored on the skill's own H1, NOT on `includes('<command-name>')`.
+    // A NEW_PROMPT_ASSIGNMENTS hit bypasses the prose-quality gate AND the
+    // model-facing/ui/internal classifier, so a bare substring matcher forces
+    // everything it touches into the catalogue unjudged. This one used to match
+    // three unrelated strings: this skill (which merely MENTIONS the tag while
+    // telling the model what to grep transcripts for) plus two internal
+    // transcript-scan constants — `"content":"<command-name>/` (the session-
+    // descriptor prefilter) and `<command-name>/loop</command-name>` (the
+    // sentinel the /resume filter greps for). Both are needles CC matches
+    // against stored transcripts and are emitted to the model nowhere, so the
+    // classifier would have dropped them as internal, exactly as it did for
+    // their five siblings in the same `var` cluster. Instead they entered the
+    // catalogue wearing a description asserting they were model-facing, an
+    // audit believed it, wiped them as prose-free markup, and `.includes("")`
+    // went unconditionally true — every session read as a /loop session and
+    // /resume listed 5 of 50 (lobotomized-claude-code#24).
+    matcher: t => t.startsWith('# Claude Code Doctor'),
+    name: 'Skill: Claude Code Doctor',
+    id: 'skill-claude-code-doctor',
+    description:
+      "Bundled /doctor skill — health-checks the user's Claude Code setup from local data only (installation and settings integrity, unused skills/MCP servers/plugins, CLAUDE.md dedup and trimming, slow hooks, context-heavy extensions, version currency, auto mode, frequently-denied read-only commands), then proposes fixes behind a confirm gate. Injected only when the skill is invoked.",
   },
   {
     matcher: t => t.includes("<local-command-stdout>"),
