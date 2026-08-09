@@ -290,7 +290,29 @@ function cmdCheck() {
   }
   console.log('');
 
-  console.log(FAILED ? C.bad('HEALTH CHECK FAILED — see above') : C.ok('HEALTH CHECK PASSED — on-version, patched clean, mis-bind-free, injection-sites-intact, boots'));
+  // 6. predicate-literal audit — a few catalogued literals are needles CC greps
+  //    text with, not prose it emits. Blanking one inverts a branch, because
+  //    `"anything".includes("")` is always true. Wiping the /loop sentinel
+  //    classified every session as a /loop session and /resume listed 5 of 50,
+  //    while apply, boot and the READY smoke all stayed green (issue #24).
+  console.log(C.head('Predicate-literal audit (blanked needles the binary greps with)'));
+  {
+    const set = path.join(TWEAKCC, 'system-prompts');
+    const v = ccVersion(ccBinary()) || repoPromptsVersions().slice(-1)[0];
+    const jsonPath = path.join(REPO, 'data/prompts', `prompts-${v}.json`);
+    if (!fs.existsSync(ORIG_JS) || !fs.existsSync(set) || !fs.existsSync(jsonPath)) {
+      console.log(C.info('no pristine cli.js, override set or prompts JSON — skipped'));
+    } else {
+      let out = '', code = 0;
+      try { out = execSync(`node tools/checkScannedLiterals.mjs ${ORIG_JS} ${jsonPath} --set=${set} 2>&1`, { cwd: REPO, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 }); }
+      catch (e) { out = (e.stdout || '') + (e.stderr || ''); code = e.status || 1; }
+      if (code === 0) console.log(C.ok(out.split('\n').filter((l) => /^✓/.test(l)).join(' ').replace(/^✓\s*/, '')));
+      else fail(`predicate literals: ${out.split('\n').filter((l) => /BLANKED PREDICATE/.test(l)).slice(0, 4).join(' | ').slice(0, 240)}`);
+    }
+  }
+  console.log('');
+
+  console.log(FAILED ? C.bad('HEALTH CHECK FAILED — see above') : C.ok('HEALTH CHECK PASSED — on-version, patched clean, mis-bind-free, injection-sites-intact, predicate-safe, boots'));
 }
 
 // ---- dispatch --------------------------------------------------------------
