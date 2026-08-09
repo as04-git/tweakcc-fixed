@@ -17,7 +17,7 @@
 
 Claude Code only exposes so much through its settings. tweakcc reaches the rest: it patches the installed binary directly — the `cli.js`, and the JavaScript baked into the native Bun build — so you can restyle the interface, rewrite the prompts Claude actually runs on, and change how it behaves. You pick what you want from a terminal UI, apply it in one command, and roll it back whenever you like.
 
-This is **tweakcc-fixed**, a fork of [Piebald's tweakcc](https://github.com/Piebald-AI/tweakcc) that keeps everything the original does and pushes further — over four times the prompt coverage, a deeper set of patches, and overrides that reach the native install where upstream stops. More on that [below](#what-this-fork-adds).
+The lineage runs [Piebald's tweakcc](https://github.com/Piebald-AI/tweakcc) → [skrabe's tweakcc-fixed](https://github.com/skrabe/tweakcc-fixed) → this. Everything each one does still applies: over four times the prompt coverage of the original, a deeper set of patches, and overrides that reach the native install where upstream stops ([below](#what-this-fork-adds)). What this fork adds on top is native support for models Claude Code has never heard of, and color as a formatting tool the model can actually use ([below](#what-this-fork-adds-on-top)).
 
 ```console
 $ npx -y tweakcc-fixed@latest --apply
@@ -108,6 +108,40 @@ Each patch is tagged with how it behaves on `--apply`: **`[default on]`** applie
 
 </details>
 
+## What this fork adds on top
+
+Two additions, both off by default.
+
+### Custom models, natively
+
+Claude Code's `/model` list, context-window accounting, `/effort` rungs and subagent resolution are all computed **inside the binary**, from an embedded model catalog. No proxy can reach them — which is why the usual approach of pointing `ANTHROPIC_BASE_URL` at a gateway and _renaming_ a model leaves Claude Code lying about what is running and capping context at the wrong number.
+
+These patches extend the catalog instead of impersonating it. Put an entry in `settings.customModels` and it becomes a real picker row with its own context window, its own effort rungs, its own `/model` alias, and working subagent selection — without redefining what `opus`, `sonnet`, `haiku` or `fable` mean.
+
+| patch                         | what it fixes                                                         |
+| ----------------------------- | --------------------------------------------------------------------- |
+| `custom-model-catalog`        | appends entries to the embedded catalog                               |
+| `context-window-from-catalog` | the resolver never read the catalog; every custom model reported 200k |
+| `custom-model-picker`         | catalog entries alone don't appear in the interactive `/model` picker |
+| `custom-model-alias`          | `/model <alias>` for custom ids                                       |
+| `agent-tool-model-string`     | lets the Agent tool accept a non-built-in model name                  |
+| `rate-limits-from-headers`    | statusline quota in sessions the OAuth check would otherwise gate off |
+
+They are provider-agnostic: any gateway speaking the Anthropic or OpenAI wire format will do. Built for running Kimi K3 and GPT-5.6 subscriptions next to a Claude subscription. The catalog is `safeParse`d at runtime and a parse failure falls back to an _empty_ catalog — a dead Claude Code — so `custom-model-catalog` self-validates its output before writing. [Design notes and CC internals map](docs/custom-model-gateway.md).
+
+### Markdown color tags
+
+Lets the model organize its own prose with color:
+
+```
+<c blue>text</c>          preset
+<c v=#7aa2f7>text</c>     literal color
+```
+
+The hook is a genuinely dead branch in the markdown renderer — raw HTML is currently echoed verbatim — so non-tag HTML still passes through untouched. Colors route through Claude Code's own applicator, so 256- and 16-color terminals downgrade for free and `NO_COLOR` emits nothing.
+
+The palette follows the active theme automatically. Dark and light entries all clear **WCAG AA**. The daltonized palettes are not the standard hues filtered: dichromats perceive roughly a blue-yellow axis plus luminance, so eight distinct hues is not achievable — simulating deuteranopia over the standard set collapses `blue`/`purple` to **dE 0.5**. They were solved numerically for maximum pairwise separation under deuteranopia and protanopia instead, and ship in two variants depending on whether you want maximum distance or names that match their colors. [Design notes](docs/markdown-color-tags.md).
+
 ## How it works
 
 Two kinds of edit, both driven by your config in `~/.tweakcc/config.json`:
@@ -134,7 +168,7 @@ When Claude Code ships a new version, the [showtime skill](./skills/showtime/) r
 
 ## Credit & license
 
-A fork of [Piebald-AI/tweakcc](https://github.com/Piebald-AI/tweakcc) (© [Piebald LLC](https://piebald.ai)) — all of the core customization is its work, carried here with fixes from upstream PRs [#601](https://github.com/Piebald-AI/tweakcc/pull/601), [#646](https://github.com/Piebald-AI/tweakcc/pull/646), [#655](https://github.com/Piebald-AI/tweakcc/pull/655), and [#664](https://github.com/Piebald-AI/tweakcc/pull/664) on top of the fork-only additions. [MIT](https://github.com/Piebald-AI/tweakcc/blob/main/LICENSE).
+Built on [Piebald-AI/tweakcc](https://github.com/Piebald-AI/tweakcc) (© [Piebald LLC](https://piebald.ai)) — all of the core customization is its work — by way of [skrabe/tweakcc-fixed](https://github.com/skrabe/tweakcc-fixed), which contributed the extraction pipeline, the system-reminder and MCP-instruction overrides, native-install support, and most of the patch set, carried with fixes from upstream PRs [#601](https://github.com/Piebald-AI/tweakcc/pull/601), [#646](https://github.com/Piebald-AI/tweakcc/pull/646), [#655](https://github.com/Piebald-AI/tweakcc/pull/655), and [#664](https://github.com/Piebald-AI/tweakcc/pull/664). Only the custom-model and color-tag work above is this fork's. [MIT](https://github.com/Piebald-AI/tweakcc/blob/main/LICENSE).
 
 <div align="center">
 

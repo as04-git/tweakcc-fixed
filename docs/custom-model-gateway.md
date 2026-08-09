@@ -8,6 +8,13 @@ without redefining what `opus`/`sonnet`/`haiku`/`fable` mean.
 Built 2026-08-08, CC 2.1.220. Read this top-to-bottom once before tweaking
 anything; the failure modes section will save you.
 
+> **Scope.** This repo carries the _patch_ half — the tweakcc patches in §3 that
+> make Claude Code accept custom models at all. They are generic: any model you
+> put in `settings.customModels` works, against any gateway that speaks the
+> Anthropic or OpenAI wire format. The _operational_ half — the proxy service
+> unit, credential resync, and the statusline — is machine-specific and lives in
+> a separate repository, so file paths referenced below may not exist here.
+
 ---
 
 ## 1. Architecture
@@ -205,7 +212,7 @@ context window).
 
 ### 3.8 The statusline (not a patch)
 
-`~/.claude/statusline.py` (versioned + tested in `docs/gateway-assets/`), a
+`~/.claude/statusline.py` (versioned + tested in the separate gateway repo), a
 Python rewrite of the old bash `statusline-command.sh` (rollback: point
 `statusLine.command` in settings.json back at it). Two lines; line 2 renders
 model/effort, context, cost/time, and per-provider quotas. Key properties:
@@ -478,7 +485,7 @@ CC's real `~/.claude/.credentials.json`, not a credential env override.
 - Rate-limit gate neutralized: `grep -ac 'if(!1){if(UDt={}' <binary>` → 1
 - Quota headers on the wire: `curl -D - -o /dev/null <any /v1/messages call> | grep -i anthropic-ratelimit`
 - Statusline render: `echo '<status JSON>' | python3 ~/.claude/statusline.py`;
-  golden tests: `python3 docs/gateway-assets/statusline_test.py`
+  golden tests: `statusline_test.py` in the separate gateway repo
 
 ---
 
