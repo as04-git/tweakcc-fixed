@@ -2064,6 +2064,12 @@
     "version": "2.1.224",
     "why": "BODY. 120,614 chars, one piece, zero identifiers; override is byte-identical pristine. Structure by line: 1-55 HTML-comment contract (the only prose), 56 <title>, 57-80 theme script, 81-1437 vendored @ant/cds <style>, 1439-1525 <article> sample, 1526 ws-decisions island, 1548-2919 decisions script. The comment carries real slop: 'so treat these as hard rules, not advice' (L8) is motivational filler stacked on a rule that already says the publish is refused; 'src/frame/workshopHtmlVerify.ts' (L6) is an unactionable path inside Anthropic's monorepo; eight shouted tokens in forty lines (NEVER L9,"
   },
+  "skill-claude-code-doctor": {
+    "verdict": "pristine-keep",
+    "version": "2.1.226",
+    "why": "Restored to pristine. The 2.1.221 audit cut this 44,336-char skill to 5,698 by deleting Data sources, all ten checks and the Report format, keeping only the intro and Ground rules \u2014 which still reference \"Check 0\", \"check 4\", \"checks 0-4 and 7\" and \"checks 8 and 9\", none of which survive. The deleted text is almost entirely frozen mechanics: exact paths (~/.claude.json, ~/.claude/projects/<sanitized-cwd>/*.jsonl), JSON keys (skillUsage, usageCount, lastUsedAt, durationMs), transcript line shapes, MCP name normalization, thresholds (~50 files, ~1% listing budget), and non-inferable caveats such as pluginUsage being seeded with lastUsedAt=now and therefore not usage evidence. None of it is derivable from the one-line intro, so the trim changed useful behavior rather than trimming volume. Previously mis-catalogued as system-prompt-command-name-framing-tag because an over-broad NEW_PROMPT_ASSIGNMENTS matcher keyed on a passing mention of <command-name> in its transcript-grep instructions.",
+    "injectionPath": "Conditional \u2014 the /doctor skill body, injected only when the skill is invoked."
+  },
   "skill-dataviz-choosing-a-form": {
     "verdict": "pristine-keep",
     "version": "2.1.224",
@@ -2278,18 +2284,6 @@
     "verdict": "trim",
     "version": "2.1.224",
     "why": "Body states one fact three times and then repeats a sibling: \"A human sent an EXISTING comment in the thread to you on an artifact you published\" / \"(an already-posted comment, newly toggled to Claude or re-sent)\" / \"the comments summoning you this turn are existing posts newly sent to you, not new comments\" \u2014 plus \"address each of them now\". Check 1: CAPS theater on \"EXISTING\"; two of the three statements are pure restatement; the two sibling triggers say their equivalent in ONE sentence each (`\u2026-new-comment-intro`: \"A human activated you on a comment thread of an artifact you published, and "
-  },
-  "system-prompt-command-name-framing-tag-2": {
-    "verdict": "pristine-keep",
-    "version": "2.1.226",
-    "why": "Not prose. The literal is `zUp`, the prefilter the session-descriptor scanner runs over raw transcript lines (`u.includes(zUp)`) to find slash-command invocations. Blanking it makes the test unconditionally true, so every line matches and the descriptors \u2014 session titles, PR numbers \u2014 are built from garbage. It reaches the model nowhere; there is nothing here to lobotomize.",
-    "injectionPath": "Not injected. Module const in the transcript-scanning path behind /resume session descriptors."
-  },
-  "system-prompt-command-name-framing-tag-3": {
-    "verdict": "pristine-keep",
-    "version": "2.1.226",
-    "why": "Not prose. CC greps stored transcripts for this exact string to decide whether a session was a /loop session and should be hidden from /resume (`o.includes(...)` on the parse-failure arm, `c.some((u)=>u.includes(...))` on the main arm). Wiped to \"\" it matches every line, so every session holding any user message is filtered out \u2014 skrabe/lobotomized-claude-code#24, where /resume listed 5 of 50 while apply, four-zeros and the READY smoke all stayed green. Matched against transcripts already on disk, so even a non-empty rewrite desyncs it from existing history.",
-    "injectionPath": "Not injected. Sentinel matched against persisted transcript text by the /resume and --continue filter chain."
   },
   "system-prompt-coordinator-cross-session-peer-guidance": {
     "verdict": "trim",

@@ -246,7 +246,6 @@
   "system-prompt-claude-md-source-label-local",
   "system-prompt-cli-identity-agent-sdk",
   "system-prompt-combined-memory-index-pointer-instructions",
-  "system-prompt-command-name-framing-tag-3",
   "system-prompt-commit-body-length-guidance",
   "system-prompt-computer-use-lock-held-acknowledge",
   "system-prompt-computer-use-lock-held-other-session",
