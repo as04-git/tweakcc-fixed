@@ -523,35 +523,54 @@ pristine), `systemctl --user disable --now cliproxyapi`, use plain `claude`.
   false (identity vs transport). Fixing means separating OAuth identity from
   API-key transport; deliberately untouched (attribution-confusion risk).
 - **kimi-k3's 1M window** is from the model registry, not a live probe.
-- **M8 — prompt bundles parked**: `opus_5_prompt_bundle`,
-  `fable_5_mitigations`, `lean_prompt` capabilities are NOT set on custom
-  entries (long default prompt everywhere). Per-section env vars exist for
-  testing: `CLAUDE_CODE_BISON_CAIRN` (delivering-work),
-  `CLAUDE_CODE_LARCH_CISTERN` (corrections). **Backlog plan**: mine the system
-  prompts Codex CLI uses for the gpt-5.6 family and Kimi Code uses for k3 (fan
-  out parallel Luna subagents at xhigh to collate them), include the useful
-  Codex-plugin prompting guidance as another source, then attach CC
-  prompt-bundle capabilities to custom entries with our own logically adapted
-  prompts. Do not import any source wholesale.
+- **M8 — prompt bundles: RESEARCHED 2026-08-08, premise corrected.** Custom
+  kimi/gpt entries currently get CC's **lean** prompt, not the long one (the
+  `Zcg` full/lean switch falls through to lean for unknown ids). So the real
+  question is lean-vs-full-vs-bundle, not "long prompt everywhere."
+  `capabilities` is already config-supported — attaching
+  `opus_5_prompt_bundle` is config + `--restore && --apply`, no patch. Its
+  sections are individually env-gated (`CLAUDE_CODE_BISON_CAIRN`,
+  `LARCH_CISTERN`, `MARL_CORMORANT`, `GORSE_PLOVER`, `AMBER_ASTROLABE`;
+  `GAULT_KESTREL` is inverted) except `heron_brook` AgentTool-suppression and
+  no-nudges. Plan: (1) zero-patch env-arm evaluation with the existing
+  `tools/liveness/` harness (lean vs full vs full+bundle per custom model),
+  (2) only then decide which sections are worth adapting, (3) mine Codex CLI
+  (5.4/5.5-era only, local cache predates 5.6), Codex-plugin prompting
+  guidance, and Kimi Code's 20k-char Jinja system prompt as EVIDENCE, never
+  wholesale. Hard constraint: prompt overrides are global text splices —
+  per-model divergent text needs a new model-branching patch. Anti-self-
+  authoring rule: no model proposes AND ratifies the same section.
 - **M9 — Gemini provider candidate**: Google AI Pro sub available;
   CLIProxyAPI supports Gemini OAuth. Proxy-side addition only — the statusline
   renderer is already provider-generic (§3.8) and CC-side needs only a new
   `customModels` entry.
-- **M11 — gate the `claude-api` skill**: its ~190k-token reference currently
-  auto-triggers and can consume most of a context before useful work starts.
-  Default-disable the full payload, preserve a tiny searchable hint, and
-  load/search the detailed API reference only when the task genuinely needs
-  it. No matching gate patch currently exists in this fork (`rememberSkill`
-  is the only skill-related patch), so M11 requires a new patch or upstream
-  configuration hook. Purpose: retain discoverability without the automatic
-  context tax.
-- **M12 — route Codex compaction to native `/responses/compact`**: CC currently
-  summarizes through ordinary `/v1/messages`, which the proxy translates to a
-  regular Codex `/responses` call. Research OpenAI Codex's exact compact
-  contract and other high-value native behaviors first. Likely clean boundary:
-  add an explicit CC-side compaction marker, then translate only marked Codex
-  requests; avoid brittle summary-prompt sniffing. Do not assume native compact
-  is better until its semantics and output quality are verified.
+- **M11 — gate the `claude-api` skill: RESEARCHED 2026-08-08, mostly
+  config-only.** Its invocation payload is ~140k–215k tokens (64-file corpus:
+  516KB shared + language block; all 64 when no language detected).
+  Auto-trigger/listing pressure needs NO patch: `skillOverrides:
+{"claude-api": "name-only"}` in settings (schema-native; keeps `/claude-api`
+  and Skill-tool invocability, lists just the name). The on-invoke payload
+  needs one patch: rewrite `sKS`/`Scm` (anchors: un-minified export map
+  `registerClaudeApiSkill`) to emit the reading guide + a file-path index
+  instead of inlining the corpus — the files are materialized on disk under
+  the skill base dir regardless, so Read/Grep access is preserved.
+- **M12 — Codex compaction: RESEARCHED 2026-08-08, direct routing rejected.**
+  CC summarizes through ordinary `/v1/messages` (verified: one 169s
+  `/v1/messages` call, zero `/responses/compact` calls, current model). But
+  Codex's native compact returns an **opaque encrypted replacement-history
+  blob, not a text summary** (V1 `/responses/compact`; V2 = ordinary
+  `/responses` + `compaction_trigger` item — both end in
+  `Compaction{encrypted_content}`). CC needs readable text for its
+  transcript/`<summary>`/rewind model, so native routing is semantically
+  incompatible without the proxy owning Codex history state — not worth it.
+  **M12a (cheap, recommended)**: CC-side marker header on
+  `querySource==="compact"` requests (anchor: `let pi=as.headers;` in the
+  streaming request assembly) → proxy reads it for correct accounting and
+  skips compaction-inapplicable request transforms. No prompt sniffing;
+  headers survive to the executor intact. **M12b (native routing): deferred
+  indefinitely.** Research notes: other Codex-native gaps inventory (turn-state
+  stickiness, attestation, service_tier, WS transport) lives in the session
+  transcript of 2026-08-08 if ever wanted.
 - **Claude fallback credential** (§4.7): normal CC traffic forwards CC's own
   bearer and has one refresh owner. The proxy's stored Claude credential still
   exists for non-CC/no-bearer callers; exercising that fallback can reintroduce
