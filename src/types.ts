@@ -111,6 +111,37 @@ export type TableFormat = 'default' | 'ascii' | 'clean' | 'clean-top-bottom';
 
 export type AutoModeClassifierModel = 'default' | 'sonnet' | 'haiku';
 
+/** One preset name -> colour mapping, for a single theme class. */
+export interface ColorTagPalette {
+  red: string;
+  orange: string;
+  yellow: string;
+  green: string;
+  cyan: string;
+  blue: string;
+  purple: string;
+  gray: string;
+}
+
+/**
+ * Palettes for the markdown colour-tag patch, selected at render time from the
+ * active Claude Code theme name.
+ */
+/**
+ * Which daltonized palette to use: `separation` maximises how far apart the
+ * colours are under dichromacy; `name-faithful` gives up some of that so each
+ * colour still looks like its name.
+ */
+export type DaltonizedVariant = 'separation' | 'name-faithful';
+
+export interface ColorTagPalettes {
+  dark: ColorTagPalette;
+  light: ColorTagPalette;
+  darkDaltonized: ColorTagPalette;
+  lightDaltonized: ColorTagPalette;
+  ansi: ColorTagPalette;
+}
+
 export interface MiscConfig {
   showTweakccVersion: boolean;
   showPatchesApplied: boolean;
@@ -151,6 +182,12 @@ export interface MiscConfig {
   autoModeClassifierModel: AutoModeClassifierModel;
   suppressDeferredTools: boolean;
   claudemdContextOncePerConversation: boolean;
+  /** Let the model colour its own prose with `<c blue>…</c>` tags. */
+  enableMarkdownColorTags: boolean;
+  /** Which daltonized palette the colour tags use. */
+  colorTagDaltonizedVariant: DaltonizedVariant;
+  /** Optional per-theme-class overrides for the colour-tag presets. */
+  colorTagPalettes: ColorTagPalettes | null;
 }
 
 export interface InputPatternHighlighter {
