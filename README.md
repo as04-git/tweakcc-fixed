@@ -4,12 +4,10 @@
 
 ### Customize Claude Code far past its settings menu — themes, prompts, thinking, toolsets, and behavior — patched straight into the installed binary.
 
-[![npm](https://img.shields.io/npm/v/tweakcc-fixed?color=cb3837&label=npm&logo=npm&style=flat-square)](https://www.npmjs.com/package/tweakcc-fixed)
-[![downloads](https://img.shields.io/npm/dt/tweakcc-fixed?color=cb3837&style=flat-square)](https://www.npmjs.com/package/tweakcc-fixed)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-2.0.98%20%E2%86%92%202.1.221-d97757?style=flat-square)](https://github.com/anthropics/claude-code)
 [![license](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](#credit--license)
 
-**[Install](#install) · [Customize](#what-you-can-customize) · [The fork](#what-this-fork-adds) · [How it works](#how-it-works)**
+**[Install](#install) · [Customize](#what-you-can-customize) · [The fork](#what-this-fork-adds) · [This fork](#what-this-fork-adds-on-top) · [How it works](#how-it-works)**
 
 </div>
 
@@ -37,9 +35,16 @@ npx -y tweakcc-fixed@latest --restore  # revert from the backup
 npx -y tweakcc-fixed@latest --validate-system-prompts  # dry-run the apply preflight over your overrides
 ```
 
-Nothing to clone or build. Prompt data is pulled from this repo at runtime, so a new Claude Code release works the moment its version bump lands here. Updating Claude Code overwrites the patches, so you just re-run `--apply` — your configuration in `~/.tweakcc/config.json` is untouched either way.
+Updating Claude Code overwrites the patches, so you just re-run `--apply` — your configuration in `~/.tweakcc/config.json` is untouched either way.
 
-> Versions ≤ 1.0.5 on npm came from a different, unmaintained fork. 2.0.0 onward is this one.
+> **This fork is not on npm.** The commands above install [skrabe/tweakcc-fixed](https://github.com/skrabe/tweakcc-fixed), which does **not** include the custom-model or color-tag patches below. To get those, build from source:
+>
+> ```bash
+> git clone https://github.com/as04-git/tweakcc-fixed.git && cd tweakcc-fixed
+> pnpm install && pnpm build
+> node dist/index.mjs           # TUI
+> node dist/index.mjs --apply
+> ```
 
 ## What you can customize
 
@@ -165,6 +170,15 @@ A code patch finds a minified shape with a regex and splices in modified JS; a p
 ## Staying current
 
 When Claude Code ships a new version, the [showtime skill](./skills/showtime/) runs the whole upgrade: pull the new `cli.js`, re-extract the prompts, realign anything that drifted, and verify it landed clean. Say "it's showtime," or run `node skills/showtime/driver.mjs check`.
+
+**Relationship to upstream.** This fork shares history with [skrabe/tweakcc-fixed](https://github.com/skrabe/tweakcc-fixed) — identical commit hashes up to the point where this one diverges — so it tracks upstream rather than drifting from it:
+
+```bash
+git remote add upstream https://github.com/skrabe/tweakcc-fixed.git
+git fetch upstream && git merge upstream/main
+```
+
+The additions here are deliberately narrow and self-contained, which keeps that merge cheap. The color-tag patch in particular has no dependency on the custom-model work and may be proposed upstream.
 
 ## Credit & license
 
