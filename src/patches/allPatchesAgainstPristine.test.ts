@@ -25,6 +25,7 @@ import { writeReadDefaultLines } from './readDefaultLines';
 import { writeContextLimit } from './contextLimit';
 import { writeOpusplan1m } from './opusplan1m';
 import { writeThinkingBlockStyling } from './thinkingBlockStyling';
+import { writeMarkdownColorTags } from './markdownColorTags';
 import { writeFixLspSupport } from './fixLspSupport';
 import { writeFixSummarizeFromHere } from './fixSummarizeFromHere';
 import { writeFixRewindSummaryHeader } from './fixRewindSummaryHeader';
@@ -218,6 +219,7 @@ const INVOCATIONS: Record<PatchId, (src: string) => string | null> = {
   'read-default-lines': c => writeReadDefaultLines(c),
   opusplan1m: c => writeOpusplan1m(c),
   'thinking-block-styling': c => writeThinkingBlockStyling(c),
+  'markdown-color-tags': c => writeMarkdownColorTags(c),
   'fix-lsp-support': c => writeFixLspSupport(c),
   'fix-summarize-from-here': c => writeFixSummarizeFromHere(c),
   'fix-rewind-summary-header': c => writeFixRewindSummaryHeader(c),

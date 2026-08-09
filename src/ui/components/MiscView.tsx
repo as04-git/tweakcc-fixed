@@ -2,7 +2,11 @@ import { Box, Text, useInput } from 'ink';
 import { useContext, useState, useMemo } from 'react';
 import { SettingsContext } from '../App';
 import Header from './Header';
-import { TableFormat, AutoModeClassifierModel } from '../../types';
+import {
+  TableFormat,
+  AutoModeClassifierModel,
+  DaltonizedVariant,
+} from '../../types';
 
 interface MiscViewProps {
   onSubmit: () => void;
@@ -94,6 +98,9 @@ export function MiscView({ onSubmit }: MiscViewProps) {
     autoModeClassifierModel: 'default' as AutoModeClassifierModel,
     suppressDeferredTools: false,
     claudemdContextOncePerConversation: true,
+    enableMarkdownColorTags: false,
+    colorTagDaltonizedVariant: 'separation' as DaltonizedVariant,
+    colorTagPalettes: null,
   };
 
   const ensureMisc = () => {
@@ -589,6 +596,38 @@ export function MiscView({ onSubmit }: MiscViewProps) {
           updateSettings(settings => {
             ensureMisc();
             settings.misc!.enableDreamMode = !settings.misc!.enableDreamMode;
+          });
+        },
+      },
+      {
+        id: 'enableMarkdownColorTags',
+        title: 'Markdown color tags',
+        description:
+          'Let Claude color its own prose with <c blue>…</c> tags (presets: red, orange, yellow, green, cyan, blue, purple, gray; <c v=#7aa2f7> for a literal color). The palette follows the active theme, switching to contrast-checked light and colorblind-safe variants automatically, and colors are suppressed entirely under screen-reader mode and NO_COLOR. Pair this with the matching output-style instructions so the model knows the syntax. Override the palettes under settings.misc.colorTagPalettes.',
+        getValue: () => settings.misc?.enableMarkdownColorTags ?? false,
+        toggle: () => {
+          updateSettings(settings => {
+            ensureMisc();
+            settings.misc!.enableMarkdownColorTags =
+              !settings.misc!.enableMarkdownColorTags;
+          });
+        },
+      },
+      {
+        id: 'colorTagDaltonizedVariant',
+        title: 'Color tags — colorblind palette',
+        description:
+          'Which daltonized palette the color tags use. "separation" maximizes how far apart colors sit under deuteranopia and protanopia (worst pair 18.8 dE on dark, 18.3 on light) at the cost of name fidelity — orange reads brown, gray reads near-black. "name-faithful" keeps each color recognizable as its name and gives up some separation (14.3 dE on dark, 16.4 on light); both stay inside the band where colors are reliably told apart. Only affects the *-daltonized themes.',
+        getValue: () =>
+          settings.misc?.colorTagDaltonizedVariant ?? 'separation',
+        toggle: () => {
+          updateSettings(settings => {
+            ensureMisc();
+            settings.misc!.colorTagDaltonizedVariant =
+              (settings.misc!.colorTagDaltonizedVariant ?? 'separation') ===
+              'separation'
+                ? 'name-faithful'
+                : 'separation';
           });
         },
       },
