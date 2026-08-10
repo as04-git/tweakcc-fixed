@@ -22,8 +22,8 @@ anything; the failure modes section will save you.
 ```
 ┌──────────────────────────────────────────────────────────────────┐
 │ Claude Code 2.1.226 (patched binary, native ELF)                 │
-│   6 tweakcc patches → model catalog, picker, ctx window,          │
-│   agent-tool enum, rate-limit gate, /model aliases                │
+│   7 tweakcc patches → model catalog, picker, ctx window,          │
+│   agent-tool enum, rate-limit gate, aliases, auto-swap           │
 └──────────────┬───────────────────────────────────────────────────┘
                │ ANTHROPIC_BASE_URL=http://127.0.0.1:8317
                │ CC native OAuth bearer (no credential env vars)
@@ -90,7 +90,7 @@ through it, and do not treat `~/.claudish/*-oauth.json` as a source of truth.
 ## 3. The tweakcc patches (Problem B)
 
 All config-driven via `settings.customModels` in `~/.tweakcc/config.json`; all
-six condition on that array being non-empty. Apply with:
+seven condition on that array being non-empty. Apply with:
 
 ```bash
 cd ~/tweakcc-fixed
@@ -218,7 +218,39 @@ id, or duplicates. Alias changes require `--restore && --apply` (the anchor no
 longer matches once injected; a partial pair-match fails loudly instead of
 double-injecting).
 
-### 3.7 Also enabled
+### 3.7 `auto-model-swap` (`src/patches/autoModelSwap.ts`, M14)
+
+When a small-context custom model hits its auto-compact ceiling, swap the
+session to its larger-window sibling and continue **uncompacted** instead of
+losing the raw conversation to a summary. Currently maps
+`kimi-k3-256k → kimi-k3` (262144 → 1048576).
+
+- **Insertion site** (2.1.226): `fXs()`, the auto-compact generator (exported
+  as `autocompact` from `rVd()`), immediately AFTER the `KJ_` threshold gate —
+  so the swap fires only when compaction is actually due — and before the
+  reactive/auto branch, so both compaction routes are covered.
+- **Mutation**: exactly what `/model` (`vwn`) and the native consent/refusal
+  fallback swaps do — `setAppState({mainLoopModel:to, mainLoopModelForSession:null})`
+  plus in-place `toolUseContext.options.mainLoopModel` (the query loop holds
+  the same object, so it propagates this turn; appState covers future turns).
+  **Session-only**: `Ewn` settings-persist deliberately skipped — a fresh
+  256k session re-swaps when it fills; the user's default is untouched.
+- Returns `{kind:"not_needed"}`; next turn's `KJ_` evaluates against the 1M
+  window and compaction never arms. Emits a native
+  `{type:"system",subtype:"notification",key:"auto-model-swap"}` banner.
+- **Side-door stats**: fire-and-forget spawn of
+  `~/.claude-gateway/bin/model-swap-event` (exists-checked) with a JSON record
+  on stdin → appends to `~/claude-gateway/model-swap-stats.jsonl`. Absent
+  script = skipped. All policy lives outside the binary; deliberately NOT
+  routed through CC hooks (closed event set = extra anchors; hooks intercept
+  CC decisions — here the patch IS the decision).
+- **Anchors**: literal `"DISABLE_COMPACT"` / `"mainLoopModel"` /
+  `"autoCompactWindow"` / `"agentContext"` / `{kind:"not_needed"}` shapes in
+  the `fXs` head; helper names extracted at apply time; **fails loudly (null)
+  on drift**. fastMode bookkeeping skipped (Claude-side gate, no custom model
+  can be a fast-mode target).
+
+### 3.8 Also enabled
 
 - `misc.enableModelCustomizations: true` + `CUSTOM_MODELS` in
   `modelSelector.ts` extended with Opus 4.7/4.8 (the hardcoded list stopped at
@@ -240,7 +272,7 @@ context window).
 
 ---
 
-### 3.8 The statusline (not a patch)
+### 3.9 The statusline (not a patch)
 
 `~/.claude/statusline.py` (versioned + tested in the separate gateway repo), a
 Python rewrite of the old bash `statusline-command.sh` (rollback: point

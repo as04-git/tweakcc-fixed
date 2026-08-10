@@ -66,6 +66,7 @@ import { writeAllowCustomAgentModels } from './allowCustomAgentModels';
 import { writeCustomModelCatalog } from './customModelCatalog';
 import { writeAgentToolModelString } from './agentToolModelString';
 import { writeContextWindowFromCatalog } from './contextWindowFromCatalog';
+import { writeAutoModelSwap } from './autoModelSwap';
 import { writeCustomModelPicker } from './customModelPicker';
 import { writeRateLimitsFromHeaders } from './rateLimitsFromHeaders';
 import { writeCustomModelAlias } from './customModelAlias';
@@ -305,6 +306,7 @@ const INVOCATIONS: Record<PatchId, (src: string) => string | null> = {
       },
     ]),
   'context-window-from-catalog': c => writeContextWindowFromCatalog(c),
+  'auto-model-swap': c => writeAutoModelSwap(c),
   'custom-model-picker': c =>
     writeCustomModelPicker(c, [
       {

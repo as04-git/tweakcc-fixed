@@ -102,6 +102,7 @@ import { writeCustomModelCatalog } from './customModelCatalog';
 import { writeCustomModelPicker } from './customModelPicker';
 import { writeAgentToolModelString } from './agentToolModelString';
 import { writeContextWindowFromCatalog } from './contextWindowFromCatalog';
+import { writeAutoModelSwap } from './autoModelSwap';
 import { writeRateLimitsFromHeaders } from './rateLimitsFromHeaders';
 import { writeCustomModelAlias } from './customModelAlias';
 import { writeMaxEffortDefault } from './maxEffortDefault';
@@ -274,6 +275,13 @@ const PATCH_DEFINITIONS = [
     group: PatchGroup.MISC_CONFIGURABLE,
     description:
       "Make the context-window resolver read a model's catalog context.window (fixes custom models reporting the hardcoded 200k to the statusline + auto-compact)",
+  },
+  {
+    id: 'auto-model-swap',
+    name: 'Auto model swap at compact ceiling',
+    group: PatchGroup.MISC_CONFIGURABLE,
+    description:
+      'When a small-context custom model (kimi-k3-256k) hits its auto-compact ceiling, swap the session to its larger-window sibling (kimi-k3) and continue uncompacted instead of compacting (session-only; spawns ~/.claude-gateway/bin/model-swap-event for stats)',
   },
   {
     id: 'custom-model-picker',
@@ -1172,6 +1180,12 @@ export const applyCustomization = async (
     },
     'context-window-from-catalog': {
       fn: c => writeContextWindowFromCatalog(c),
+      condition:
+        !!config.settings.customModels &&
+        config.settings.customModels.length > 0,
+    },
+    'auto-model-swap': {
+      fn: c => writeAutoModelSwap(c),
       condition:
         !!config.settings.customModels &&
         config.settings.customModels.length > 0,
