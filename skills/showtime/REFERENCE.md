@@ -528,6 +528,26 @@ emission on another — only a smoke test on that platform does. If you patch on
 than one OS/arch, **every** platform must smoke green before the work is complete.
 Never hardcode one platform's minified name anywhere — in an override or a code patch.
 
+**Embedded build metadata also differs per target.** The inline
+`${{ISSUES_EXPLAINER, …, GIT_SHA, BUILD_TIME, DD_SOURCEMAP_GROUP}}` object carries
+per-BUILD values: the darwin binary embeds `DD_SOURCEMAP_GROUP:"darwin"`, Linux
+`"default"`. Consequences seen on the 2.1.226 bump:
+
+- Templates interpolating that object re-hash every release (VERSION/BUILD_TIME/
+  GIT_SHA rotate), so the prose gate re-flags them as classify candidates each bump
+  even when a ruling exists under an older hash. If the prompt belongs in the
+  catalogue, encode the ruling as a `NEW_PROMPT_ASSIGNMENTS` entry anchored on a
+  STABLE lead (its own bold header), never on the volatile object — that is what
+  makes the extraction reproducible. (`data-environment-recent-releases` lived only
+  in the committed JSON for a release and fired "fresh extraction differs" until it
+  got an assignment.)
+- The version-bump report's committed-vs-extracted equality check normalizes
+  `DD_SOURCEMAP_GROUP` away, so a JSON committed on macOS still verifies on Linux.
+- Two sibling fragments of the same family are deliberately NOT catalogued at all
+  (promptExtractor's `leadShowsModelFacingContext` comment) because no cross-platform
+  override target exists for them — catalogue-with-assignment is for prompts that
+  actually need override binding.
+
 ---
 
 ## 15. Upstream comparison: extractor canonical, no count regressions, the data-anthropic-cli VERSION false-positive
