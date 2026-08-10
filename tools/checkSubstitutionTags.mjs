@@ -23,7 +23,15 @@ const arg = (n, d) => {
   return i === -1 ? d : process.argv[i + 1];
 };
 const HOME = os.homedir();
-const LCC = arg('--lcc', path.join(HOME, '.tweakcc/lobotomized-claude-code'));
+// Layouts in the wild: the lobotomized-claude-code repo (sets as
+// system-prompts-<model>/ subdirs), or a bare active-set directory at
+// ~/.tweakcc/system-prompts (the .md files directly). Prefer the LCC repo
+// when present; fall back to the bare set.
+const LCC_DEFAULT = (() => {
+  const lcc = path.join(HOME, '.tweakcc/lobotomized-claude-code');
+  return fs.existsSync(lcc) ? lcc : path.join(HOME, '.tweakcc/system-prompts');
+})();
+const LCC = arg('--lcc', LCC_DEFAULT);
 const CLI = arg('--cli', path.join(HOME, '.tweakcc/native-claudejs-orig.js'));
 const REPO = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 
@@ -66,10 +74,14 @@ const tags = new Set();
 for (const m of cli.matchAll(/\.replace\(\s*"(<[a-z0-9_]{3,60}>)"/g)) tags.add(m[1]);
 
 const { prompts } = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
-const sets = fs
-  .readdirSync(LCC)
-  .filter(d => d.startsWith('system-prompts-'))
-  .filter(d => fs.statSync(path.join(LCC, d)).isDirectory());
+const sets = (() => {
+  const sub = fs
+    .readdirSync(LCC)
+    .filter(d => d.startsWith('system-prompts-'))
+    .filter(d => fs.statSync(path.join(LCC, d)).isDirectory());
+  // Bare-set layout: LCC points at a directory that IS the override set.
+  return sub.length > 0 ? sub : ['.'];
+})();
 
 const body = file => {
   const t = fs.readFileSync(file, 'utf8');

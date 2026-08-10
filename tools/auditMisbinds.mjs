@@ -34,7 +34,14 @@ const ourJson = process.argv[2] || `data/prompts/prompts-${VER}.json`;
 const upstreamJson = process.argv[3] || `/tmp/pieb-${VER}.json`;
 const overridesDir =
   process.argv[4] ||
-  `${process.env.HOME}/.tweakcc/lobotomized-claude-code/system-prompts-opus-4-8`;
+  (() => {
+    // Prefer the lobotomized-claude-code per-model set; fall back to a bare
+    // active set at ~/.tweakcc/system-prompts when no LCC checkout exists.
+    const lcc = `${process.env.HOME}/.tweakcc/lobotomized-claude-code/system-prompts-opus-4-8`;
+    return fs.existsSync(lcc)
+      ? lcc
+      : `${process.env.HOME}/.tweakcc/system-prompts`;
+  })();
 
 const OURS = JSON.parse(fs.readFileSync(ourJson, 'utf8'));
 // Upstream reference is required. On a box without the `upstream` remote (e.g. a
