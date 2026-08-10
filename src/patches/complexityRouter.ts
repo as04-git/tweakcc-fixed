@@ -318,9 +318,21 @@ const wrapEffortResolver = (
   helpers: ClassifierHelpers,
   sidFn: string | null
 ): string | null => {
-  // Two resolver shapes, tried newest-first. BOTH expose the same capture
-  // groups: 1=prefix (through `=ENV();`), 2=MODEL, 3=FALLBACK, 4=ENV result,
-  // 5=combined effort var, 6=maxGuard, 7=xhighGuard.
+  // Three resolver shapes, tried newest-first. The two in-line shapes expose the
+  // same capture groups: 1=prefix (through `=ENV();`), 2=MODEL, 3=FALLBACK,
+  // 4=ENV result, 5=combined effort var, 6=maxGuard, 7=xhighGuard. The split
+  // shape carries its guards in a separate normalizer function, resolved below.
+  //
+  // CC 2.1.222+ (lQ/s_u shape): the normalization + both support guards moved
+  // OUT of the resolver into a shared normalizer, so the resolver body ends at
+  // a single tail call. The wrap still rides right after `=ENV();`; only the
+  // guard names have to be read out of the normalizer.
+  //   function NAME(MODEL,FALLBACK){if(!dI(MODEL))return;let A=SOe(MODEL),B=LKe(MODEL),ENV=Sft();
+  //     if(ENV===null&&!A)return;return NORM(ENV??(A?B:void 0)??FALLBACK??B,MODEL)}
+  //   function NORM(V,MODEL){let S=V;if(typeof S==="string"&&rge(S))S=bOe(S,MODEL);
+  //     if(S==="max"&&!yOe(MODEL))S="high";if(S==="xhigh"&&!DEe(MODEL))S="high";return S}
+  const patternSplit =
+    /(function [$\w]+\(([$\w]+),([$\w]+)\)\{if\(![$\w]+\(\2\)\)return;let [$\w]+=[$\w]+\(\2\),[$\w]+=[$\w]+\(\2\),([$\w]+)=[$\w]+\(\);)if\(\4===null&&![$\w]+\)return;return ([$\w]+)\(\4\?\?\([$\w]+\?[$\w]+:void 0\)\?\?\3\?\?[$\w]+,\2\)\}/;
   //
   // CC 2.1.199+ (iQ shape): the two support guards became ASSIGNMENTS
   // (S="high") instead of an early `return"high"`, a string-normalization line
@@ -340,7 +352,9 @@ const wrapEffortResolver = (
   const patternLegacy =
     /(function [$\w]+\(([$\w]+),([$\w]+)\)\{if\(![$\w]+\(\2\)\)return;let [$\w]+=[$\w]+\(\2\),[$\w]+=[$\w]+\(\2\),([$\w]+)=[$\w]+\(\);)if\(\4===null\)return [$\w]+\?[$\w]+:void 0;let ([$\w]+)=\4\?\?\([$\w]+\?[$\w]+:void 0\)\?\?\3\?\?[$\w]+;if\(\5==="max"&&!([$\w]+)\(\2\)\)return"high";if\(\5==="xhigh"&&!([$\w]+)\(\2\)\)return"high";return \5\}/;
 
-  const match = file.match(patternNew) || file.match(patternLegacy);
+  const splitMatch = file.match(patternSplit);
+  const match =
+    splitMatch || file.match(patternNew) || file.match(patternLegacy);
   if (!match || match.index === undefined) {
     if (!file.includes('CLAUDE_CODE_EFFORT_LEVEL')) {
       debug(
@@ -358,8 +372,28 @@ const wrapEffortResolver = (
   const model = match[2];
   const fallback = match[3];
   const env = match[4];
-  const maxGuard = match[6];
-  const xhighGuard = match[7];
+  let maxGuard = match[6];
+  let xhighGuard = match[7];
+
+  // Split shape: the guards live in the normalizer the resolver tail-calls.
+  if (splitMatch) {
+    const norm = splitMatch[5].replace(/[$]/g, '\\$');
+    const normPattern = new RegExp(
+      `function ${norm}\\(([$\\w]+),([$\\w]+)\\)\\{let ([$\\w]+)=\\1;` +
+        `(?:if\\(typeof \\3==="string"&&[$\\w]+\\(\\3\\)\\)\\3=[$\\w]+\\(\\3,\\2\\);)?` +
+        `if\\(\\3==="max"&&!([$\\w]+)\\(\\2\\)\\)\\3="high";` +
+        `if\\(\\3==="xhigh"&&!([$\\w]+)\\(\\2\\)\\)\\3="high";return \\3\\}`
+    );
+    const normMatch = file.match(normPattern);
+    if (!normMatch) {
+      console.error(
+        'patch: complexityRouter: failed to find effort normalizer (support guards)'
+      );
+      return null;
+    }
+    maxGuard = normMatch[4];
+    xhighGuard = normMatch[5];
+  }
 
   // Apply the router's effort, overriding the persisted baseline (settings.effortLevel
   // / per-model default arrive as the app-state FALLBACK) but yielding to a pin:

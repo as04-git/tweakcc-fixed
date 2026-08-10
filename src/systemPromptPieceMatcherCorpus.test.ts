@@ -18,6 +18,14 @@ import {
 // systemPromptPieceMatcher.test.ts still run every time.
 const CORPUS = Boolean(process.env.TWEAKCC_MATCHER_CORPUS);
 const MINUTES = 5 * 60 * 1000;
+// The real-bundle differential grows with the bundle: 130s on a 20MB cli.js,
+// 330s on 2.1.226's 23MB one. At MINUTES it timed out and reported as a FAILED
+// equivalence, i.e. a gate that says "the apply would splice a wrong site" when
+// the truth is that it never finished. A per-test timeout passed to `it` also
+// overrides --testTimeout, so raising the CLI flag does nothing. Budget for a
+// bundle several versions larger; a run that legitimately needs 20 minutes is a
+// signal worth seeing, not a failure.
+const REAL_BUNDLE_TIMEOUT = 20 * MINUTES;
 
 // The differential guard.
 //
@@ -197,7 +205,7 @@ describe.runIf(CORPUS)(
         expect(checked).toBeGreaterThan(2000);
         expect(mismatches, mismatches.join('\n\n')).toEqual([]);
       },
-      MINUTES
+      REAL_BUNDLE_TIMEOUT
     );
   }
 );

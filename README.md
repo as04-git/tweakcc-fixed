@@ -4,7 +4,7 @@
 
 ### Customize Claude Code far past its settings menu — themes, prompts, thinking, toolsets, and behavior — patched straight into the installed binary.
 
-[![Claude Code](https://img.shields.io/badge/Claude%20Code-2.0.98%20%E2%86%92%202.1.221-d97757?style=flat-square)](https://github.com/anthropics/claude-code)
+[![Claude Code](https://img.shields.io/badge/Claude%20Code-2.0.98%20%E2%86%92%202.1.226-d97757?style=flat-square)](https://github.com/anthropics/claude-code)
 [![license](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](#credit--license)
 
 **[Install](#install) · [Customize](#what-you-can-customize) · [The fork](#what-this-fork-adds) · [This fork](#what-this-fork-adds-on-top) · [How it works](#how-it-works)**
@@ -62,8 +62,8 @@ The biggest difference is coverage. Its extractor pulls over four times the prom
 
 |                              | tweakcc-fixed | upstream  |
 | ---------------------------- | :-----------: | :-------: |
-| Prompt sites (CC 2.1.221)    |   **3,347**   |    624    |
-| Unique prompt IDs            |   **3,118**   |    624    |
+| Prompt sites (CC 2.1.226)    |   **3,652**   |    636    |
+| Unique prompt IDs            |   **3,396**   |    636    |
 | Patches                      |    **58**     |    45     |
 | Overrides on native installs |    **yes**    | gated off |
 

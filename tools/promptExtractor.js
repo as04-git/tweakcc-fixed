@@ -69,23 +69,73 @@ const WORKFLOW_SCRIPT_IDENTIFIER_MAP = {
 // contorted to `${SENDMESSAGE_TOOL_NAME}` for the same line, which rendered
 // CORRECTLY only because the map was wrong. Fix the map; the overrides then use
 // names that mean what they say.
+// An id may need more than one variant: the mislabel recurs whenever Anthropic
+// restructures the prompt (the generated names slide again), and the entry only
+// applies when `identifiers` matches exactly. Each value is a list of variants.
+//
+// 2.1.224 restructured the prompt (34 -> 30 slots: the ListAgents var is gone,
+// its content folded into the cross-session peers block) and the names slid by
+// one again. Slots re-derived from the binary in `CW_(e)`:
+//   [0] a  = e?SW_:"Every message you send is to the user."
+//   [1] li = AgentTool          "- **${li}** - Spawn a new worker"
+//   [2] _f = SendMessage        "- **${_f}** - Continue an existing worker"
+//   [3] U$ = TaskStop           "- **${U$}** - Stop a running worker"
+//   [4] s  = workflow bullet    GR()?"- **${kI}** (if available) - Run a …":""
+//   [5] i  = cross-session peers bullet (mentions ${cy}=ListAgents inside it)
+//   [6] l  = e?TW_:"briefly tell the user what you launched"
+//   [7] o  = "Workers have access to …" intro text
 const CURATED_IDENTIFIER_MAPS = {
-  'system-prompt-coordinator-mode': {
-    identifiers: [
-      0, 1, 2, 3, 4, 5, 2, 5, 5, 2, 1, 2, 6, 1, 1, 7, 2, 3, 1, 2, 1, 3, 2, 1, 1,
-      1, 2, 1, 2, 2, 2, 1, 1, 2,
-    ],
-    identifierMap: {
-      0: 'EVERY_MESSAGE_TO_USER_NOTE',
-      1: 'AGENT_TOOL_NAME',
-      2: 'SENDMESSAGE_TOOL_NAME',
-      3: 'TASKSTOP_TOOL_NAME',
-      4: 'WORKFLOW_CONDITIONAL_TOOL_NOTE',
-      5: 'LISTAGENTS_TOOL_NAME',
-      6: 'LAUNCH_ANNOUNCE_NOTE',
-      7: 'WORKER_TOOLS_INTRO_TEXT',
+  'system-prompt-coordinator-mode': [
+    {
+      identifiers: [
+        0, 1, 2, 3, 4, 5, 1, 2, 6, 1, 1, 7, 2, 3, 1, 2, 1, 3, 2, 1, 1, 1, 2, 1,
+        2, 2, 2, 1, 1, 2,
+      ],
+      identifierMap: {
+        0: 'EVERY_MESSAGE_TO_USER_NOTE',
+        1: 'AGENT_TOOL_NAME',
+        2: 'SENDMESSAGE_TOOL_NAME',
+        3: 'TASKSTOP_TOOL_NAME',
+        4: 'WORKFLOW_CONDITIONAL_TOOL_NOTE',
+        5: 'CROSS_SESSION_PEERS_NOTE',
+        6: 'LAUNCH_ANNOUNCE_NOTE',
+        7: 'WORKER_TOOLS_INTRO_TEXT',
+      },
     },
-  },
+    {
+      identifiers: [
+        0, 1, 2, 3, 4, 5, 2, 5, 5, 2, 1, 2, 6, 1, 1, 7, 2, 3, 1, 2, 1, 3, 2, 1,
+        1, 1, 2, 1, 2, 2, 2, 1, 1, 2,
+      ],
+      identifierMap: {
+        0: 'EVERY_MESSAGE_TO_USER_NOTE',
+        1: 'AGENT_TOOL_NAME',
+        2: 'SENDMESSAGE_TOOL_NAME',
+        3: 'TASKSTOP_TOOL_NAME',
+        4: 'WORKFLOW_CONDITIONAL_TOOL_NOTE',
+        5: 'LISTAGENTS_TOOL_NAME',
+        6: 'LAUNCH_ANNOUNCE_NOTE',
+        7: 'WORKER_TOOLS_INTRO_TEXT',
+      },
+    },
+  ],
+  // 2.1.224 grew this from one slot to three, and fuzzy carryover kept the old
+  // 2.1.221 name on slot 0 — which is now the WRONG slot. Verified at the
+  // emission site: `…| \`"main"\` | The main conversation (background subagents
+  // only) |${t}${""}\n\n…already rendered to the user.${n}${e?'\n\n## Protocol
+  // responses (legacy)…':""}`, so t = the cross-session recipient rows, n = the
+  // "## Cross-session" section, and e = the legacy-protocol flag at slot 2.
+  // Upstream does not ship this prompt, so auditMisbinds had no reference.
+  'tool-description-sendmessagetool': [
+    {
+      identifiers: [0, 1, 2],
+      identifierMap: {
+        0: 'CROSS_SESSION_RECIPIENT_ROWS',
+        1: 'CROSS_SESSION_SECTION',
+        2: 'SHOULD_INCLUDE_LEGACY_PROTOCOL_RESPONSES',
+      },
+    },
+  ],
   'tool-description-bash-git-commit-and-pr-creation-instructions': {
     identifiers: [
       0, 1, 1, 2, 1, 1, 3, 4, 1, 1, 5, 6, 6, 2, 7, 8, 9, 9, 3, 4, 10, 10,
@@ -547,10 +597,27 @@ const NEW_PROMPT_ASSIGNMENTS = [
     description: "Model-facing type-suffix label appended to a project CLAUDE.md path in the memory/context injection (\"Contents of ${path} (project instructions, checked into the codebase):\"); conditional on a Project-type memory item being present.",
   },
   {
-    matcher: t => t.includes("<command-name>"),
-    name: "Slash-Command Name Framing Tag",
-    id: "system-prompt-command-name-framing-tag",
-    description: "Model-facing framing tag wrapping a slash-command invocation into a user-role message sent to the model (\"<command-name>...</command-name>\"); present whenever a slash command is expanded into the conversation.",
+    // Anchored on the skill's own H1, NOT on `includes('<command-name>')`.
+    // A NEW_PROMPT_ASSIGNMENTS hit bypasses the prose-quality gate AND the
+    // model-facing/ui/internal classifier, so a bare substring matcher forces
+    // everything it touches into the catalogue unjudged. This one used to match
+    // three unrelated strings: this skill (which merely MENTIONS the tag while
+    // telling the model what to grep transcripts for) plus two internal
+    // transcript-scan constants — `"content":"<command-name>/` (the session-
+    // descriptor prefilter) and `<command-name>/loop</command-name>` (the
+    // sentinel the /resume filter greps for). Both are needles CC matches
+    // against stored transcripts and are emitted to the model nowhere, so the
+    // classifier would have dropped them as internal, exactly as it did for
+    // their five siblings in the same `var` cluster. Instead they entered the
+    // catalogue wearing a description asserting they were model-facing, an
+    // audit believed it, wiped them as prose-free markup, and `.includes("")`
+    // went unconditionally true — every session read as a /loop session and
+    // /resume listed 5 of 50 (lobotomized-claude-code#24).
+    matcher: t => t.startsWith('# Claude Code Doctor'),
+    name: 'Skill: Claude Code Doctor',
+    id: 'skill-claude-code-doctor',
+    description:
+      "Bundled /doctor skill — health-checks the user's Claude Code setup from local data only (installation and settings integrity, unused skills/MCP servers/plugins, CLAUDE.md dedup and trimming, slow hooks, context-heavy extensions, version currency, auto mode, frequently-denied read-only commands), then proposes fixes behind a confirm gate. Injected only when the skill is invoked.",
   },
   {
     matcher: t => t.includes("<local-command-stdout>"),
@@ -3871,8 +3938,14 @@ if (require.main === module) {
       // be re-applied on top of it. See CURATED_IDENTIFIER_MAPS.
       let curated = 0;
       for (const p of mergedResult.prompts) {
-        const fix = p.id && CURATED_IDENTIFIER_MAPS[p.id];
-        if (fix && JSON.stringify(fix.identifiers) === JSON.stringify(p.identifiers)) {
+        const entry = p.id && CURATED_IDENTIFIER_MAPS[p.id];
+        if (!entry) continue;
+        const variants = Array.isArray(entry) ? entry : [entry];
+        const fix = variants.find(
+          (v) =>
+            JSON.stringify(v.identifiers) === JSON.stringify(p.identifiers)
+        );
+        if (fix) {
           p.identifierMap = { ...fix.identifierMap };
           curated++;
         }

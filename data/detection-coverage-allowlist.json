@@ -494,5 +494,89 @@
     "verdict": "ui",
     "shape": "concat",
     "excerpt": "Install was cancelled at the elevation prompt, but the sandbox user is already provisioned \u2014 the sandbox TLS inspection CA is now set up and"
+  },
+  "90a5646c0be8f5c2": {
+    "verdict": "internal",
+    "shape": "concat",
+    "excerpt": "[sandbox] implicit AWS credential pair: 'AWS_SESSION_TOKEN' is declared but not forwarded as a whole-value mask entry (deny-overridden or us",
+    "why": "emitted via E(msg,{level:\"warn\"}) \u2014 sandbox credential-forwarding warning log, never enters model context"
+  },
+  "74ec95c97983d102": {
+    "verdict": "internal",
+    "shape": "concat",
+    "excerpt": "What to do when `extract` matches nothing in the file \u2014 or, with `decode`, when no candidate survives verification. `warn` (default) emits a",
+    "why": "zod .describe() on settings.json sandbox.credentials file-mask onExtractNoMatch \u2014 config schema, validated locally"
+  },
+  "19537b7e6c62e12d": {
+    "verdict": "internal",
+    "shape": "concat",
+    "excerpt": "If true, verbatim occurrences of each captured credential value outside the regex-matched spans are also replaced with the corresponding sen",
+    "why": "zod .describe() on settings.json sandbox.credentials maskDuplicates \u2014 config schema"
+  },
+  "1e508385e87fc15b": {
+    "verdict": "internal",
+    "shape": "concat",
+    "excerpt": "Optional regex for structured masking when mode is `mask`. Applied globally to the value; capture group 1 of each match is a credential valu",
+    "why": "zod .describe() on settings.json sandbox.credentials extract \u2014 config schema"
+  },
+  "e0ce8a9339b88394": {
+    "verdict": "internal",
+    "shape": "concat",
+    "excerpt": "What to do when `extract` matches nothing in the value. `warn` (default) emits a stderr warning and lets the variable pass through unmasked ",
+    "why": "zod .describe() on settings.json sandbox.credentials onExtractNoMatch (env-var form) \u2014 config schema"
+  },
+  "dcea83b722369dc1": {
+    "verdict": "internal",
+    "shape": "concat",
+    "excerpt": "Optional encoded-credential format for `mask` mode. `jwt`: the variable's whole value is verified to actually be a JWT and replaced with a s",
+    "why": "zod .describe() on settings.json sandbox.credentials decode \u2014 config schema"
+  },
+  "bb0d274ab31ebcc7": {
+    "verdict": "internal",
+    "shape": "concat",
+    "excerpt": "Explicit groupings of masked env vars into AWS credential pairs for SigV4 re-signing, for non-standard variable names. The conventional AWS_",
+    "why": "zod .describe() on settings.json sandbox.credentials awsPairs \u2014 config schema"
+  },
+  "37fc5034991f6517": {
+    "verdict": "internal",
+    "shape": "concat",
+    "excerpt": "Policies for AWS SigV4 request shapes the proxy cannot re-sign (streaming, presigned, sigv4a) when they reference a masked credential pair: ",
+    "why": "zod .describe() on settings.json sandbox.credentials sigv4 \u2014 config schema"
+  },
+  "d56ed46fcca3f604": {
+    "verdict": "internal",
+    "shape": "concat",
+    "excerpt": "GitHub repository in owner/repo format. ONLY in the managed-settings policy lists (strictKnownMarketplaces / blockedMarketplaces) the owner-",
+    "why": "zod .describe() on the plugin marketplace github source schema \u2014 config schema"
+  },
+  "bcf5ea56640a222d": {
+    "verdict": "internal",
+    "shape": "concat",
+    "excerpt": "HTTPS URL of a zip archive containing the plugin. The plugin root (the directory holding .claude-plugin/) may be at the top of the archive o",
+    "why": "zod .describe() on the plugin archive source url \u2014 config schema"
+  },
+  "8aea3cccc6b2cb3a": {
+    "verdict": "internal",
+    "shape": "concat",
+    "excerpt": "SHA-256 digest of the archive. When set, every download is verified against it and the install is refused on mismatch. It also serves as the",
+    "why": "zod .describe() on the plugin archive sha256 \u2014 config schema"
+  },
+  "fb6b086aa5341567": {
+    "verdict": "internal",
+    "shape": "concat",
+    "excerpt": "Plugin distributed as a zip archive fetched over HTTPS \u2014 for hosting on any static file server or artifact repository (S3, GitLab, nginx) wi",
+    "why": "zod .describe() on the plugin archive source object \u2014 config schema"
+  },
+  "42bacea260a1981a": {
+    "verdict": "internal",
+    "shape": "concat",
+    "excerpt": "Placeholder for source types this Claude Code version does not recognize, or a known type whose fields failed validation (then `error` holds",
+    "why": "zod .describe() on the plugin unsupported-source placeholder \u2014 config schema"
+  },
+  "9f1cb33088965789": {
+    "verdict": "internal",
+    "shape": "concat",
+    "excerpt": "Enterprise strict list of allowed marketplace sources. When set in managed settings, ONLY these sources can be added as marketplaces. Entrie",
+    "why": "zod .describe() on managed-settings strictKnownMarketplaces \u2014 config schema"
   }
 }

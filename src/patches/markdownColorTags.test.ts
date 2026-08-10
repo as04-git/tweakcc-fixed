@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
-import vm from 'node:vm';
+import ts from 'typescript';
 import { writeMarkdownColorTags } from './markdownColorTags';
 import { DEFAULT_COLOR_TAG_PALETTES } from '../colorTagPalettes';
 
@@ -142,8 +142,22 @@ describe('markdownColorTags', () => {
       // helper injected once, in the renderer's own scope
       expect(out!.split('function _twkC(').length - 1).toBe(1);
 
-      // and the patched bundle is still syntactically valid JavaScript
-      expect(() => new vm.Script(out!)).not.toThrow();
+      // and the patched bundle is still syntactically valid JavaScript.
+      // Checked with TypeScript's parser rather than vm.Script: recent CC
+      // bundles use `using` declarations, which the Node 22 runtime vitest
+      // runs on cannot parse — vm.Script rejects even the *pristine* bundle.
+      const parsed = ts.transpileModule(out!, {
+        reportDiagnostics: true,
+        compilerOptions: { target: ts.ScriptTarget.ESNext },
+      });
+      const syntaxErrors = (parsed.diagnostics ?? []).filter(
+        d => d.category === ts.DiagnosticCategory.Error
+      );
+      expect(
+        syntaxErrors.map(d =>
+          ts.flattenDiagnosticMessageText(d.messageText, ' ')
+        )
+      ).toEqual([]);
     },
     120_000
   );
