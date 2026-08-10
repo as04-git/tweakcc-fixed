@@ -5,7 +5,7 @@ Code alongside the Claude subscription: real `/model` picker entries, correct
 context windows, per-provider 5h/7d quota in the statusline, subagent support —
 without redefining what `opus`/`sonnet`/`haiku`/`fable` mean.
 
-Built 2026-08-08, CC 2.1.220. Read this top-to-bottom once before tweaking
+Built 2026-08-08, CC 2.1.220; re-anchored + live-verified on CC 2.1.226 (2026-08-10, see §3.2/§3.4/§3.5 and M13). Read this top-to-bottom once before tweaking
 anything; the failure modes section will save you.
 
 > **Scope.** This repo carries the _patch_ half — the tweakcc patches in §3 that
@@ -21,7 +21,7 @@ anything; the failure modes section will save you.
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
-│ Claude Code 2.1.220 (patched binary, native ELF)                 │
+│ Claude Code 2.1.226 (patched binary, native ELF)                 │
 │   6 tweakcc patches → model catalog, picker, ctx window,          │
 │   agent-tool enum, rate-limit gate, /model aliases                │
 └──────────────┬───────────────────────────────────────────────────┘
@@ -51,34 +51,37 @@ anything; the failure modes section will save you.
 
 `claudish` (the old approach) only did A, by _substituting_ model ids — which
 is why it lied about what model was running and capped context at 372k. This
-system replaces it. `claudish` remains installed and its OAuth token files are
-the credential source (below); do not run CC through it anymore.
+system replaces it. `claudish` remains installed for spawning fully separate
+isolated sessions (its `create_session`/`team` MCP tools), but as of
+2026-08-10 it is no longer the credential source either — do not run CC
+through it, and do not treat `~/.claudish/*-oauth.json` as a source of truth.
 
 ---
 
 ## 2. Component inventory
 
-| Component                   | Location                                                                                   | Owner           |
-| --------------------------- | ------------------------------------------------------------------------------------------ | --------------- |
-| Patched CC binary           | `~/.local/share/claude/versions/2.1.220`                                                   | tweakcc         |
-| Patch source + tests        | `~/tweakcc-fixed` (this repo)                                                              | git             |
-| tweakcc config (model defs) | `~/.tweakcc/config.json` → `settings.customModels`                                         | you             |
-| Proxy source (fork)         | `~/src/CLIProxyAPI`, branch `aryan/rate-limit-headers`                                     | git             |
-| Proxy binary                | `~/.local/bin/cliproxyapi`                                                                 | built from fork |
-| Proxy config + creds        | `~/.cli-proxy-api/`                                                                        | you             |
-| Proxy service               | `~/.config/systemd/user/cliproxyapi.service` (+ linger on)                                 | systemd         |
-| Launcher                    | `~/.local/bin/cx`                                                                          | you             |
-| CC env (replaces cx wiring) | `~/.claude/settings.json` → `env` (BASE_URL/API_KEY/AUTH_TOKEN, §4.7)                      | you             |
-| Statusline                  | `~/.claude/statusline.py` (Python; §3.8) + `~/.claude/statusline-quota-history.log`        | you             |
-| Go toolchain                | `~/.local/go-sdk/go/bin/go` (NOT in PATH)                                                  | you             |
-| Quota state (runtime)       | `~/.cli-proxy-api/quota-state.json`                                                        | proxy writes    |
-| Credential sources          | `~/.claudish/{codex,kimi}-oauth.json`, `~/.codex/auth.json`, `~/.claude/.credentials.json` | OAuth flows     |
+| Component                   | Location                                                                                                                                           | Owner           |
+| --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | --------------- |
+| Patched CC binary           | `~/.local/share/claude/versions/2.1.226`                                                                                                           | tweakcc         |
+| Patch source + tests        | `~/tweakcc-fixed` (this repo)                                                                                                                      | git             |
+| tweakcc config (model defs) | `~/.tweakcc/config.json` → `settings.customModels`                                                                                                 | you             |
+| Proxy source (fork)         | `~/src/CLIProxyAPI`, branch `aryan/rate-limit-headers`                                                                                             | git             |
+| Proxy binary                | `~/.local/bin/cliproxyapi`                                                                                                                         | built from fork |
+| Proxy config + creds        | `~/.cli-proxy-api/`                                                                                                                                | you             |
+| Proxy service               | `~/.config/systemd/user/cliproxyapi.service` (+ linger on)                                                                                         | systemd         |
+| Launcher                    | `~/.local/bin/cx`                                                                                                                                  | you             |
+| CC env (replaces cx wiring) | `~/.claude/settings.json` → `env` (BASE_URL/API_KEY/AUTH_TOKEN, §4.7)                                                                              | you             |
+| Statusline                  | `~/.claude/statusline.py` (Python; §3.8) + `~/.claude/statusline-quota-history.log`                                                                | you             |
+| Go toolchain                | `~/.local/go-sdk/go/bin/go` (NOT in PATH)                                                                                                          | you             |
+| Quota state (runtime)       | `~/.cli-proxy-api/quota-state.json`                                                                                                                | proxy writes    |
+| Credential sources          | `~/.codex/auth.json`, `~/.kimi-code/credentials/kimi-code.json`, `~/.claude/.credentials.json` — or the proxy's own `--codex-login`/`--kimi-login` | OAuth flows     |
 
 **Commits that matter:**
 
 - tweakcc-fixed: `cc6b9e4` (catalog + agent-tool), `3f2ebba` (ctx window),
   `168783a` (picker), `5aae546` (rate-limit gate), `2623f27` (Opus 4.7/4.8
-  picker list), `ec00ada` (aliases), `85d5f03` (statusline rewrite)
+  picker list), `ec00ada` (aliases), `85d5f03` (statusline rewrite),
+  `fe21f78` (2.1.226 re-anchor + retire obsolete no-ops, §3.2/§3.4/§3.5)
 - CLIProxyAPI fork: `4256991` (Codex+Kimi header synthesis), `eaa2782`
   (quota-state.json)
 
@@ -117,14 +120,27 @@ binary, `schema_version:1`, `models:[...]`, `aliases:{...}`).
 
 ### 3.2 `context-window-from-catalog` (`src/patches/contextWindowFromCatalog.ts`)
 
-CC's context-window resolver `mZc` never reads the catalog: it special-cases
-1M variants, then `CLAUDE_CODE_MAX_CONTEXT_TOKENS` (non-`claude-` ids only),
-then hardcoded `ber=200000`. Without this patch every custom model reports
-200k to the statusline + auto-compact.
+CC's context-window resolver (`qmf` on 2.1.226; `mZc` on 2.1.220) never reads
+the catalog: it special-cases 1M variants, then
+`CLAUDE_CODE_MAX_CONTEXT_TOKENS` (non-`claude-` ids only), then hardcoded
+`nbr=200000`. Without this patch every custom model reports 200k to the
+statusline + auto-compact (the 2.1.226 auto-compact resolver `M3` computes
+its base window from this function via `hT`).
 
-- **Anchor**: `let X=dro(Y);if(X!==null)return X;let Z=` inside `mZc`.
-- Injects `let cw=ww(lo(Y))?.context?.window;if(typeof cw==="number"&&cw>0)return cw;`
-  BEFORE the env override (env keeps precedence).
+- **Anchor** (2.1.226, re-anchored 2026-08-10): the env-override guard
+  `let X=te.CLAUDE_CODE_MAX_CONTEXT_TOKENS;if(X!==void 0&&X>0&&!wo(ns(e)).startsWith("claude-"))return X`.
+  The minified helper names are **extracted from the file at apply time**, not
+  hardcoded: `wo`/`ns` from the guard itself, the catalog by-id lookup (`Bv`,
+  was `ww`) from the `.capabilities.includes` check in `l2`. The 2.1.220→2.1.226
+  bump renamed every helper (`mZc→qmf`, `dro→Zti`, `ww→Bv`, `lo→wo`, `vi→ns`)
+  and the hardcoded-name version silently no-opped — custom models ran at a
+  wrong 200k window for a day. **The patch now fails loudly (null) on anchor
+  drift instead of no-oping.**
+- Injects `let cwb=wo(ns(e)),cw=cwb.startsWith("claude-")?void 0:Bv(cwb)?.context?.window;if(typeof cw==="number"&&cw>0)return cw;`
+  before the env override. The `claude-` guard is NEW for 2.1.226 and
+  load-bearing: the 2.1.226 catalog lists `window:1e6` for the **base**
+  opus/sonnet entries (1M is opt-in via the `[1m]`/beta arms, which run
+  first), so a blind catalog read would redefine built-ins to 1M.
 - **Compaction path**: CC generates its summary with the current model through
   its normal Anthropic-facing `POST /v1/messages`; it does NOT call a
   provider-native compact endpoint. Verified from a manual Kimi compaction on
@@ -132,8 +148,9 @@ then hardcoded `ber=200000`. Without this patch every custom model reports
   `model=kimi-k3`, with no actual `/responses/compact` request. Therefore a
   Sol compaction enters the proxy as `/v1/messages` and is translated to a
   normal Codex `/responses` request — not Codex `/responses/compact`.
-- Built-ins unaffected: their 1M path is the pre-existing session-beta branch,
-  which runs before the new lookup. Verified: opus/sonnet/haiku all still 200k.
+- Built-ins unaffected (guard + 1M arms run first). Live-verified on 2.1.226
+  (2026-08-10): kimi-k3-256k → 262144, kimi-k3 → 1048576, gpt-5.6-luna →
+  372000, claude-sonnet-5 → 200000.
 
 ### 3.3 `custom-model-picker` (`src/patches/customModelPicker.ts`)
 
@@ -150,6 +167,14 @@ The Agent/Task tool's inline `model` param was
 surface (agent `.md` frontmatter `model:` is already a free string). Widened to
 `v.string().optional()`. Subagents can take custom models inline.
 
+**OBSOLETE on CC ≥2.1.226** (verified 2026-08-10): upstream removed the enum
+entirely (0 occurrences in the binary; a live Agent-tool spawn with
+`model:"kimi-k3-256k"` ran natively and self-reported as Kimi K3 256K). The
+patch now logs "satisfied" on this build. Note subagent _effort_ needs no
+patch at all: subagent definitions support an `effort` frontmatter field
+(overrides session effort), and Workflow scripts have `agent()` `opts.effort`;
+inline Agent-tool spawns inherit the session's effort (no inline effort param).
+
 ### 3.5 `rate-limits-from-headers` (`src/patches/rateLimitsFromHeaders.ts`)
 
 CC populates the statusline's `.rate_limits.five_hour/seven_day` from
@@ -158,10 +183,15 @@ OAuth-subscription session (checks credential scopes). With a credential env
 var set (`ANTHROPIC_API_KEY` or `ANTHROPIC_AUTH_TOKEN`, any proxy), `ii()` is
 false and headers are ignored. This neutralizes the
 gate in `cpo`: `let o=ii();if(!rir(o)){...return}` → `if(!1){...}`. Absent
-headers still yield an empty map; subscriber sessions unaffected. Since §4.7
-now keeps CC on its native OAuth identity, this patch is normally redundant
-for Claude traffic, but remains useful insurance for alternate launchers and
-custom-provider headers.
+headers still yield an empty map; subscriber sessions unaffected.
+
+**UNNECESSARY on this setup (§4.7) and gate shape gone on 2.1.226**: with no
+credential env vars, `ii()` is true for the whole session (it's a credential
+check, not per-response), so headers from every provider parse natively. On
+2.1.226 the `cpo` gate shape is gone (rate-limit machinery restructured around
+representative-claim/overage-status headers). The patch logs "satisfied" on
+this build. If a future launcher reintroduces credential env vars, re-check
+whether a gate exists and re-anchor then.
 
 ### 3.6 `custom-model-alias` (`src/patches/customModelAlias.ts`)
 
@@ -347,9 +377,16 @@ session logs):
 
 - `claude-*.json` ← `~/.claude/.credentials.json` → `claudeAiOauth`
   (access/refresh tokens, `expiresAt` ms → RFC3339 `expired`).
-- `codex-*.json` ← `~/.claudish/codex-oauth.json` + `~/.codex/auth.json`
-  (`tokens.id_token` for the `id_token` + email claim).
-- `kimi-oauth.json` ← `~/.claudish/kimi-oauth.json` + `~/.claudish/kimi-device-id`.
+- `codex-*.json` ← `~/.codex/auth.json` (`tokens.id_token` for the `id_token`
+  - email claim), or `cliproxyapi --codex-login` if that store is dead.
+- `kimi-oauth.json` ← `~/.kimi-code/credentials/kimi-code.json` +
+  `~/.kimi-code/device_id`, or `cliproxyapi --kimi-login` if that store is
+  dead. No `~/.claudish/*` dependency as of 2026-08-10 — removed because the
+  native CLI stores were themselves stale (unused `codex`/`kimi-code` CLI
+  logins) while claudish's copies were accidentally the freshest thing on
+  the machine; the proxy's own `--codex-login`/`--kimi-login` is now the
+  correct "we own this" fallback instead of leaning on a tool being retired
+  as the router.
 
 Formats: `internal/auth/{claude,codex,kimi}/token.go` structs. The proxy has a
 built-in auth auto-refresh subsystem (`sdk/cliproxy/auth/auto_refresh_loop.go`;
@@ -368,10 +405,11 @@ copying could clobber a healthy rotated credential): a provider is synced only
 if its proxy credential is missing, has no refresh token, is failing refresh
 in the proxy journal (last 24h), or the native CLI store carries a newer,
 different refresh token (i.e. a re-login just happened). Sources are the
-NATIVE CLI stores first — `~/.claude/.credentials.json` (`claude /login`),
-`~/.codex/auth.json` (`codex login`), `~/.kimi-code/credentials/` (kimi-code
-CLI) — with claudish's copies as fallback. The fully manual alternative is the
-proxy's own OAuth flows, which write the auth dir directly:
+NATIVE CLI stores, exclusively — `~/.claude/.credentials.json` (`claude
+/login`), `~/.codex/auth.json` (`codex login`), `~/.kimi-code/credentials/`
+(kimi-code CLI). No claudish fallback. If a native store is missing or dead
+(refresh token gone), the fully manual alternative is the proxy's own OAuth
+flows, which write the auth dir directly and become the new source of truth:
 `cliproxyapi --claude-login | --codex-login | --kimi-login`.
 
 **Re-login cadence:** Claude Code now owns the Claude refresh lifecycle
@@ -586,28 +624,62 @@ pristine), `systemctl --user disable --now cliproxyapi`, use plain `claude`.
   custom models is absent/zero by design (proxy still tracks real usage).
 - **`gpt-5.4` 1M mode** advertised but untested; `gpt-5.4` not added to
   customModels (could be, at 272k conservative or probed first).
+- **M13 — 2.1.226 re-anchor (DONE 2026-08-10, `fe21f78`).** The 2.1.226 bump
+  renamed the whole resolver chain and left three gateway patches as silent
+  no-ops; only `contextWindowFromCatalog` was a real regression (custom models
+  at 200k). Re-anchored with apply-time name extraction + fail-loud policy +
+  the new `claude-` built-in guard (2.1.226's catalog lists `window:1e6` for
+  base opus/sonnet). `agentToolModelString` (enum removed upstream) and
+  `rateLimitsFromHeaders` (unnecessary under §4.7) are retired-to-satisfied.
+  **Lesson now encoded in the patch: a gateway patch that can't find its
+  anchor must fail loudly, never no-op** — the silent no-op is what hid this.
+- **M14 — PreCompact auto-model-switch (RESEARCHED 2026-08-10, hook half not
+  built, patch half deferred).** Goal: when a `kimi-k3-256k` session nears its
+  ceiling, cancel compaction and continue on `kimi-k3` (1M) instead of losing
+  context to a summary. Findings from the official hooks docs: a `PreCompact`
+  hook (matcher `auto`) **can block** compaction (exit code 2, or JSON
+  `{"decision":"block","reason":…}`), but there is **no documented mechanism
+  to change the session's active model programmatically** — no hook field, env
+  var, or settings key; `/model` is human-only, and a message arriving via
+  cross-session messaging is plain text (commands inside it never execute).
+  Agent teams don't help (a teammate's model is fixed at spawn; no
+  model-switch handoff). Cross-session messaging (v2.1.224+, present here) is
+  adjacent: hooks receive `CLAUDE_CODE_MESSAGING_SOCKET` and a hook's own
+  child process can post back into its own session (verified-delivery path on
+  Linux/WSL2), so a blocking PreCompact hook can also inject a nudge turn —
+  but the actual `/model kimi-k3` step remains manual. **Deferred
+  alternatives:** (a) reduced-scope hook — PreCompact blocks + nudges the user
+  to run `/model kimi-k3` (unbuilt; also unverified whether PreCompact's stdin
+  JSON exposes the current model id and whether the block reason reaches
+  Claude's context vs. terminal-only); (b) tweakcc patch at the compaction
+  trigger site that swaps the session model before continuing — possible in
+  principle (the trigger and resolver are in-binary), deferred per Aryan
+  2026-08-10.
 
 ---
 
-## 9. CC internals quick map (2.1.220)
+## 9. CC internals quick map (2.1.226; 2.1.220 names in §3.2)
 
 For re-anchoring. All in the binary's embedded JS (`node dist/index.mjs unpack
 out.js <binary>` to read it):
 
-- Catalog object: `Skl={schema_version:1,pricing_tiers:...,models:[...],
-aliases:{...},defaults:{},best:"fable",latest_per_family:{...},
-alias_migration:{}}` → `G8m()` Zod `.loose()` parse; failure → empty `W8m`.
-- `vi(e)` — model resolver; built-in alias cases via `m1e` + switch; custom
-  aliases injected at its head by the `custom-model-alias` patch (§3.6).
-- `ww(e)` — catalog by-id lookup (`q8m().get`).
-- `lo(e)` — alias/[1m] → base id. `Wu(e)` — strips `[1m]` from wire model.
-- `mZc(e,t)` — context window (patched). `lst(e)` — max output (reads catalog).
+- Catalog object: `{schema_version:1,pricing_tiers:...,models:[...],
+aliases:{...},...,alias_migration:{}}` (near file head) → Zod `.loose()` parse
+  in the `c2` module; failure → empty catalog = dead CC (brick risk, §3.1).
+- `ns(e)` — model resolver (was `vi`); built-in alias switch + custom aliases
+  injected at its head (§3.6); strips `[1m]` via `Aa`, custom map `am={...}`.
+- `Bv(e)` — catalog by-id lookup (was `ww`; `$rg().get`). Identifiable via the
+  `.capabilities.includes` check in `l2`.
+- `wo(e)` — alias/[1m] → base id (was `lo`). `wS(e)` — `/\[1m\]/i.test`.
+- `qmf(e,t)` — raw context-window resolver (patched; was `mZc`). `hT(e,t)` —
+  the used resolver: `Wmf()` env/`DISABLE_COMPACT` → `vPs` 1M-credits cap →
+  `qmf`. `M3(e,t)` — auto-compact window with sources env/settings/clientdata/
+  experiment/model-default/unknown-model; base window from `hT`. `Zye`/`nbr` = 200000. `JQu` — hardcoded per-model override map (NOT the catalog).
 - `m$(model, cap)` — capability gate.
-- `ii()` — OAuth-subscription check (credential scopes). Gates `cpo`
-  (rate-limit parse, patched), `/usage`, picker "Default (recommended)".
-- `SLu(headers)` — parses `anthropic-ratelimit-unified-{5h,7d}-*` into the
-  statusline cache `UDt`.
-- Picker: fixed entries + `for(let c of $1e())` enumeration + pushes;
-  `{value,label,description}` shape.
+- `ii()` — OAuth-subscription check (credential scopes). Gates `/usage`,
+  picker "Default (recommended)"; the old `cpo` rate-limit gate shape is gone
+  on 2.1.226 (restructured around representative-claim/overage-status; §3.5).
+- Picker: fixed entries + enumeration + pushes; `{value,label,description}`
+  shape.
 - Effort: `EL=["low","medium","high","xhigh","max"]`, sent as
   `output_config.effort`.
