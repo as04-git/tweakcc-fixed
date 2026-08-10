@@ -14,6 +14,12 @@
 //
 // The enum array contains only non-minified string literals, so the anchor is
 // stable. The Zod schema builder var (`v` above) is minified and captured.
+//
+// OBSOLETE ON CC ≥2.1.226 (verified 2026-08-10): upstream removed the enum
+// entirely — no `enum(["sonnet","opus","haiku","fable"])` anywhere in the
+// binary, and a live Agent-tool spawn with model:"kimi-k3-256k" ran natively.
+// The no-op path below is therefore the expected, correct outcome; it logs
+// "satisfied" rather than looking like a failure.
 
 import { showDiff } from './index';
 
@@ -34,7 +40,7 @@ export const writeAgentToolModelString = (file: string): string | null => {
     // The enum may already be gone in some builds (e.g. upstream widened it).
     if (!/\.enum\(\["sonnet","opus","haiku","fable"\]\)/.test(file)) {
       console.log(
-        'patch: agentToolModelString: agent model enum not present — no-op'
+        'patch: agentToolModelString: enum absent (upstream ≥2.1.226 accepts free model strings — verified live 2026-08-10) — satisfied'
       );
       return file;
     }

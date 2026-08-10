@@ -21,6 +21,15 @@
 // runs for every response. Absent headers produce an empty map (statusline
 // shows nothing), so subscriber sessions are unaffected. rir/gkt are false in
 // this build, so vLu always receives the Headers object — no null-deref risk.
+//
+// UNNECESSARY UNDER NATIVE IDENTITY (gateway guide §4.7, 2026-08-08): with no
+// ANTHROPIC_API_KEY/AUTH_TOKEN env vars, CC loads its real OAuth credential,
+// ii() is true, and headers parse natively for every provider's responses
+// (the session credential check is not per-response). This patch only ever
+// mattered for credential-env-var launches, which no longer exist. On
+// CC 2.1.226 the cpo gate shape is gone (rate-limit handling restructured
+// around representative-claim/overage-status), so the satisfied path below
+// is the expected outcome.
 
 import { showDiff } from './index';
 
@@ -35,7 +44,7 @@ export const writeRateLimitsFromHeaders = (file: string): string | null => {
   if (!match || match.index === undefined) {
     if (!/rir\(/.test(file)) {
       console.log(
-        'patch: rateLimitsFromHeaders: rate-limit gate not present — no-op'
+        'patch: rateLimitsFromHeaders: gate absent (unnecessary under native OAuth identity, §4.7 — no credential env vars, ii() true) — satisfied'
       );
       return file;
     }
