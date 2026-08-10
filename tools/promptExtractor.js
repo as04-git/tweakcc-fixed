@@ -157,6 +157,19 @@ const CURATED_IDENTIFIER_MAPS = {
 };
 
 const NEW_PROMPT_ASSIGNMENTS = [
+  {
+    // 2.1.226 — version-churned template: VERSION/BUILD_TIME/GIT_SHA/DD_SOURCEMAP_GROUP
+    // rotate every release, so its content hash never stabilises and the prose gate
+    // re-flags it as a classify candidate on every bump (the ruling lived only in the
+    // committed JSON, not in code — "fresh extraction differs" fired on an otherwise
+    // clean bump). Anchored on its own bold header, NOT on the volatile metadata
+    // object it interpolates. A NEW_PROMPT_ASSIGNMENTS hit bypasses the gate.
+    matcher: t => t.startsWith('**Recent releases (you are running v'),
+    name: 'Data: Recent releases block',
+    id: 'data-environment-recent-releases',
+    description:
+      'Environment block listing the last ten Claude Code releases and the running version, injected into the model context.',
+  },
   // 2.1.219 — ten fuzzy-carryover misses. Every one is still in the binary with a
   // bound override; Anthropic reworded each prompt's OPENING (inside FUZZY_PREFIX's
   // first 100 chars), so the carried name dropped. Four extracted anonymous; five
