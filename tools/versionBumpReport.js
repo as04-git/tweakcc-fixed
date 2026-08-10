@@ -155,10 +155,18 @@ function runExtraction({ cliPath, oldJsonPath, newVersion }) {
   if (oldJsonPath && fs.existsSync(oldJsonPath)) {
     fs.copyFileSync(oldJsonPath, tempOutput);
   }
+  // Share upstream's (Piebald) identifierMap for shared prompts when the dump
+  // is present — the same env var the SKILL.md extraction step sets. Without
+  // it the report's extraction regenerates raw maps and "fresh extraction
+  // differs" fires on spurious identifierMap-only diffs.
+  const piebDump = `/tmp/pieb-${newVersion}.json`;
+  const env = fs.existsSync(piebDump)
+    ? { ...process.env, TWEAKCC_UPSTREAM_JSON: piebDump }
+    : process.env;
   const result = spawnSync(
     process.execPath,
     [path.join(__dirname, 'promptExtractor.js'), tempCli, tempOutput],
-    { encoding: 'utf8' }
+    { encoding: 'utf8', env }
   );
   if (result.status !== 0) {
     throw new Error(
@@ -375,9 +383,21 @@ function main() {
   const emptyMaps = emptyIdentifierMapEntries(targetData);
   const blockingIssues = [];
   const extractedMetrics = extraction ? metrics(extraction.data) : null;
+  // DD_SOURCEMAP_GROUP is embedded per build target ("darwin" on macOS,
+  // "default" on Linux) — the extractor catalogues it verbatim, so a committed
+  // JSON produced on one platform never string-matches a fresh extraction on
+  // another. Normalize it away for the equality check only; the committed
+  // bytes are untouched. (VERSION/BUILD_TIME already normalize to
+  // <<CCVERSION>>/<<BUILD_TIME>> inside the extractor.)
+  const normalizePlatformVolatile = d =>
+    JSON.stringify(d).replace(
+      /DD_SOURCEMAP_GROUP:\\?"[^"\\]*\\?"/g,
+      'DD_SOURCEMAP_GROUP:\\"<<DD_SOURCEMAP_GROUP>>\\"'
+    );
   const committedMatchesExtraction =
     committedNewData && extraction
-      ? JSON.stringify(committedNewData) === JSON.stringify(extraction.data)
+      ? normalizePlatformVolatile(committedNewData) ===
+        normalizePlatformVolatile(extraction.data)
       : null;
   if (extractedMetrics?.anonymous) {
     blockingIssues.push(
