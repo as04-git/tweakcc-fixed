@@ -746,6 +746,7 @@ export const DEFAULT_SETTINGS: Settings = {
     enableChannelsMode: false,
     maxEffortDefault: false,
     autonomousOperationAllModels: false,
+    adhdOutputStyle: false,
     autoModeClassifierModel: 'default',
     suppressDeferredTools: false,
     claudemdContextOncePerConversation: true,

@@ -148,6 +148,7 @@ export interface MiscConfig {
   enableChannelsMode: boolean;
   maxEffortDefault: boolean;
   autonomousOperationAllModels: boolean;
+  adhdOutputStyle: boolean;
   autoModeClassifierModel: AutoModeClassifierModel;
   suppressDeferredTools: boolean;
   claudemdContextOncePerConversation: boolean;

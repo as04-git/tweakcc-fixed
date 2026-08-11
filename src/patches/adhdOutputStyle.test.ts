@@ -1,0 +1,73 @@
+import { describe, it, expect } from 'vitest';
+import { writeAdhdOutputStyle } from './adhdOutputStyle';
+
+// Shapes lifted from the pristine 2.1.227 comms prompt and claudeMd wrapper.
+const COMMS =
+  "Before your first tool call, say in a sentence what you're about to do; " +
+  'while working, give brief updates when you find something load-bearing or change direction.' +
+  '\n\nBeing readable and being concise are different things, and readable matters more. ' +
+  'If the user has to reread your summary or ask you to explain, any time saved by brevity is gone. ' +
+  'The way to keep output short is to be selective about what you include, ' +
+  'not to compress the writing into fragments, abbreviations, or jargon. ' +
+  'What you do include, write in complete sentences with the technical terms spelled out.' +
+  '\n\nMatch the response to the question: a simple question gets a direct answer in prose, not headers and sections. ' +
+  'Use tables only for short enumerable facts.';
+
+const REMINDER =
+  "As you answer the user's questions, you can use the following context:\n${BLOCKS}\n\n" +
+  'IMPORTANT: this context may or may not be relevant to your tasks. ' +
+  'You should not respond to this context unless it is highly relevant to your task.';
+
+const FILE = `var a=1;${COMMS}${REMINDER}var b=2;`;
+
+describe('writeAdhdOutputStyle', () => {
+  it('removes all three verbosity drivers from the comms prompt', () => {
+    const out = writeAdhdOutputStyle(FILE);
+    expect(out).not.toBeNull();
+    expect(out).not.toContain('find something load-bearing');
+    expect(out).not.toContain('readable matters more');
+    expect(out).not.toContain('in prose, not headers and sections');
+  });
+
+  it('drops the claudeMd relevance hedge', () => {
+    const out = writeAdhdOutputStyle(FILE)!;
+    expect(out).not.toContain('may or may not be relevant');
+    expect(out).toContain("user's standing preference");
+  });
+
+  it('installs the skim-first rules and a soft length anchor', () => {
+    const out = writeAdhdOutputStyle(FILE)!;
+    expect(out).toContain('Answer in the first line');
+    expect(out).toContain('Bold the key terms');
+    expect(out).toContain('usually lands under 120 words');
+  });
+
+  it('inserts no backticks or backslashes that could break a JS literal', () => {
+    const added = writeAdhdOutputStyle(FILE)!.slice(FILE.indexOf('var a=1;'));
+    expect(added).not.toContain('`');
+    expect(added).not.toContain('\\');
+  });
+
+  it('preserves untouched surrounding code', () => {
+    const out = writeAdhdOutputStyle(FILE)!;
+    expect(out.startsWith('var a=1;')).toBe(true);
+    expect(out.endsWith('var b=2;')).toBe(true);
+    expect(out).toContain('Use tables only for short enumerable facts.');
+  });
+
+  it('is idempotent', () => {
+    const once = writeAdhdOutputStyle(FILE)!;
+    expect(writeAdhdOutputStyle(once)).toBe(once);
+  });
+
+  it('still applies when only some anchors are present', () => {
+    const partial = `var a=1;${REMINDER}var b=2;`;
+    const out = writeAdhdOutputStyle(partial);
+    expect(out).not.toBeNull();
+    expect(out).not.toContain('may or may not be relevant');
+  });
+
+  it('fails loudly when no anchor matches at all', () => {
+    expect(writeAdhdOutputStyle('var a=1;var b=2;')).toBeNull();
+  });
+});

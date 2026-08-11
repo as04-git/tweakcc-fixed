@@ -91,6 +91,7 @@ export function MiscView({ onSubmit }: MiscViewProps) {
     enableChannelsMode: false,
     maxEffortDefault: false,
     autonomousOperationAllModels: false,
+    adhdOutputStyle: false,
     autoModeClassifierModel: 'default' as AutoModeClassifierModel,
     suppressDeferredTools: false,
     claudemdContextOncePerConversation: true,
@@ -783,6 +784,19 @@ export function MiscView({ onSubmit }: MiscViewProps) {
             ensureMisc();
             settings.misc!.autonomousOperationAllModels =
               !settings.misc!.autonomousOperationAllModels;
+          });
+        },
+      },
+      {
+        id: 'adhdOutputStyle',
+        title: 'ADHD-friendly output style',
+        description:
+          'Rewrites the always-on "# Communicating with the user" prompt for skim-first reading: answer in the first line, bold the key terms, three-sentence blocks, and a soft "usually under 120 words" anchor (soft, not a hard cap: Anthropic measured a 3% eval drop from hard caps and reverted them). Removes the three clauses that drive Claude-speak: the "load-bearing" update cue, the "readable matters more" ranking, and the "in prose, not headers and sections" rule. Also restates the shape rule in the per-turn CLAUDE.md reminder, where recency makes it stick, and drops that reminder\'s "may or may not be relevant" hedge.',
+        getValue: () => settings.misc?.adhdOutputStyle ?? false,
+        toggle: () => {
+          updateSettings(settings => {
+            ensureMisc();
+            settings.misc!.adhdOutputStyle = !settings.misc!.adhdOutputStyle;
           });
         },
       },

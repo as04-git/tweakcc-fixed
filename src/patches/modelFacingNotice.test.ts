@@ -12,6 +12,7 @@ const MODEL_FACING_IDS = [
   'fix-rewind-summary-header',
   'max-effort-default',
   'autonomous-operation-all-models',
+  'adhd-output-style',
   'auto-mode-classifier-model',
   'complexity-router',
   'dream-mode',

@@ -98,6 +98,7 @@ import { writeWorktreeMode } from './worktreeMode';
 import { writeAllowCustomAgentModels } from './allowCustomAgentModels';
 import { writeMaxEffortDefault } from './maxEffortDefault';
 import { writeAutonomousOperationAllModels } from './autonomousOperationAllModels';
+import { writeAdhdOutputStyle } from './adhdOutputStyle';
 import { writeAutoModeClassifierModel } from './autoModeClassifierModel';
 import { writeComplexityRouter } from './complexityRouter';
 import { writeVoiceMode } from './voiceMode';
@@ -444,6 +445,14 @@ const PATCH_DEFINITIONS = [
     group: PatchGroup.MISC_CONFIGURABLE,
     description:
       'Treats your selected model as Fable/Mythos everywhere CC branches on model family (flips the zQ gate): you get the autonomous-operation prompt (proceed without asking for reversible in-scope work; finish the job before ending the turn), the "# Communicating with the user" comms block in place of "# Text output", /loop dynamic-pacing behavior, and brief-mode comms shaping. Per-model feature-flag routing also follows fable but is inert on a local install',
+    modelFacing: true,
+  },
+  {
+    id: 'adhd-output-style',
+    name: 'ADHD-friendly output style',
+    group: PatchGroup.MISC_CONFIGURABLE,
+    description:
+      'Rewrites the always-on "# Communicating with the user" prompt for skim-first reading: answer in the first line, bold the key terms, short blocks, and a soft "usually under 120 words" anchor. Removes the three clauses that drive Claude-speak: the "load-bearing" update cue (the prompt is where that tic comes from), the "readable matters more" ranking, and the "in prose, not headers and sections" ban on the structure skim-readers rely on. Also restates the shape rule in the per-turn CLAUDE.md reminder, where recency makes it stick, and drops that reminder\'s "may or may not be relevant" hedge which labelled your own CLAUDE.md as ignorable.',
     modelFacing: true,
   },
   {
@@ -1163,6 +1172,10 @@ export const applyCustomization = async (
     'autonomous-operation-all-models': {
       fn: c => writeAutonomousOperationAllModels(c),
       condition: !!config.settings.misc?.autonomousOperationAllModels,
+    },
+    'adhd-output-style': {
+      fn: c => writeAdhdOutputStyle(c),
+      condition: !!config.settings.misc?.adhdOutputStyle,
     },
     'auto-mode-classifier-model': {
       fn: c =>
