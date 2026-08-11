@@ -578,5 +578,10 @@
     "shape": "concat",
     "excerpt": "Enterprise strict list of allowed marketplace sources. When set in managed settings, ONLY these sources can be added as marketplaces. Entrie",
     "why": "zod .describe() on managed-settings strictKnownMarketplaces \u2014 config schema"
+  },
+  "475fd77e044371ba": {
+    "verdict": "internal",
+    "shape": "array",
+    "excerpt": "OAuth access token has expired. Re-authenticate to continue. OAuth access token has been revoked. OAuth access token is invalid. API key is "
   }
 }
