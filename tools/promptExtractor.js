@@ -2570,20 +2570,43 @@ let _ccVersionForCache = null;
 function setCcVersionForCacheLookups(version) {
   _ccVersionForCache = version || null;
 }
+// BUILD_TIME is normalized into the stored pieces exactly like the version, so
+// it needs the same two-form lookup: capture-time hashes the raw ISO stamp
+// while post-merge hashes the placeholder. Without it a verdict on a
+// build-stamped string can never bind, and the string re-surfaces as an
+// anonymous candidate every single bump.
+// Learned from the first raw stamp seen (capture-time bodies are raw, and they
+// are hashed before any post-merge lookup), so the placeholder->raw direction
+// works too. Without both directions only one side of the asymmetry resolves.
+let _buildTimeForCache = null;
+const normalizeBuildTime = s =>
+  s.replace(
+    /BUILD_TIME:"(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z)"/g,
+    (_m, stamp) => {
+      _buildTimeForCache = stamp;
+      return 'BUILD_TIME:"<<BUILD_TIME>>"';
+    }
+  );
+
 function classifyByCache(body) {
   const cache = loadClassificationCache();
   const sha = s => crypto.createHash('sha1').update(s).digest('hex');
-  const direct = cache[sha(body)];
-  if (direct) return direct;
+  const forms = [body];
   if (_ccVersionForCache) {
-    if (body.includes(_ccVersionForCache)) {
-      const norm = cache[sha(body.split(_ccVersionForCache).join('<<CCVERSION>>'))];
-      if (norm) return norm;
-    }
-    if (body.includes('<<CCVERSION>>')) {
-      const raw = cache[sha(body.split('<<CCVERSION>>').join(_ccVersionForCache))];
-      if (raw) return raw;
-    }
+    if (body.includes(_ccVersionForCache))
+      forms.push(body.split(_ccVersionForCache).join('<<CCVERSION>>'));
+    if (body.includes('<<CCVERSION>>'))
+      forms.push(body.split('<<CCVERSION>>').join(_ccVersionForCache));
+  }
+  for (const form of forms.slice()) {
+    const nb = normalizeBuildTime(form);
+    if (nb !== form) forms.push(nb);
+    if (_buildTimeForCache && form.includes('<<BUILD_TIME>>'))
+      forms.push(form.split('<<BUILD_TIME>>').join(_buildTimeForCache));
+  }
+  for (const form of forms) {
+    const hit = cache[sha(form)];
+    if (hit) return hit;
   }
   return null;
 }
