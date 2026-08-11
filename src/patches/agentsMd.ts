@@ -24,7 +24,11 @@ export const writeAgentsMd = (
     return file;
   }
 
-  // Try the dir-flag null-check reader first (CC >=2.1.210)
+  // Try the storage-backend reader first (CC >=2.1.227)
+  const asyncV4 = writeAgentsMdAsyncBackend(file, altNames);
+  if (asyncV4) return asyncV4;
+
+  // Try the dir-flag null-check reader next (CC 2.1.210..2.1.226)
   const asyncV3 = writeAgentsMdAsyncDirFlag(file, altNames);
   if (asyncV3) return asyncV3;
 
@@ -38,6 +42,65 @@ export const writeAgentsMd = (
 
   // Fall back to the old sync pattern (CC <=2.1.69)
   return writeAgentsMdSync(file, altNames);
+};
+
+// CC >=2.1.227: the reader gained a 4th param carrying a storage backend, and
+// the local read moved into the `else` arm of a backend branch. Shape:
+//   async function XPs(e,t,r,n){try{let o,i=!1;
+//     if(n){let s=await vd_(n);switch(s.kind){case"absent":return{info:null,…};
+//       case"error":…;case"skipped":i=s.isDirectory,o=null;break;
+//       case"content":o=s.content;break}}
+//     else{let s=gr();o=await XY(s,e,vIo,(a)=>{i=a.isDirectory()})}
+//     if(o===null){…skipping…return{info:null,includePaths:[]}}
+//     return md_(o,e,t,r)}catch(o){return Td_(o,e),{info:null,includePaths:[]}}}
+// The whole backend branch is captured and spliced back verbatim, so only the
+// `o===null` head is touched. The reroute recurses with the backend argument
+// dropped (void 0): the backend descriptor carries a per-file storage KEY, so
+// reusing it for an alternative filename would read the wrong object. Missing
+// files on the backend path return from `case"absent"` before reaching
+// `o===null`, so the local filesystem arm is the one this reroute serves.
+const writeAgentsMdAsyncBackend = (
+  file: string,
+  altNames: string[]
+): string | null => {
+  const funcPattern =
+    /(async function ([$\w]+)\(([$\w]+),([$\w]+),([$\w]+),([$\w]+))\)\{try\{let ([$\w]+),([$\w]+)=!1;(if\(\6\)\{[\s\S]*?\}else\{[\s\S]*?\})if\(\7===null\)\{([\s\S]*?\[CLAUDE\.md\] skipping[\s\S]*?return\{info:null,includePaths:\[\]\})\}return ([$\w]+)\(\7,\3,\4,\5\)\}catch\(([$\w]+)\)\{return ([$\w]+)\(\12,\3\),\{info:null,includePaths:\[\]\}\}\}/;
+
+  const m = file.match(funcPattern);
+  if (!m || m.index === undefined) return null;
+
+  const funcSig = m[1]; // async function XPs(e,t,r,n
+  const funcName = m[2]; // XPs
+  const pathParam = m[3]; // e
+  const typeParam = m[4]; // t
+  const thirdParam = m[5]; // r
+  const contentVar = m[7]; // o
+  const dirFlag = m[8]; // i
+  const backendBranch = m[9]; // if(n){…}else{…}
+  const nullBody = m[10]; // if(E(`[CLAUDE.md] skipping …`)…return{…}
+  const processor = m[11]; // md_
+  const catchVar = m[12]; // o (catch-scoped)
+  const errorHandler = m[13]; // Td_
+
+  const altNamesJson = JSON.stringify(altNames);
+
+  const replacement =
+    `${funcSig},didReroute){try{let ${contentVar},${dirFlag}=!1;${backendBranch}` +
+    `if(${contentVar}===null){` +
+    `if(!didReroute&&(${pathParam}.endsWith("/CLAUDE.md")||${pathParam}.endsWith("\\\\CLAUDE.md"))){` +
+    `for(let alt of ${altNamesJson}){let altPath=${pathParam}.slice(0,-9)+alt;` +
+    `try{let rerouteResult=await ${funcName}(altPath,${typeParam},${thirdParam},void 0,true);if(rerouteResult.info)return rerouteResult}catch{}}}` +
+    `${nullBody}}` +
+    `return ${processor}(${contentVar},${pathParam},${typeParam},${thirdParam})}catch(${catchVar}){return ${errorHandler}(${catchVar},${pathParam}),{info:null,includePaths:[]}}}`;
+
+  const startIndex = m.index;
+  const endIndex = startIndex + m[0].length;
+  const newFile =
+    file.slice(0, startIndex) + replacement + file.slice(endIndex);
+
+  showDiff(file, newFile, replacement, startIndex, endIndex);
+
+  return newFile;
 };
 
 // CC >=2.1.210: the async reader gained an isDirectory() probe. The reader now
