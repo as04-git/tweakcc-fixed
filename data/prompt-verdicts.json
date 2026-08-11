@@ -2422,8 +2422,8 @@
   },
   "system-prompt-memory-save-hygiene-and-exclusions": {
     "verdict": "pristine-keep",
-    "version": "2.1.224",
-    "why": "Read in full: 'Before saving, check for an existing file that already covers it \u2014 update that file rather than creating a duplicate; delete memories that turn out to be wrong. Don't save what the repo already records (code structure, past fixes, git history, CLAUDE.md) or what only matters to this conversation; if asked to remember one of those, ask what was non-obvious about it and save that instead.' This is already Anthropic's own condensed rewrite of the verbose arms' material, and it shows: no CAPS, no hedging, no validation-forward phrasing, no restatement, no examples-of-the-same-princi"
+    "version": "2.1.227",
+    "why": "The compact memory paths need the pre-save existing-file check, removal of wrong memories, repository-derived exclusions, conversation-only exclusion, and non-obvious-information fallback together. Detailed memory siblings cover pieces in other builders or tool prompts, but this line is the carrier that reaches the lean file-memory path; its frozen ordering and enumerations therefore stay intact."
   },
   "system-prompt-memory-save-team-scoped-writable-store": {
     "verdict": "trim",
@@ -2501,8 +2501,8 @@
   },
   "system-prompt-memory-type-definitions-line": {
     "verdict": "pristine-keep",
-    "version": "2.1.224",
-    "why": "Check 1: four enum values, one clause each, no CAPS, no hedging, no filler \u2014 `user` \u2014 who the user is (role, expertise, preferences)`, `feedback` \u2014 \u2026 both corrections and confirmed approaches; include the why`, `project` \u2014 \u2026 not derivable from the code or git history; convert relative dates to absolute`, `reference` \u2014 pointers to external resources (URLs, dashboards, tickets)`. These are the literal `type:` frontmatter values, so this is an output-shape/enum contract, not prose. Check 2: the only real overlap the corpus scan found is the four-word clause \"; include the why\", which is restated "
+    "version": "2.1.227",
+    "why": "The four application-specific memory types, feedback rationale, project durability boundary, absolute-date rule, and reference-resource scope are load-bearing taxonomy. Detailed type siblings exist on other memory-prompt variants, but the compact builder relies on this line itself, so wiping it would leave `Each memory has a type:` without definitions; every enumerated sentence remains verbatim."
   },
   "system-prompt-memory-type-privacy-defaults": {
     "verdict": "wipe-merge",
@@ -3250,9 +3250,8 @@
   },
   "tool-result-artifact-comments-requested-thread-only-note": {
     "verdict": "pristine-keep",
-    "version": "2.1.226",
-    "why": "Unique runtime state: the result is filtered to one requested thread, reports whether other threads contain comments sent to Claude, and gives the exact unfiltered invocation. The uppercase \u201cOTHER\u201d is a compact dynamic label, not CAPS exhortation. Nearby comment prompts describe pagination or missing threads, but none carries the dynamic omitted-thread count and notification state.",
-    "injectionPath": "Artifact tool result, conditional on action \"comments\" being called with thread_id."
+    "version": "2.1.227",
+    "why": "The sentence reports the actual result scope and dynamically warns how many other threads carry comments sent to Claude. No deployed sibling conveys that runtime count or its implication, and the frozen interpolation-bearing sentence cannot be partially compressed."
   },
   "tool-result-artifact-comments-sent-to-you-ordering-note": {
     "verdict": "pristine-keep",
@@ -4139,5 +4138,680 @@
     "verdict": "pristine-keep",
     "version": "2.1.224",
     "why": "Check 1: the detected fact (git resolves the working tree elsewhere, with the path), the two possible causes (\"a core.worktree redirect, or a checkout discovered above it\"), the consequence (\"commands run there would write outside the worktree\"), and three remedies that map one-to-one onto the causes plus a fallback (\"Remove the redirect, restore the worktree's own .git, or recreate the worktree, then retry\"). That is not three examples of one principle \u2014 it is three distinct fixes \u2014 so the cut-list's example-padding rule does not bite. No CAPS, no hedging, no filler; the consequence clause is"
+  },
+  "agent-prompt-artifact-comment-reply-writer-resolved-thread": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The load-bearing claim is that a human explicitly requested a reply on an already-resolved thread and that replying must not change or question that resolved state. The deployed reply-writer sibling only constrains the output to one reply; it does not carry this state-transition rule, which observably prevents reopening or redundant resolution."
+  },
+  "agent-prompt-artifact-comment-thread-analysis-task": {
+    "verdict": "trim",
+    "version": "2.1.227",
+    "why": "The exact artifact, thread, and triggering-comment identifiers are runtime routing mechanics and must remain. \u201cFollow your workflow and output the analysis brief\u201d is already supplied by the analyst system prompt, so that redundant second sentence is deleted outright."
+  },
+  "agent-prompt-artifact-comment-thread-analyst": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The read-only role, scoped tool sequence, fallback behavior, 30-line sentinel, ordered brief schema, and output exclusions are unique pipeline mechanics. The paragraph that reclassifies viewer comments as data and rehearses prompt-injection cases is covered by the deployed Artifact comments tool description and Opus 5\u2019s strong default injection resistance, so that whole paragraph is removed while every frozen mechanic remains verbatim. [stage-3 refutation applied: The carrier preserves the general data-versus-instructions boundary but not the required brief output and move-on behavior, so the trim removes a capability. Revert to pristine. \u2014 the cut was reverted to pristine in opus-5.]"
+  },
+  "agent-prompt-artifact-comment-thread-analyst-when-to-use": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "This prompt uniquely tells the parent what the analyst returns and that the artifact pipeline dispatches it programmatically rather than through direct spawning. That routing distinction is not present in a deployed sibling and changes observable agent selection behavior."
+  },
+  "agent-prompt-security-monitor-subagent-handback-review-example": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "This fragment is structurally part of the security monitor\u2019s hand-back sentence and identifies the relayed-injection risk being reviewed. Deleting it alone would splice the neighboring fragments into a malformed and semantically different sentence, while no deployed sibling supplies this hand-back-specific continuation."
+  },
+  "agent-prompt-security-monitor-subagent-handback-wrapper-open": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The warning continuation and the literal <subagent_hand_back> opening tag are input-framing mechanics for the monitor. The sentinel is not model-default behavior, and deleting this fragment would leave the runtime-composed wrapper unmatched."
+  },
+  "agent-prompt-subagent-handback-security-review": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "This fragment defines who receives the hand-back, classifies it as agent-authored rather than user authorization, and ties its review to the transcript block rules. Those distinctions remain load-bearing for Opus 5\u2019s documented unverified-subagent-relay regression, and the fragment must stay verbatim because it is compositionally joined to the next two catalogue prompts."
+  },
+  "agent-prompt-ultrareview-github-comment-poster": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The GitHub identity lookup, payload schema, exact one-comment format, deduplication marker, 40,000-character cap, sole permitted write, target scope, and terminal status line are unique runtime mechanics. The generic \u201cdo exactly the steps\u201d exhortation and the early trust-boundary sentence add no signal beyond the detailed rules later in the same prompt and Opus 5\u2019s default injection resistance, so those two complete sentences are deleted. [stage-3 refutation applied: The sole cited carrier does not exist, and the later surviving rule is narrower than the deleted whole-payload trust boundary. Revert to pristine. \u2014 the cut was reverted to pristine in opus-5.]"
+  },
+  "data-api-error-stream-connection-lost-partial-response": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The interpolated error tag and the fact that prior streamed output may be incomplete are unique runtime state, not behavioral scaffolding. The idle-stream sibling is an alternative branch and does not fire on a lost connection, so it cannot carry this signal on this path."
+  },
+  "data-api-error-stream-idle-partial-response": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The interpolated error tag and the fact that prior streamed output may be incomplete are unique runtime state, not behavioral scaffolding. The connection-loss sibling is an alternative branch and does not fire on an idle stream, so it cannot carry this signal on this path."
+  },
+  "data-artifact-comment-edit-composer-analysis-notes": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "This prompt is the actual transport wrapper for the analyst brief, including its randomized line marker and all interpolation slots. Removing or trimming its sole sentence would drop the value-bearing payload or its provenance boundary, so the exact body is load-bearing."
+  },
+  "data-artifact-resolve-comment-thread-auto-classifier-input": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "This is the permission classifier\u2019s exact action summary: target thread, artifact identity or fallback address, reversible effect, and appended metadata. Those variables and semantics are runtime mechanics the classifier cannot infer from a generic resolve-tool description."
+  },
+  "data-task-notification-artifact-auto-edit-thread-followup": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "This notification carries the unresolved-completion state machine: re-read comments, verify the change, avoid a duplicate reply, and resolve only if the thread is still open. No deployed sibling supplies those conditions on this completion branch, and the tool/action names and ordering are frozen mechanics."
+  },
+  "data-task-notification-artifact-auto-reply-change-request-followup": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "This condition prevents an acknowledgement-only auto-reply from being mistaken for completion when the human actually requested an artifact change. Similar text exists on failed-edit branches, but those notifications do not co-fire here; finishing the requested change remains a documented Opus 5 regression worth countering."
+  },
+  "data-task-notification-artifact-auto-reply-resolved-thread-followup": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The prompt requires an after-action reply while preserving an already-resolved thread. That state-specific combination is not carried by the generic follow-up sibling and observably prevents reopening or redundantly resolving the thread."
+  },
+  "data-task-notification-artifact-comment-thread-action-followup": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "This is a concrete post-action state transition: reply, resolve, and preserve the narrow exceptions for an active conversation or an answer the commenter still needs to read. The deployed Artifact tool description explains how to use comment actions but does not decide these workflow conditions."
+  },
+  "data-task-notification-artifact-watch-idle-retirement-reason": {
+    "verdict": "wipe-merge",
+    "version": "2.1.227",
+    "why": "The parenthetical only explains the implementation reason for retirement; it does not add a new action or constraint for the coding workflow. The deployed watch-ended notification already states that the watch ended, that republishes will no longer be heard, and how to watch again, so the operational signal is fully covered."
+  },
+  "slash-command-code-review-post-ignored-pr-comment-guidance": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The load-bearing claims are that this particular typed `--post` was ignored, that `--post` belongs to `/code-review ultra`, that `--comment` posts inline PR findings, and that the mismatch must be disclosed briefly. Siblings describe the flags generally, but none carries the runtime fact that this invocation ignored the user's flag; because the sentence is frozen by its slot, tool names, restrictive quantifier, and one-line cap, it stays verbatim."
+  },
+  "slash-command-mcp-other-session-disabled-reconnect-all": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "This reports the affected-server count, the cross-session disable state, and the exact toggle-or-restart recovery sequence. The singular disabled-server sibling does not carry this aggregate result or its count, and the sentence is frozen by the slot, enumeration, and `/mcp` command."
+  },
+  "slash-command-mcp-other-session-disabled-unconfigured": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The unique signal is the combination of an aggregate count, a disable performed in another session, and the fact that the affected servers are not configured here, so reconnecting is impossible yet. Similar MCP siblings cover either unconfigured servers or cross-session disabling on other result branches, but neither reaches this branch with the complete diagnosis; the frozen sentence therefore stays verbatim."
+  },
+  "slash-command-mcp-reconnect-all-status-terminal": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "This is the terminal-status handoff appended specifically after reconnect-all and enable/disable-all summaries. `slash-command-mcp-status-see-terminal-for-details` has similar deployed wording on the separate status-query branch, so it does not carry this handoff when the current result fires; the command path is mechanics and remains verbatim."
+  },
+  "slash-command-ultrareview-post-ignored-disabled": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The notice conveys a concrete result of this launch: `--post` was ignored because PR posting is disabled. A later posting-disabled reminder describes a different result branch and does not replace disclosure at launch, while the flag and PR terms make this sentence frozen mechanics."
+  },
+  "slash-command-ultrareview-post-ignored-non-github-pr": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The load-bearing runtime fact is that this invocation ignored `--post` because its target is not a GitHub.com pull request. The ultra option description states the eligibility rule but not that the user's current flag was ignored, so this conditional notice changes observable behavior and its frozen sentence stays verbatim."
+  },
+  "slash-command-version-build-timestamp": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "This is the `/version` output contract joining the rendered version value to the binary's exact `BUILD_TIME`. The recent-releases carrier exposes the running version but evaluates `.VERSION`, not `.BUILD_TIME`, so the timestamp and its interpolation remain unique frozen mechanics."
+  },
+  "system-prompt-artifact-comment-dispatch-classifier": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The exact two-value `lane` JSON schema and the prohibition on prose or code fences are the classifier's output contract. The paired triage prompt names `act` and `pipeline` but does not specify the `lane` key or complete JSON shape, and Opus 5 cannot infer an application-specific schema by default."
+  },
+  "system-prompt-artifact-comment-thread-triage": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The formatted rows, NEWEST-request ordering, and exact act-versus-pipeline boundary are unique application mechanics and stay verbatim. The viewer-text anti-injection sentence is redundant with Opus 5's documented prompt-injection robustness, while the concurrently injected dispatch classifier already supplies the JSON-only output contract, so those two frozen sentences can be deleted outright. [stage-3 refutation applied: The output-shape carrier is valid, but the trim mechanically drops the entire COMMENT_THREAD_VIEWER_PREFIX binding and its trust-boundary semantics. Revert to pristine. \u2014 the cut was reverted to pristine in opus-5.]"
+  },
+  "system-reminder-cloud-review-post-essential-traffic-only-unavailable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "This names the exact active mode and the architectural reason web-based posting is unavailable. The third-party-provider sibling describes a different gate, and Opus 5 cannot derive the `essential-traffic-only` compatibility constraint from defaults."
+  },
+  "system-reminder-cloud-review-post-login-required": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "This branch-specific reminder states both the missing Claude.ai authentication prerequisite and the exact `/login` retry sequence. Other login prompts belong to schedule, artifact, or design flows and do not reach a failed cloud-review post, so the command-order mechanics remain verbatim."
+  },
+  "system-reminder-cloud-review-post-no-findings": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The unique result is not a generic review failure but the absence of postable findings, with the explicit consequence that nothing was sent to the pull request. Nearby no-output, posting-disabled, and review-failed reminders describe materially different states, so this truthful outcome report remains."
+  },
+  "system-reminder-cloud-review-post-routine-missing-id": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "This captures a partial-success state in which routine creation succeeded but its identifier was not returned, plus the exact routines URL to inspect before retrying. No deployed sibling carries that missing-id diagnosis, and the id, URL, and ordering make it frozen mechanics."
+  },
+  "system-reminder-cloud-review-post-routine-refresh-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The load-bearing claim is a specific schema-migration failure from the older review-posting routine to comment posting, followed by two valid recovery choices. Generic routine setup, start, and verification failures do not convey that stored-shape incompatibility, so the frozen enumeration stays verbatim."
+  },
+  "system-reminder-cloud-review-post-routine-request-rate-limited": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "This distinguishes rate limiting during routine creation or verification from rate limiting while running an existing routine and supplies the one-minute retry floor plus manual-post fallback. The run-rate-limited sibling fires on a different backend phase, so it does not carry this current failure; the number, ordering, and alternatives are frozen mechanics."
+  },
+  "system-reminder-cloud-review-post-routine-run-rate-limited": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The sentence carries the live failure state that starting the routine was rate-limited and the two valid recoveries: wait and rerun, or post manually. The request-rate-limit sibling is a mutually exclusive branch and does not tell the model what happened on this path; Opus 5 cannot infer this runtime result, and the frozen recovery sentence must remain verbatim."
+  },
+  "system-reminder-cloud-review-post-routine-verification-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "This identifies a failed read of the stored posting routine and gives the exact retry/manual-post alternatives. That transient verification result is not model-default behavior or live sibling coverage on this branch, so deleting it would leave the model unable to report or recover from the failure."
+  },
+  "system-reminder-cloud-review-post-start-deadline": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The prompt says the posting outcome is unconfirmed after the start deadline and orders a pull-request check before any manual post. That uncertainty and duplicate-comment safeguard are load-bearing, especially given Opus 5's regression in confidently asserting unverified outcomes; the frozen ordering sentence must stay verbatim."
+  },
+  "system-reminder-cloud-review-post-third-party-provider-unavailable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The unique claim is that review posting depends on Claude Code on the web and is unavailable under the active third-party provider. Other deployed wrong-provider prompts concern Projects or Design, not this posting branch, and Opus 5 cannot derive this product gate from the failed operation alone."
+  },
+  "system-reminder-memory-connected-store-write-guidance": {
+    "verdict": "trim",
+    "version": "2.1.227",
+    "why": "Keep the current writable-store id, project directory, index path, tool contract, and the private-versus-shared scope distinction because a connection change can make the session's earlier system-prompt values stale. Delete only the standalone secrets prohibition: it is safety-default scaffolding for Opus 5 and is also already stated by a deployed memory sibling."
+  },
+  "system-reminder-memory-project-switch-stale-context-caveat": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "This marks earlier store lists, shared indexes, and memory-tool results as belonging to an earlier connection, then requires rechecking before attribution or writes. Those are live provenance and ordering mechanics after a project switch, not generic verification scaffolding, and the single frozen sentence cannot be compressed."
+  },
+  "system-reminder-project-memory-all-stores-read-only": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The reminder updates the current post-switch state to say every newly connected store is read-only and that the named write calls will be refused. The similar initial-system-prompt sibling may be absent or stale when the connection changes mid-session, so it does not cover this runtime transition."
+  },
+  "system-reminder-project-memory-connected-stores-list": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "This introduces the fresh post-change store list and supplies the exact store-argument and no-argument recheck mechanics. A session can acquire shared memory after starting without connected stores, so the similar initial-system-prompt fragment is not guaranteed to have reached the model and cannot safely replace this reminder."
+  },
+  "system-reminder-project-memory-connection-changed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The interpolated branch reports which project is now connected and distinguishes fallback-to-another-project, default-project selection, and an explicit user selection. The /memory path, enum check, dynamic project values, and appended caveat are frozen runtime mechanics with no model-default substitute."
+  },
+  "system-reminder-project-memory-connection-pending": {
+    "verdict": "trim",
+    "version": "2.1.227",
+    "why": "Keep the pending/not-yet-connected state and the ordered memory-list recheck gate, including what to do once stores appear. Drop the separate statement that personal memory is unaffected because the deployed system prompt already defines the personal directory as separate and still readable and writable."
+  },
+  "system-reminder-project-memory-disconnected": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The prompt reports the exact disconnect/fallback cause, invalidates prior store and index results, and states that no memory tool can serve them until reconnection. Its final personal-memory-or-explain branch is also load-bearing because it overrides stale write guidance when no private directory exists; all variable, enum, path, and ordering mechanics must remain verbatim."
+  },
+  "system-reminder-project-memory-index-fetch-unavailable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "This is the only notice that ties a specific newly connected store's missing index to a transient fetch failure and names the exact read-tool recovery. The store identifier and tool call are frozen mechanics that Opus 5 cannot reconstruct from defaults."
+  },
+  "system-reminder-project-memory-repick-pending": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The reminder says the prior project is disconnected while a re-pick is still applying, invalidates earlier memory context, and requires a no-argument connection check before tool reliance. These are branch-specific state and ordering constraints, not redundant diligence prompts."
+  },
+  "system-reminder-ultrareview-post-environment-setup-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The two sentences identify the failed cloud-environment prerequisite and give the exact setup URL followed by the required --post retry. The schedule sibling uses the same site for a different feature and rerun command, so it does not cover this workflow's frozen path, flag, and ordering mechanics."
+  },
+  "system-reminder-ultrareview-post-handoff-uncertain": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The prompt preserves the actual handoff exception and explicitly marks the remote posting outcome as uncertain. Checking the pull request before manual posting prevents duplicate comments and directly counters Opus 5's unverified-completion regression, so both frozen sentences are load-bearing."
+  },
+  "system-reminder-ultrareview-post-routine-account-disabled": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "This distinguishes account-level routine disablement from transient posting failures and truthfully states that no automatic post occurred. Keeping the findings/manual-post fallback changes the next action on this branch and is not supplied by model defaults or a co-injected sibling."
+  },
+  "system-reminder-ultrareview-post-routine-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The interpolated expression distinguishes setup, start, and verification failures while preserving either the returned error detail or status, then provides the manual-post fallback. It is the generic server-error branch rather than a duplicate of the specific failure branches, and its enum values, variables, and alternatives are frozen mechanics."
+  },
+  "system-reminder-ultrareview-post-routine-organization-disabled": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The load-bearing claims are the organization-level disablement, the failed automatic post, the still-available findings, and the exact admin-settings recovery URL. No deployed sibling reaches this failure branch with that cause and recovery path, and Opus 5 cannot infer runtime organization policy or truthfully report the posting outcome without it."
+  },
+  "system-reminder-ultrareview-post-routine-setup-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "This prompt carries the concrete setup-failure state and the manual-post fallback for the branch where routine creation exhausts its attempts. Similar routine-failure text belongs to alternate runtime branches rather than a co-injected carrier, so suppressing this prompt would remove the only outcome signal on this path."
+  },
+  "system-reminder-ultrareview-post-routine-start-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The unique signal is that routine startup failed, including the interpolated error message or status, while the findings remain available for manual posting. Those runtime values and this exact branch outcome are not model defaults and are not conveyed by a deployed sibling on the same path."
+  },
+  "system-reminder-ultrareview-posting-disabled": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The prompt states that PR posting is disabled, confirms that nothing was posted, and points to the findings already in context as the fallback. That is condition-specific external-state information; nearby --post warnings occur on other branches and do not replace this completion-time reminder."
+  },
+  "system-reminder-ultrareview-requested-post-review-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The prompt ties the failed cloud review to the user's requested account-attributed PR comment and explicitly confirms that no comment was posted. This is a load-bearing truthful-outcome guard, especially given Opus 5's flat false-completion rate and assertion regression, and no deployed sibling supplies it on the review-failure path."
+  },
+  "system-reminder-usage-limit-grace-checkpoint-intro": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "This is the opening half of a runtime checkpoint instruction and establishes the usage-limit grace-window state plus the immediate checkpoint ordering. The older deployed wrap-up prompt is an alternate experiment branch, not a carrier on the next-steps branch; suppressing this fragment would also leave its continuation malformed."
+  },
+  "system-reminder-usage-limit-grace-checkpoint-next-steps": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "This continuation adds the exact checkpoint mechanics: finish the current step, report at most three short prioritized bullets, and start no subagents or long-running work. The alternate deployed wrap-up branch lacks the three-item prioritization contract and does not fire on this branch, so these runtime-cap instructions remain unique and observable."
+  },
+  "tool-description-artifact-live-edit": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The prompt identifies a live edit as a mutation of an already-published page, says the change is immediate, and injects the target's current audience state. That pre-action consequence and dynamic visibility context are not model defaults or fully carried by another deployed tool description."
+  },
+  "tool-description-artifact-reply-comment": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The prompt makes clear that the action publishes text into an existing thread and supplies dynamic audience visibility for the target artifact. The general comments sibling explains reply mechanics and attribution, but it does not provide this per-target share status, so a unique load-bearing signal remains."
+  },
+  "tool-description-artifact-resolve-comment-thread": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The prompt gives the pre-action effect, Claude attribution, target audience, and reversibility of resolving a single thread. A later tool result cannot substitute for this decision-time consequence, while the deployed comments description does not carry the same resolve semantics."
+  },
+  "tool-description-code-review-ultra-cloud-option": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The fragment's load-bearing claims are that ultra is a deep multi-agent cloud review and that account access may be required. The deployed code-review command body already reproduces both claims at the same option site, including the conditional account-access text, so this nested fragment adds no observable signal. [stage-3 refutation applied: Catalogue id tool-description-code-review-ultra-cloud-option binds the dropped slot, while the current command carrier only has an interpolation site for this fragment rather than the cited inline clause. The wipe-merge verdict is wrong; revert to pristine. \u2014 the cut was reverted to pristine in opus-5.]"
+  },
+  "tool-description-code-review-ultra-post-option": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "This sentence defines two otherwise non-inferable flags and their exact GitHub effect: one account-attributed comment rather than a review, interactive confirmation behavior, non-interactive posting, and suppression via --no-post. The deployed parent command omits these --post mechanics, and no other pre-action carrier states the same contract."
+  },
+  "tool-description-devicebash": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The body carries concrete execution mechanics the model cannot infer: device versus cloud location, fresh-shell cwd and environment isolation, sandbox allow/deny behavior and error text, timeout, and concurrency cap. Some failure/result prompts repeat isolated consequences only after an error, but no deployed pre-action sibling covers this complete contract; the frozen sentences and all three interpolation slots therefore stay pristine."
+  },
+  "tool-description-devicebash-local-sandbox-intro": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "This fragment is the opening half of the Device Bash description and establishes that execution occurs on the user's local machine inside Claude Code's OS sandbox rather than in the cloud. It joins directly to the following Device Bash fragment, so deleting it would remove the tool's trust boundary and leave a malformed description."
+  },
+  "tool-description-proposegoal": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The unique load-bearing content is the goal's evaluator-backed persistence, the narrow multi-turn/verifiable trigger, the no-scope-widening rule, and the one-active-goal replacement mechanic. Deployed parameter and result prompts already carry the approval default and direct-set gate, decline behavior, non-blocking kickoff timing, evaluator visibility constraint, example check, and character cap. The proposed body deletes those frozen sentences whole and preserves every surviving frozen sentence verbatim. [stage-3 refutation applied: The verdict relies entirely on suppressed carriers that deliver none of the cited rules to the model. The trim is wrong; revert to pristine. \u2014 the cut was reverted to pristine in opus-5.]"
+  },
+  "tool-description-remotetrigger-summary": {
+    "verdict": "trim",
+    "version": "2.1.227",
+    "why": "Managing routines and, especially, inspecting recent runs and logs remain useful because the deployed detailed RemoteTrigger body is stale and omits the run-inspection actions. Its separate authentication sentence is redundant with the deployed sibling's in-process OAuth statement, so that whole frozen sentence can be deleted while the first sentence stays verbatim."
+  },
+  "tool-parameter-agent-run-in-background": {
+    "verdict": "trim",
+    "version": "2.1.227",
+    "why": "The deployed Agent background-default sibling already says that subagents default to background execution and that completion produces a notification. The stricter foreground gate\u2014only when the very next action depends on the result and no other useful work can proceed\u2014remains unique and is useful restraint for Opus 5, so the frozen second sentence stays verbatim."
+  },
+  "tool-parameter-device-bash-timeout-ms": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The two claims are the parameter's millisecond unit and its default timeout. The `timeout_ms` key already supplies the unit, while the deployed device_bash description states the same default/max behavior, so this parameter description adds no unique observable guidance. [stage-3 refutation applied: Catalogue id tool-parameter-device-bash-timeout-ms binds a slot that the empty replacement drops completely, and the cited carrier does not reproduce the parameter contract. The wipe-merge verdict is wrong; revert to pristine. \u2014 the cut was reverted to pristine in opus-5.]"
+  },
+  "tool-parameter-devicebash-command": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The load-bearing claim is that the supplied string is executed specifically through `bash -c`. No deployed sibling states that mechanism; the closest device_bash description instead says the device shell may be bash or zsh, which is not equivalent."
+  },
+  "tool-parameter-propose-goal-ask-user": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The default approval dialog and the exact gate for setting `ask_user` false are already stated in the deployed ProposeGoal description. The direct-set result also carries the visible-notice and `/goal clear` consequences, leaving no unique signal in this parameter description. [stage-3 refutation applied: The wipe-merge verdict is wrong because neither cited deployed carrier contains the cut semantics. Revert to pristine. \u2014 the cut was reverted to pristine in opus-5.]"
+  },
+  "tool-parameter-proposegoal-condition": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The separate-evaluator contract, conversation-only verifiability, representative check, and character cap are all already in the deployed ProposeGoal description. The approval-dialog readability clause only explains the duplicated cap and adds no further behavior. [stage-3 refutation applied: The wipe drops the prompt's only bound identifier occurrence and the claimed deployed carrier omits the cap and evaluator constraints. Revert to pristine. \u2014 the cut was reverted to pristine in opus-5.]"
+  },
+  "tool-parameter-remotetrigger-cursor": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "This sentence uniquely binds `cursor` to the `next_cursor` returned by the two paginated actions. The deployed RemoteTrigger override removed its `list_runs` and `get_run_log` mechanics, and no other deployed body supplies this pagination contract."
+  },
+  "tool-parameter-remotetrigger-session-id": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The prompt uniquely identifies when `session_id` is required, its accepted `cse_\u2026` and `session_\u2026` forms, and that it comes from `list_runs`. Those are non-derivable tool mechanics and have no deployed sibling coverage."
+  },
+  "tool-parameter-remotetrigger-trigger-id": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The frozen enumeration defines exactly which actions require `trigger_id`. The deployed RemoteTrigger body covers endpoint paths for `get`, `update`, and `run` but omits `list_runs`, so deleting the sentence would lose a unique requirement."
+  },
+  "tool-result-artifact-comment-thread-analyst-scope-denied": {
+    "verdict": "wipe-merge",
+    "version": "2.1.227",
+    "why": "The analyst's read-only status, one-artifact/one-thread scope, denial of writes and other-thread reads, and permitted page-data read are already established by its deployed agent prompt. This denial result merely restates that existing allowlist."
+  },
+  "tool-result-artifact-comment-thread-resolve-not-activated": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "This result carries the runtime failure state and the non-obvious rule that resolving shares the reply activation gate. The deployed reply-failure reminder explains reply activation only; it does not establish the resolve-specific gate in this path or the resolve/leave recovery choice."
+  },
+  "tool-result-artifact-comment-thread-resolve-not-authorized": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The thread-starter-or-artifact-writer authorization rule is a concrete runtime gate the model cannot infer. No deployed sibling conveys it, and the instruction to leave the thread prevents futile retries after a definitive denial."
+  },
+  "tool-result-artifact-comment-thread-resolved": {
+    "verdict": "trim",
+    "version": "2.1.227",
+    "why": "The first frozen sentence uniquely reports successful resolution and preserves the dynamic thread identifier. The second sentence's attribution and reversibility claims are already stated by the deployed resolve-tool description, so only that whole duplicated sentence is removed."
+  },
+  "tool-result-artifact-comments-full-list-hint": {
+    "verdict": "wipe-merge",
+    "version": "2.1.227",
+    "why": "The recovery action\u2014run `comments` without `thread_id` for the full list\u2014is already present verbatim in a deployed artifact-comment result. The deployed comments description and `thread_id` parameter also establish that omitting the one-thread selector reads the thread list, so this suffix has no unique signal."
+  },
+  "tool-result-artifact-durable-wake-already-watching-note": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "This is the only result that confirms the requested watch is already backed by a durable subscription rather than newly registered. No deployed always-on body reports that runtime no-op state, so suppressing it would make the outcome ambiguous."
+  },
+  "tool-result-artifact-durable-wake-network-policy-disabled": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The prompt uniquely reports the policy-specific failure, that no request was sent, and that retrying cannot help while the policy remains active. These are non-derivable mechanics and useful protection against Opus 5's documented self-verification and retry loops."
+  },
+  "tool-result-artifact-durable-wake-no-credential": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The missing-credential cause and the exact condition under which retrying becomes useful are unique runtime facts. No deployed sibling supplies them, and retaining the retry gate directly counters unproductive repeated attempts."
+  },
+  "tool-result-artifact-durable-wake-registered-note": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The result uniquely confirms successful durable registration and explains the wake-on-next-publish, no-streaming, and re-read mechanics. The deployed `artifact-action-watch` override removed its remote-session durable-wake paragraph, while the status result is an alternative path rather than coverage of this registration outcome."
+  },
+  "tool-result-artifact-durable-wake-registration-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "This fragment carries two branch-local facts: durable-wake registration failed, while publishing and reading remain available. The surrounding unavailable-status wrapper supplies the URL but depends on this note for the generic failure reason; the publishing/reading enumeration freezes the sentence, and Opus 5 cannot infer those runtime capabilities."
+  },
+  "tool-result-artifact-durable-wake-status": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "This fragment binds the watched artifact URL to its current subscription note and supplies the wake/no-stream/re-read fallback. The interpolation slots and recovery mechanics freeze it; the registered-note sibling repeats part of the fallback but cannot replace this dynamic status wrapper."
+  },
+  "tool-result-artifact-durable-wake-trigger-limit": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The fragment conveys the hard webhook-trigger cap of 10 and the concrete recovery action of unwatching an artifact. The numeric limit and action name are frozen mechanics unique to this failure branch, not Opus 5 defaults."
+  },
+  "tool-result-artifact-durable-wake-unavailable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "This is the unavailable-state wrapper carrying the artifact URL, optional runtime note and reason, and a fallback that publishing and reading still work. Its slots, reason fallback, and capability enumeration are frozen mechanics; the registration-failed note is a nested value used by this wrapper, not a replacement for it."
+  },
+  "tool-result-artifact-live-subscription-watch-cap-reconnect": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "This fragment reports the distinct reconnect branch: the session was already at its watch cap and none of the other watches could make room. The cap slot and the when/reconnect ordering are frozen; the ordinary watch-cap sibling does not convey this failed-reconnection state."
+  },
+  "tool-result-artifact-publish-live-version-not-viewed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "This fragment reports the validation gate that refused a publish because the session had not viewed the current live version. A successful auto-read reuses it as a header prefix, but when auto-read cannot run this standalone result is the only rejection reason, so the branch-local mechanics remain observable and load-bearing."
+  },
+  "tool-result-artifact-read-viewers-pinned-current": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "This maps the runtime pinned-current state: viewers see the present version, but future publishes stop advancing them until the share pin moves. That temporal transition and enum-state meaning are frozen mechanics; the shared-version-pinned sibling describes an older pin after publishing, not this read-result state."
+  },
+  "tool-result-artifact-read-viewers-pinned-earlier": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "This maps the runtime pinned-earlier state and distinguishes the version viewers see from the live version being read. The shared-version-pinned sibling fires on a publish path and cannot supply this read-result state, whose distinction changes whether the model knows viewers are seeing current content."
+  },
+  "tool-result-artifact-resolve-plan-mode-denied": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The fragment says resolving is a viewer-visible write, explains the plan-mode denial, and gives the recovery sequence of recording the intended resolve and running it during execution. General plan-mode siblings cover read-only planning but not the artifact visibility or this recovery; the restrictive and ordering language freezes the whole sentence."
+  },
+  "tool-result-artifact-stale-guard-autoread-footer": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The footer carries the closing `[End of live content \u2026]` boundary sentinel as well as merge-and-republish recovery. Header and conflict siblings repeat the recovery, but none replaces that closing sentinel; the sentinel and `then` ordering freeze the whole sentence, so the duplicate clause cannot be trimmed out."
+  },
+  "tool-result-artifact-stale-guard-autoread-header": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "This fragment carries the rejection-prefix slot, marks the fetched version as viewed, instructs a lossless merge before republishing, and emits the dynamic live-content header. Its slots and ordering freeze it; the footer duplicates only the recovery instruction, not the state transition or dynamic header."
+  },
+  "tool-result-artifact-watch-permission-required": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "This is the consent-surface explanation for what watching does in interactive and remote sessions, how long it lasts, and that it reads no content. Those enumerated runtime effects are not model defaults, and the permission surface must communicate them directly; the mechanics tripwire freezes the wording."
+  },
+  "tool-result-bash-clamp-command-denial-prefix": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The prefix identifies the exact tool and command denied and ties the denial to the agent's fixed per-spawn command forms. Its interpolation slots and the `bashCommandClamp` parameter name freeze it; the generic Bash permission-denied sibling omits the clamp scope that determines how the agent should recover."
+  },
+  "tool-result-bash-clamp-non-bash-surface-denial-prefix": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "This fragment identifies the blocked non-Bash surface and ties it to the per-spawn clamp that scopes shell execution; the composed suffix then explains why the surface cannot match. The dynamic surface slot and `bashCommandClamp` parameter are frozen, while the PowerShell sibling covers only its separate fixed-name branch."
+  },
+  "tool-result-bash-clamp-permission-check-crash-denial": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "This fragment reports which permission check crashed and that execution was denied closed because the agent carries a Bash clamp. The dynamic surface slot, `bashCommandClamp` parameter, and fail-closed validation gate are frozen mechanics; the PowerShell sibling is a separate fixed-surface branch."
+  },
+  "tool-result-bash-clamp-unmatched-span-reason": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "This fragment reports the exact analyzed command span that failed and the actual allowed forms for its clamp group. Both values are runtime interpolations and the allowed-forms list is an enumeration, so the sentence is frozen and no sibling can supply those concrete values."
+  },
+  "tool-result-bash-command-clamp-no-rule-admission": {
+    "verdict": "trim",
+    "version": "2.1.227",
+    "why": "The first sentence fails the sibling and usefulness checks: the composed denial prefix already limits Bash to a fixed set of forms, and the immediately preceding fragment already says this command structure cannot be verified. The retry instruction remains unique and observable, directing the agent to issue a plain command that can match the clamp."
+  },
+  "tool-result-bash-command-clamp-unverifiable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The fragment identifies the denial as a verifier limitation rather than a mismatch with an allowed command form. The other clamp-result prompts describe the clamp and the remedy, but none of their effective bodies conveys this runtime diagnosis; it is not an Opus 5 default the model can infer reliably from a generic denial."
+  },
+  "tool-result-bash-command-clamp-unverifiable-structures": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The enumeration names the exact shell structures that make the clamp unable to decompose the command, which tells the model what shape to remove on retry. No effective sibling body supplies these categories, and the frozen enumeration cannot be compressed or reworded, so its unique mechanics stay verbatim."
+  },
+  "tool-result-bash-final-response-background-process-warning": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "This sentence supplies two otherwise hidden lifecycle facts: the process is killed at final response, and a needed result must be awaited before that response. Sibling background guidance promises notifications or discourages polling but does not cover this final-response termination boundary, so the frozen ordering and runtime-cap guard remain verbatim."
+  },
+  "tool-result-bash-interim-background-output-read-guidance": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The sentence binds the current environment's read-tool name to the emitted output path, enabling an immediate interim check. The deployed timeout-result override repeats this instruction only on the timeout branch; ordinary auto-backgrounding has no other effective carrier, so the slot-bearing frozen sentence cannot be removed."
+  },
+  "tool-result-cloud-session-device-binding-agent-conflict": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The result identifies the specific unsupported combination of agent ownership and device binding and confirms that creation did not occur. The project-binding sibling is a mutually exclusive failure with a different offending input, and no effective body or model default reports this concrete session outcome."
+  },
+  "tool-result-cloud-session-device-binding-project-conflict": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The result names the exact incompatible `--project` and device-binding combination and states that no session was created. The agent-owned-session sibling covers a different branch, while no other effective carrier supplies this flag-specific failure state; the frozen sentence therefore stays intact."
+  },
+  "tool-result-device-bash-all-unix-sockets-refused": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "This result reports the precise `sandbox.network.allowAllUnixSockets` gate, explains the out-of-sandbox service exposure, and gives the required configuration fix. The general device-bash description mentions network allow-listing but not this Unix-socket exception, so the slot- and setting-bearing frozen sentence has unique operational signal."
+  },
+  "tool-result-device-bash-cancelled": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The result warns that cancellation may have happened after process start and forbids blindly replaying a non-idempotent command. Timeout and output-limit siblings carry the same retry guard for their own exclusive paths, but they do not report cancellation or reach this path; this side-effect boundary is mechanics, not redundant caution."
+  },
+  "tool-result-device-bash-concurrency-limit-refused": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The result supplies the live concurrency cap, identifies saturation as the refusal reason, and orders retry after an existing command finishes. The tool description states a general maximum but does not report current saturation or the recovery condition, so the dynamic slots and limit mechanics remain verbatim."
+  },
+  "tool-result-device-bash-output-limit": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The leading slot preserves captured output, while the following sentence reports forced termination, possible partial completion, and the non-idempotent retry prohibition. The timeout and cancellation results repeat only the generic side-effect guard on different exclusive paths; no sibling carries this output-limit outcome or its partial output."
+  },
+  "tool-result-device-bash-sandbox-disabled": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The result ties the refusal to disabled sandboxing and provides the exact settings shape and `/sandbox` verification step needed to recover. Although the device-bash description says disabled sandboxing refuses calls, it does not provide this concrete remediation, and the frozen configuration sentence cannot be partially rewritten."
+  },
+  "tool-result-device-bash-sandbox-unconfined": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The result distinguishes incomplete filesystem/network confinement from a merely disabled sandbox and specifies both the settings repair and the incompatible `subprocess-env-scrub` mode. No effective sibling contains those gates, so the enumerated, path-bearing, ordered mechanics are unique and must remain verbatim."
+  },
+  "tool-result-device-bash-sandbox-unsupported": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The sentence reports that sandboxing is configured but unavailable and names the two runtime causes, including `enabledPlatforms` policy exclusion. Other sandbox errors cover disabled, unconfined, or startup-failure states instead; none conveys this serving-device capability gate."
+  },
+  "tool-result-device-bash-timeout": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The leading slot preserves command output, and the result records the actual millisecond timeout, forced stop, possible partial completion, and non-idempotent retry guard. The general tool description exposes timeout policy but not this execution outcome, while output-limit and cancellation siblings fire on different paths."
+  },
+  "tool-result-device-bash-unbound-device-refused": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The result identifies the missing device ID as the binding failure and gives the exact `claude --remote` recovery action. No effective sibling reports this registration state or command, and neither is derivable from Opus 5 defaults, so the frozen mechanics stay intact."
+  },
+  "tool-result-devicebash-sandbox-credential-injection-refused": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The result names the exact `sandbox.credentials` entries and `mode \"mask\"` condition that could leak real credentials to a remote command, then states the configuration remedy. General sandbox and network descriptions do not cover credential injection, leaving unique security mechanics that require the full frozen sentence."
+  },
+  "tool-result-devicebash-sandbox-start-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The result distinguishes a sandbox startup failure from disabled or unsupported sandboxing and gives the required `/sandbox`, fix, restart, then retry sequence. The OAuth startup-failure sibling concerns an unrelated subsystem, and no device-bash carrier covers this ordered recovery path."
+  },
+  "tool-result-notebook-edit-exceeds-maximum-size": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "This result carries three branch-local runtime facts: the edit was rejected, the exact formatted size limit, and the assurance that no write occurred. Similar notebook and generic file-size results fire on different branches, so no deployed sibling supplies this limit or unchanged-file status here; Opus 5 cannot derive those mechanics reliably."
+  },
+  "tool-result-notebook-file-exceeds-maximum-size": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The prompt reports that the existing notebook is beyond the readable limit, injects the exact formatted cap, and appends a runtime-generated follow-up through the third slot. Those are path-specific mechanics, and no co-present deployed sibling carries either the computed value or the generated guidance."
+  },
+  "tool-result-notebook-invalid-jupyter-structure": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "This is the exact validation contract for the rejected notebook: top-level cells must be an array of cell objects, with source restricted to a string or string array. The schema detail is unique and actionable, not an Opus 5 default or generic advice, and the frozen sentence must remain verbatim."
+  },
+  "tool-result-powershell-bash-clamp-denial-command-forms": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "This middle fragment supplies the exact clamp family and explains the PowerShell mismatch in the assembled denial sentence. The nearby generic clamp denials are alternative runtime branches rather than co-injected coverage, and deleting this fragment would make the actual PowerShell result incomplete."
+  },
+  "tool-result-powershell-bash-clamp-denial-prefix": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "This opening fragment identifies the denied PowerShell surface, the per-spawn bashCommandClamp, and the fact that it scopes shell execution. Those mechanics are specific to the firing branch; generic clamp results do not appear alongside it, and removing the prefix would corrupt the assembled denial."
+  },
+  "tool-result-powershell-bash-clamp-denial-use-bash-instead": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "This closing fragment completes the causal sentence and gives the only actionable recovery on this path: use the clamped Bash forms. A similar recovery in a generic Bash-clamp result belongs to another branch and does not reach the model with this PowerShell denial."
+  },
+  "tool-result-powershell-bash-clamp-permission-check-crash": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The sentence reports both the PowerShell permission-check crash and the deny-closed execution outcome under a per-spawn clamp. That runtime failure state is unique on this branch; the generic surface-parametrized crash result is an alternative branch, not deployed coverage at this point."
+  },
+  "tool-result-proposegoal-awaiting-approval": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "Its claims are that the proposal is visible, work should continue without waiting, approval activates only via a later kickoff, and decline is silent and must not trigger asking or re-proposal. The deployed ProposeGoal description already carries each of those lifecycle rules, so every frozen sentence can be deleted outright without losing behavior. [stage-3 refutation applied: The wipe-merge is wrong because its sole deployed carrier omits every cited lifecycle sentence, while pristine contains concrete activation-order and silent-decline behavior. Revert to pristine. \u2014 the cut was reverted to pristine in opus-5.]"
+  },
+  "tool-result-proposegoal-direct-set": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "This result repeats the direct-set visibility and clearing control, the kickoff activation gate, and the instruction to continue working. The only extra timing phrase, that activation occurs at the end of the turn, does not alter the already-deployed rule that no new goal is active before the kickoff, so it fails the usefulness check. [stage-3 refutation applied: The wipe-merge is wrong because one cited carrier is suppressed and the other lacks the claimed lifecycle text; the end-of-turn activation rule and /goal clear control are unique, load-bearing capabilities. Revert to pristine. \u2014 the cut was reverted to pristine in opus-5.]"
+  },
+  "tool-result-routine-list-runs-none-recorded": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The empty runs array supplies the immediate state, but this sentence adds the non-obvious mechanics that pre-session skips, refusals, or failures leave no row and that the routine should be checked with get. The RemoteTrigger override has a deployed body that omits all list_runs guidance, so its newer pristine catalogue text provides no sibling coverage; the frozen sentence must remain verbatim."
+  },
+  "tool-result-routine-run-log-event-too-large": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "This annotation says that even the newest event exceeded the current page budget, gives the exact omitted-event count, and preserves the optional continuation text. The RemoteTrigger description mentions condensed logs and cursors but does not expose this branch-specific size failure or its dynamic values."
+  },
+  "tool-result-routine-run-log-nontranscript-events-skipped": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "Both slots carry observable result metadata: the number of omitted non-transcript events and their joined event types. No deployed sibling reports those page-specific values, so removing the frozen sentence would make the returned log materially less truthful about omissions."
+  },
+  "tool-result-routine-run-log-older-events-elided": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The prompt reports the exact number of events shown, the exact number elided by the size budget, and the optional pagination continuation. General cursor guidance does not cover these dynamic omissions on the current page, and Opus 5 cannot reconstruct them from the visible subset."
+  },
+  "tool-result-routine-run-log-unexpected-page-shape": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "This diagnostic preserves the upstream result, names the unexpected page kind, and includes a body preview with an explicit 2000-character cap through five interpolation slots. The shape failure and bounded preview are unique runtime mechanics; generic unexpected-shape messages elsewhere concern different data sources."
+  },
+  "tool-result-routine-run-log-untrusted-content-note": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The only claim is generic prompt-injection caution for remote routine titles and transcripts. The deployed RemoteTrigger override does not repeat it, but the Opus 5 digest identifies prompt-injection resistance as the card's largest improvement and explicitly attributes it to architectural defenses rather than prompt text, so this scaffolding fails the default check. [stage-3 refutation applied: The wipe-merge is wrong because an architectural/model-card assertion is not model-visible prompt coverage, and the deployed generic conditional warning does not carry the routine-log trust boundary. Revert to pristine. \u2014 the cut was reverted to pristine in opus-5.]"
+  },
+  "tool-result-sendfile-cross-session-unavailable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "This is a state-specific capability failure: file transfer is unavailable in the current session. The similar deployed message concerns cross-session messaging, while the SendFile description normally says transfer is available; neither tells the model that this file-transfer invocation cannot proceed here."
+  },
+  "tool-result-tool-unavailable-coordinator-delegate-worker": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "The two slots identify the exact unavailable tool and the exact worker-delegation tool that can run it, turning a no-such-tool result into a valid recovery route. Coordinator and worker prompts describe roles generally but do not supply this invocation-specific mapping, so the frozen sentence remains useful mechanics."
+  },
+  "data-task-notification-artifact-auto-replied-lead": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "Two runtime slots (thread id, artifact) plus the qualifier 'an acknowledgement only', which is the one claim that tells the model the auto-reply did NOT make the requested change and it may still need to act. Nothing else in the corpus carries that distinction, and both slots are bound."
+  },
+  "tool-description-artifact-comments-section": {
+    "verdict": "pristine-keep",
+    "version": "2.1.227",
+    "why": "Almost every sentence is frozen mechanics: the comments/reply/resolve action enum, the url/thread_id/text parameter contract, the 4096-byte UTF-8 cap, the human-activation gate with its 'returns guidance, not an error - ask the user to activate rather than retrying' handling, the resolve discipline, and the viewer-comments-are-data trust boundary. Grew +719 chars in 2.1.227 for the new resolve action. It is also the carrier the comment-thread-analyst trim cited, so cutting it would create exactly the circular coverage stage 3 refuted."
   }
 }
