@@ -553,6 +553,23 @@ const writeModernTitleCommand = (oldFile: string): string | null => {
 };
 
 export const writeConversationTitle = (oldFile: string): string | null => {
+  // Claude Code ships conversation renaming natively as of CC 2.1.226: the
+  // builtin command table registers BOTH
+  //   {type:"local-jsx",name:"rename",aliases:["name"],description:"Rename the
+  //    current conversation",immediate:!0,argumentHint:"[name]"}
+  // and its non-interactive twin, and the interactive one carries no isEnabled
+  // gate. This patch bolts on a parallel `/title` with its own persistence for
+  // exactly that capability, so it is superseded, not merely drifted — the
+  // feature-promoted case in AGENTS.md "failed to find", the same call as
+  // rememberSkill. Three of its five anchors (the transcript-store class, the
+  // append-entry interceptor) are gone from the bundle anyway.
+  if (/name:"rename",aliases:\["name"\]/.test(oldFile)) {
+    console.log(
+      'patch: conversationTitle: CC ships /rename natively — superseded, no-op'
+    );
+    return oldFile;
+  }
+
   const modernResult = writeModernTitleCommand(oldFile);
   if (modernResult) return modernResult;
 
