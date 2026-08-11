@@ -2664,13 +2664,21 @@ function isHardExcluded(text) {
   // tencent, 2.7.0). Model-facing but no working cross-platform override
   // target, same category as the general-purpose fragments above.
   //
-  // Keyed on the object's own marker rather than on each fragment's opening
+  // Keyed on the object's own markers rather than on each fragment's opening
   // words: the two prefix rules this replaces covered only the fragments known
   // in 2.7.0, and 2.1.227 added two more (the /version build stamp and the
   // recent-releases block) that slipped straight through and reproduced the
-  // same Linux-only "Could not find". DD_SOURCEMAP_GROUP is Anthropic's own
-  // key, so it survives minification and version bumps.
-  if (text.includes('DD_SOURCEMAP_GROUP:')) return true;
+  // same Linux-only "Could not find".
+  //
+  // Match on GIT_SHA too, not DD_SOURCEMAP_GROUP alone: the object literal is
+  // PLATFORM-ASYMMETRIC. darwin emits `…GIT_SHA:"5ecc…",DD_SOURCEMAP_GROUP:
+  // "darwin"}`, while linux-arm64 omits that key from the literal entirely and
+  // reads it as a property (`…GIT_SHA:"5ecc…"}.DD_SOURCEMAP_GROUP)`). Keying on
+  // DD_SOURCEMAP_GROUP alone therefore only fires when extraction runs on a
+  // Mac — correct today by accident, and silently wrong the day it doesn't. A
+  // build sha in a prompt body is disqualifying on its own merits anyway.
+  if (text.includes('DD_SOURCEMAP_GROUP:') || text.includes('GIT_SHA:'))
+    return true;
   return false;
 }
 
