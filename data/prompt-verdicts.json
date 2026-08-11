@@ -1022,12 +1022,6 @@
     "why": "`[document]` is a unique serialization sentinel, not prose scaffolding. All three pristine sites use the same exact token, and no deployed sibling supplies an equivalent placeholder.",
     "injectionPath": "Conditional on serializing document content into conversation context; used at three document-bearing sites."
   },
-  "data-environment-recent-releases": {
-    "verdict": "pristine-keep",
-    "version": "2.1.224",
-    "why": "Pure runtime data template, zero claims: '**Recent releases (you are running v${...VERSION}):**' followed by '${DATA_ENVIRONMENT_RECENT_RELEASES_VAR_0.join(`\\n\\n`)}' \u2014 it interpolates the last 10 changelog entries (`.slice(-10).reverse()` in wSv). Nothing to lobotomize: no CAPS, no exhortation, no rule. Corpus scan: nothing else in prompts-2.1.224.json or the deployed system-prompts-opus-5/ carries the changelog, and the parent skill body routes to it explicitly ('| What changed recently | The \"Recent releases\" section in Current Build below, then `references/recent-changes.md` |'), so a wipe ",
-    "injectionPath": "cli-2.1.224.js @21716330 \u2014 built inside wSv()/CSv(), the 'Current Build' section of the bundled `claude-code-docs` skill prompt (ASv/registerClaudeCodeSkill). Model-facing only when that skill is invoked, and it is gated"
-  },
   "data-environment-version-build-line": {
     "verdict": "pristine-keep",
     "version": "2.1.224",
@@ -4253,11 +4247,6 @@
     "verdict": "pristine-keep",
     "version": "2.1.227",
     "why": "The load-bearing runtime fact is that this invocation ignored `--post` because its target is not a GitHub.com pull request. The ultra option description states the eligibility rule but not that the user's current flag was ignored, so this conditional notice changes observable behavior and its frozen sentence stays verbatim."
-  },
-  "slash-command-version-build-timestamp": {
-    "verdict": "pristine-keep",
-    "version": "2.1.227",
-    "why": "This is the `/version` output contract joining the rendered version value to the binary's exact `BUILD_TIME`. The recent-releases carrier exposes the running version but evaluates `.VERSION`, not `.BUILD_TIME`, so the timestamp and its interpolation remain unique frozen mechanics."
   },
   "system-prompt-artifact-comment-dispatch-classifier": {
     "verdict": "pristine-keep",

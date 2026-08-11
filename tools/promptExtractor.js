@@ -2655,22 +2655,22 @@ function isHardExcluded(text) {
     text.trimEnd().endsWith('so it only needs the essentials.')
   )
     return true;
-  // Two fragments that interpolate the inline ${{ISSUES_EXPLAINER, ...,
-  // GIT_SHA, BUILD_TIME, DD_SOURCEMAP_GROUP}} object. The object's values are
+  // Anything that interpolates the inline ${{ISSUES_EXPLAINER, ..., GIT_SHA,
+  // BUILD_TIME, DD_SOURCEMAP_GROUP}} object. The object's values are
   // BUILD-SPECIFIC (the darwin binary embeds DD_SOURCEMAP_GROUP:"darwin" and
   // that build's GIT_SHA/BUILD_TIME), so pristine pieces extracted on one
   // platform can never match another platform's binary — cataloguing them
   // produced two "Could not find" warnings on every Linux apply (seen on
   // tencent, 2.7.0). Model-facing but no working cross-platform override
   // target, same category as the general-purpose fragments above.
-  if (
-    text.startsWith(
-      "- When you cannot find an answer or the feature doesn't exist, direct the user to ${{ISSUES_EXPLAINER:"
-    )
-  )
-    return true;
-  if (text.startsWith('To give feedback, users should ${{ISSUES_EXPLAINER:'))
-    return true;
+  //
+  // Keyed on the object's own marker rather than on each fragment's opening
+  // words: the two prefix rules this replaces covered only the fragments known
+  // in 2.7.0, and 2.1.227 added two more (the /version build stamp and the
+  // recent-releases block) that slipped straight through and reproduced the
+  // same Linux-only "Could not find". DD_SOURCEMAP_GROUP is Anthropic's own
+  // key, so it survives minification and version bumps.
+  if (text.includes('DD_SOURCEMAP_GROUP:')) return true;
   return false;
 }
 
