@@ -206,7 +206,15 @@ try {
       fs.cpSync(fs.realpathSync(src), path.join(tc, name), { recursive: true });
     }
   }
-  for (const f of ['config.json']) {
+  // systemPromptOriginalHashes.json is the baseline index syncPrompt reads to tell
+  // "user edited this override" from "pristine moved under it". Omitting it does not
+  // merely change the conflict REPORT — it changes what gets spliced, so the harness
+  // grades a binary a real apply never produces. On 2.1.227 that was the whole of the
+  // long-standing fable-5 `introduced ${n}: 1`: with the baseline the same set is
+  // clean, without it the apply emits a 28KB-different bundle carrying an `${n}` in
+  // override text. A ground-truth harness has to reproduce the real code path, and
+  // the driver's own sandboxedApply already copies both files for this reason.
+  for (const f of ['config.json', 'systemPromptOriginalHashes.json']) {
     const src = path.join(realTweakcc, f);
     if (fs.existsSync(src)) fs.copyFileSync(src, path.join(tc, f));
   }
