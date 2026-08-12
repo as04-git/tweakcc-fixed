@@ -1290,7 +1290,7 @@ export const applyCustomization = async (
     'claudemd-context-once-per-conversation': {
       fn: c => writeClaudemdContextOncePerConversation(c),
       condition:
-        config.settings.misc?.claudemdContextOncePerConversation ?? true,
+        config.settings.misc?.claudemdContextOncePerConversation ?? false,
     },
   };
 

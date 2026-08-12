@@ -79,9 +79,9 @@ Each patch is tagged with how it behaves on `--apply`: **`[default on]`** applie
 
 **Memory & context**
 
-- `dream-mode` **`[default on]`** — `/dream` plus automatic memory consolidation
+- `dream-mode` **`[opt-in]`** — `/dream` plus automatic memory consolidation
 - `lean-memory-types` **`[opt-in]`** — a trimmed memory-type taxonomy
-- `claudemd-context-once-per-conversation` **`[default on]`** — inject CLAUDE.md and context once per conversation, not every turn (rewrites how CLAUDE.md reaches the model)
+- `claudemd-context-once-per-conversation` **`[opt-in]`** — inject CLAUDE.md and context once per conversation, not every turn (rewrites how CLAUDE.md reaches the model)
 
 **Reasoning**
 
