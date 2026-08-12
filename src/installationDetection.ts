@@ -699,36 +699,60 @@ export async function findClaudeCodeInstallation(
   }
 
   // 3. Check PATH via `which` package
+  //
+  // Kept so the fallback below can re-raise it: if the hardcoded search paths
+  // find nothing either, "could not extract JS from native binary" is a far
+  // more useful message than "Claude Code not found".
+  let pathBranchError: unknown = null;
   const pathClaudeExe = await getClaudeFromPath();
   if (pathClaudeExe) {
     debug(`Checking claude on PATH: ${pathClaudeExe}`);
 
-    const resolved = await resolvePathToInstallationType(pathClaudeExe);
-    if (!resolved) {
-      debug(
-        `Found 'claude' on PATH at '${pathClaudeExe}', but it isn't a Claude Code cli.js or native binary ` +
-          `(likely a CMD/BAT shim from a Node version manager such as Volta or nvm-windows). ` +
-          `Falling back to hardcoded search paths.`
-      );
-    } else {
-      const version = await extractVersion(
-        resolved.resolvedPath,
-        resolved.kind
-      );
-      if (isDebug() && resolved.kind === 'npm-based') {
-        debug(`SHA256 hash: ${await hashFileInChunks(resolved.resolvedPath)}`);
-      }
+    // PATH is auto-discovery, not user intent, so a candidate that classifies
+    // but then fails to yield a version must fall through to the hardcoded
+    // search paths — exactly like collectCandidates wraps each of its own
+    // candidates. Without this, a version-manager shim that classifies as
+    // 'native-binary' (mise's `claude` shim resolves to /usr/bin/mise, which is
+    // an ELF with no Bun overlay) throws out of detection entirely and the
+    // real installation is never reached.
+    let fromPath: ClaudeCodeInstallationInfo | null = null;
+    try {
+      const resolved = await resolvePathToInstallationType(pathClaudeExe);
+      if (!resolved) {
+        debug(
+          `Found 'claude' on PATH at '${pathClaudeExe}', but it isn't a Claude Code cli.js or native binary ` +
+            `(likely a CMD/BAT shim from a Node version manager such as Volta or nvm-windows). ` +
+            `Falling back to hardcoded search paths.`
+        );
+      } else {
+        const version = await extractVersion(
+          resolved.resolvedPath,
+          resolved.kind
+        );
+        if (isDebug() && resolved.kind === 'npm-based') {
+          debug(
+            `SHA256 hash: ${await hashFileInChunks(resolved.resolvedPath)}`
+          );
+        }
 
+        debug(
+          `Using Claude Code from PATH: ${resolved.resolvedPath} (${resolved.kind}, v${version})`
+        );
+        fromPath = toInstallationInfo(
+          resolved.resolvedPath,
+          resolved.kind,
+          version,
+          'path'
+        );
+      }
+    } catch (error) {
+      pathBranchError = error;
       debug(
-        `Using Claude Code from PATH: ${resolved.resolvedPath} (${resolved.kind}, v${version})`
-      );
-      return toInstallationInfo(
-        resolved.resolvedPath,
-        resolved.kind,
-        version,
-        'path'
+        `Found 'claude' on PATH at '${pathClaudeExe}', but it could not be read as a Claude Code ` +
+          `installation (${error}). Falling back to hardcoded search paths.`
       );
     }
+    if (fromPath) return fromPath;
   }
 
   // 4. Fall back to hardcoded search paths
@@ -736,6 +760,9 @@ export async function findClaudeCodeInstallation(
   const candidates = await collectCandidates();
 
   if (candidates.length === 0) {
+    // Nothing anywhere, and the PATH candidate failed for a specific reason:
+    // that reason IS the answer, so don't bury it under a generic not-found.
+    if (pathBranchError) throw pathBranchError;
     if (options.interactive) {
       // Return null to let the UI handle displaying the error
       return null;
