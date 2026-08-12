@@ -25,7 +25,9 @@ import {
   encodeReplacementForDelimiter,
   loadIdentifierMapUnion,
   loadSystemPromptsWithRegex,
+  needsDelimiterAwareEscaping,
   pristineBodiesById,
+  reconstructContentFromPieces,
 } from './systemPromptSync';
 import {
   bodyCarriedBy,
@@ -38,7 +40,7 @@ import {
   lintBacktickEscapes,
   literalProbeWindows,
   OffsetMapper,
-  pickMatchForSpliceAt,
+  selectSpliceSiteAt,
   presentLiterals,
   resolveCandidateSites,
   spanConflicts,
@@ -203,12 +205,30 @@ export const replayPromptPlans = async (
     if (regexes) regexes.push(regex);
     else expiring.set(index, [regex]);
   }
+  // Same positional, sequential site accounting as the apply — see
+  // selectSpliceSiteAt. The replay exists to predict exactly which bytes the
+  // apply will touch, so it must resolve sites the identical way; when it
+  // narrowed differently the preflight linted spans the apply never visited.
+  const planMultiplicity = new Map<string, number>();
+  for (const plan of orderedPlans) {
+    planMultiplicity.set(
+      plan.regex,
+      (planMultiplicity.get(plan.regex) ?? 0) + 1
+    );
+  }
+  const planRetained = new Map<string, number>();
+  const planSpliced = new Map<string, number>();
+
   for (const [planIndex, plan] of orderedPlans.entries()) {
     for (const expired of expiring.get(planIndex - 1) ?? []) {
       catalog.delete(expired);
     }
     const matches = await catalog.matchCurrent(plan.regex, working);
-    const { match } = pickMatchForSpliceAt(matches, index =>
+    const retained = planRetained.get(plan.regex) ?? 0;
+    const remaining =
+      (planMultiplicity.get(plan.regex) ?? 1) -
+      (planSpliced.get(plan.regex) ?? 0);
+    const { match } = selectSpliceSiteAt(matches, remaining, retained, index =>
       working.charAt(index)
     );
     if (!match || match.index === undefined) {
@@ -223,6 +243,7 @@ export const replayPromptPlans = async (
     const interpolatedContent = plan.getInterpolatedContent(match);
     if (plan.shouldSkip?.(interpolatedContent, delimiter)) {
       landed.set(plan.claim, false);
+      planRetained.set(plan.regex, retained + 1);
       continue;
     }
     const encoded = encodeReplacementForDelimiter(
@@ -232,6 +253,7 @@ export const replayPromptPlans = async (
     );
     if (encoded.incomplete) {
       landed.set(plan.claim, false);
+      planRetained.set(plan.regex, retained + 1);
       continue;
     }
     landed.set(plan.claim, true);
@@ -239,8 +261,10 @@ export const replayPromptPlans = async (
     delimiters.set(plan.claim, delimiter);
     if (encoded.content === match[0]) {
       destinations.set(plan.claim, span);
+      planRetained.set(plan.regex, retained + 1);
       continue;
     }
+    planSpliced.set(plan.regex, (planSpliced.get(plan.regex) ?? 0) + 1);
     const actualClaim: SpanClaim = {
       ...plan.claim,
       ...mapper.spanToPristine(span),
@@ -465,7 +489,14 @@ export const runSystemPromptPreflight = async ({
   for (const [regex, entries] of groups) {
     const multiplicity = entries.length;
     const matches = groupMatches.get(regex) ?? [];
-    const candidates = resolveCandidateSites(pristine, matches, multiplicity);
+    const resolved = resolveCandidateSites(pristine, matches, multiplicity);
+    // More sites than entries with no way to tell which are ours: the apply
+    // refuses to splice at all (selectSpliceSiteAt), so claiming spans here
+    // would lint bytes nothing is going to touch.
+    const candidates =
+      matches.length > multiplicity && resolved.length !== multiplicity
+        ? []
+        : resolved;
     const landingSites = candidates.flatMap(match =>
       match.index === undefined
         ? []
@@ -477,7 +508,7 @@ export const runSystemPromptPreflight = async ({
           ]
     );
 
-    if (candidates.length !== multiplicity) {
+    if (resolved.length !== multiplicity) {
       const ids = [...new Set(entries.map(e => e.entry.promptId))].join(', ');
       findings.push({
         check: 'cardinality',
@@ -485,12 +516,13 @@ export const runSystemPromptPreflight = async ({
         id: entries[0].entry.promptId,
         site: 0,
         message:
-          `${candidates.length} candidate site(s) in cli.js for ` +
+          `${resolved.length} candidate site(s) in cli.js for ` +
           `${multiplicity} catalogue entr${multiplicity === 1 ? 'y' : 'ies'} ` +
           `(${ids}) — the apply consumes one site per entry, so this ` +
-          (candidates.length < multiplicity
+          (resolved.length < multiplicity
             ? 'leaves entries with no site to splice'
-            : 'leaves the extra site(s) ambiguous'),
+            : 'is ambiguous and the apply will skip it rather than splice ' +
+              'into whichever site came first'),
       });
     }
 
@@ -531,7 +563,28 @@ export const runSystemPromptPreflight = async ({
       }
 
       const interpolatedContent = entry.getInterpolatedContent(match);
+      // Every reason the apply leaves a resolved site alone, so the replay
+      // predicts the same bytes: a body still equal to the vanilla baseline is
+      // written back verbatim rather than re-encoded, and a site whose
+      // enclosing delimiter cannot be determined is only safe for content that
+      // needs no delimiter-specific escaping.
+      const stillVanilla =
+        entry.prompt.content.trim() ===
+        reconstructContentFromPieces(
+          entry.pieces,
+          entry.identifiers,
+          entry.identifierMap
+        ).trim();
       const shouldSkip = (content: string, siteDelimiter: string): boolean => {
+        if (stillVanilla) return true;
+        if (
+          siteDelimiter !== '"' &&
+          siteDelimiter !== "'" &&
+          siteDelimiter !== '`' &&
+          needsDelimiterAwareEscaping(content)
+        ) {
+          return true;
+        }
         const leaked = leakedPromptPlaceholders(
           content,
           entry.prompt.content,

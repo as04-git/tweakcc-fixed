@@ -1480,6 +1480,23 @@ export interface EncodedReplacement {
  * (#664). Non-ASCII escaping runs LAST, after the doubling, or an already
  * emitted `\uXXXX` becomes literal `\\uXXXX` text in the binary.
  */
+/**
+ * Whether `text` carries anything whose encoding depends on which string
+ * delimiter encloses it.
+ *
+ * A match is normally a whole string-literal value, so the character before it
+ * names the delimiter. When the match is instead a FRAGMENT of a longer literal
+ * that character is arbitrary, and `encodeReplacementForDelimiter` has no
+ * branch for it — the text is embedded with no backslash doubling, no quote
+ * escaping and no backtick escaping at all. Text free of every construct below
+ * is inert in a '…', "…" and `…` literal alike and can be embedded safely
+ * without knowing which one it is; anything else must not be guessed at, since
+ * a single raw backtick or `${` emitted into a template literal ends the
+ * literal early and leaves the rest of cli.js as floating syntax.
+ */
+export const needsDelimiterAwareEscaping = (text: string): boolean =>
+  /[\\`'"\r\n]/.test(text) || text.includes('${');
+
 export const encodeReplacementForDelimiter = (
   text: string,
   delimiter: string,

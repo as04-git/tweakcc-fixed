@@ -150,11 +150,76 @@ export const resolveCandidateSites = <T extends MatchLike>(
   content: string,
   matches: T[],
   multiplicity: number
+): T[] =>
+  resolveCandidateSitesAt(matches, multiplicity, index => content[index] ?? '');
+
+export const resolveCandidateSitesAt = <T extends MatchLike>(
+  matches: T[],
+  multiplicity: number,
+  charAt: (index: number) => string
 ): T[] => {
   if (matches.length === multiplicity) return matches;
-  const standalone = standaloneMatches(content, matches);
+  const standalone = standaloneMatchesAt(matches, charAt);
   if (standalone.length === multiplicity) return standalone;
   return matches;
+};
+
+export interface SiteSelection<T extends MatchLike> {
+  /** The site this catalogue entry should splice, or null when none resolves. */
+  match: T | null;
+  /**
+   * The group matches in more places than it has catalogue entries AND the
+   * standalone filter could not narrow them to exactly the entry count, so no
+   * site can be attributed to this entry.
+   */
+  ambiguous: boolean;
+  /** The standalone filter did the narrowing. */
+  disambiguated: boolean;
+}
+
+/**
+ * Which binary site one catalogue entry of a shape group splices.
+ *
+ * The single resolver for the apply, the apply's preflight replay, and the
+ * preflight's own span claim, so the three cannot disagree about where an
+ * override lands (they used to: one narrowed only when exactly one standalone
+ * match survived, the other whenever the standalone count equalled the entry
+ * count, and nothing compared the two — every lint then ran against bytes the
+ * apply would not touch).
+ *
+ * Selection is positional and sequential. 124 prompt ids occupy MULTIPLE binary
+ * sites; each entry splices one site, and a spliced site stops matching, so the
+ * caller passes how many of the group's sites are still unspliced (`remaining`)
+ * and how many earlier entries resolved to a site but left it in place
+ * (`retained` — an uncustomized prompt, or one a guard skipped). Index
+ * `retained` is then this entry's site.
+ *
+ * `ambiguous` is the guard against the whole wrong-site class. A prompt whose
+ * entire body is a short common string (`/model`, `(no output)`, or a body that
+ * is nothing but `${...}` interpolation, which the search regex reduces to a
+ * pure wildcard) matches hundreds of unrelated places. Taking index 0 there
+ * splices override text into arbitrary code — it corrupted the SDK's error
+ * formatter, and editing the `/model` nudge rewrote the `"/v1/models"` API
+ * paths. Valid JS either way, so nothing downstream notices.
+ */
+export const selectSpliceSiteAt = <T extends MatchLike>(
+  matches: T[],
+  remaining: number,
+  retained: number,
+  charAt: (index: number) => string
+): SiteSelection<T> => {
+  if (matches.length === 0) {
+    return { match: null, ambiguous: false, disambiguated: false };
+  }
+  const candidates = resolveCandidateSitesAt(matches, remaining, charAt);
+  if (matches.length > remaining && candidates.length !== remaining) {
+    return { match: null, ambiguous: true, disambiguated: false };
+  }
+  return {
+    match: candidates[retained] ?? null,
+    ambiguous: false,
+    disambiguated: candidates.length !== matches.length,
+  };
 };
 
 export interface BacktickEscapeFinding {
