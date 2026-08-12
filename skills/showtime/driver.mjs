@@ -171,7 +171,10 @@ function cmdReport(oldArg) {
   console.log(C.head(`Version-bump report ${old} -> ${cur}`));
   let out;
   try {
-    out = execSync(`node tools/versionBumpReport.js ${old} ${cur}`, { cwd: REPO, encoding: 'utf8' });
+    out = execFileSync(process.execPath, ['tools/versionBumpReport.js', old, cur], {
+      cwd: REPO,
+      encoding: 'utf8',
+    });
   } catch (e) {
     out = (e.stdout || '') + (e.stderr || '');
   }
@@ -208,7 +211,7 @@ function cmdCheck() {
   // 1. stale-backup guard (a stale backup makes --apply a downgrade)
   console.log(C.head('Backup vintage (stale -> --apply would downgrade)'));
   const backupVer = fs.existsSync(ORIG_JS)
-    ? (fs.readFileSync(ORIG_JS, 'utf8').slice(0, 5_000_000).match(/2\.\d+\.\d+/) || [])[0]
+    ? (fs.readFileSync(ORIG_JS, 'utf8').slice(0, 10_000).match(/\/\/ Version: (\d+\.\d+\.\d+)/) || [])[1]
     : null;
   if (!backupVer) console.log(C.info('no native-claudejs-orig.js yet (first --apply will create it)'));
   else if (installed && backupVer !== installed)

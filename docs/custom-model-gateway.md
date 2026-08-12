@@ -113,10 +113,12 @@ binary, `schema_version:1`, `models:[...]`, `aliases:{...}`).
   id the proxy expects (`kimi-k3-256k`, `gpt-5.6-sol`, …).
 - `effort` rungs map to catalog capabilities: always `effort`; `max` adds
   `max_effort`; `max` OR `xhigh` adds `xhigh_effort`.
-- **Guards**: structural self-validator before write (the catalog is
-  `safeParse`d at runtime and a parse failure falls back to an EMPTY catalog =
-  dead CC — this is THE brick risk); refuses built-in families
-  (opus/sonnet/haiku/fable); idempotent by id-presence.
+- **Guards**: runtime-validates every `settings.customModels` definition before
+  an apply (including local JSON, `--config-url`, and programmatic callers),
+  JSON-encodes every injected scalar, then runs a structural self-validator
+  before write. The catalog is `safeParse`d at runtime and a parse failure falls
+  back to an EMPTY catalog = dead CC — this is THE brick risk. Also refuses
+  built-in families (opus/sonnet/haiku/fable); idempotent by id-presence.
 
 ### 3.2 `context-window-from-catalog` (`src/patches/contextWindowFromCatalog.ts`)
 
@@ -162,18 +164,24 @@ the `description:"Custom model"` push site (finder exported from
 
 ### 3.4 `agent-tool-model-string` (`src/patches/agentToolModelString.ts`)
 
-The Agent/Task tool's inline `model` param was
-`v.enum(["sonnet","opus","haiku","fable"]).optional()` — the only locked
-surface (agent `.md` frontmatter `model:` is already a free string). Widened to
-`v.string().optional()`. Subagents can take custom models inline.
+The Agent/Task tool's inline `model` param is the locked surface (agent `.md`
+frontmatter `model:` is already a free string). Widen it to a string schema so
+subagents can take custom model ids inline.
 
-**OBSOLETE on CC ≥2.1.226** (verified 2026-08-10): upstream removed the enum
-entirely (0 occurrences in the binary; a live Agent-tool spawn with
-`model:"kimi-k3-256k"` ran natively and self-reported as Kimi K3 256K). The
-patch now logs "satisfied" on this build. Note subagent _effort_ needs no
-patch at all: subagent definitions support an `effort` frontmatter field
-(overrides session effort), and Workflow scripts have `agent()` `opts.effort`;
-inline Agent-tool spawns inherit the session's effort (no inline effort param).
+Two minified Zod shapes are supported. CC 2.1.220 used
+`v.enum(["sonnet","opus","haiku","fable"]).optional()` and is rewritten to
+`v.string().optional()`. CC 2.1.226 changed syntax, not semantics: it emits the
+standalone enum factory `$r(["sonnet","opus","haiku","fable"]).optional()`;
+the patch captures the adjacent string factory from `subagent_type:$()` and
+rewrites the model field to `$().optional()`. The previous absence check looked
+only for `.enum(...)`, falsely declared this build "satisfied", and left the
+live tool schema restricted. The patch now anchors to the Agent model-field
+description and fails loudly on an unknown future shape.
+
+Subagent _effort_ needs no patch: subagent definitions support an `effort`
+frontmatter field (overrides session effort), and Workflow scripts have
+`agent()` `opts.effort`; inline Agent-tool spawns inherit the session's effort
+(no inline effort param).
 
 ### 3.5 `rate-limits-from-headers` (`src/patches/rateLimitsFromHeaders.ts`)
 
@@ -239,7 +247,7 @@ losing the raw conversation to a summary. Currently maps
   window and compaction never arms. Emits a native
   `{type:"system",subtype:"notification",key:"auto-model-swap"}` banner.
 - **Side-door stats**: fire-and-forget spawn of
-  `~/.claude-gateway/bin/model-swap-event` (exists-checked) with a JSON record
+  `~/claude-gateway/bin/model-swap-event` (exists-checked) with a JSON record
   on stdin → appends to `~/claude-gateway/model-swap-stats.jsonl`. Absent
   script = skipped. All policy lives outside the binary; deliberately NOT
   routed through CC hooks (closed event set = extra anchors; hooks intercept
@@ -661,32 +669,39 @@ pristine), `systemctl --user disable --now cliproxyapi`, use plain `claude`.
   no-ops; only `contextWindowFromCatalog` was a real regression (custom models
   at 200k). Re-anchored with apply-time name extraction + fail-loud policy +
   the new `claude-` built-in guard (2.1.226's catalog lists `window:1e6` for
-  base opus/sonnet). `agentToolModelString` (enum removed upstream) and
-  `rateLimitsFromHeaders` (unnecessary under §4.7) are retired-to-satisfied.
+  base opus/sonnet). `agentToolModelString` needed a second 2.1.226 re-anchor:
+  upstream replaced the `.enum(...)` method with a standalone enum factory but
+  kept the four-value restriction; `rateLimitsFromHeaders` remains unnecessary
+  under §4.7.
   **Lesson now encoded in the patch: a gateway patch that can't find its
   anchor must fail loudly, never no-op** — the silent no-op is what hid this.
-- **M14 — PreCompact auto-model-switch (RESEARCHED 2026-08-10, hook half not
-  built, patch half deferred).** Goal: when a `kimi-k3-256k` session nears its
-  ceiling, cancel compaction and continue on `kimi-k3` (1M) instead of losing
-  context to a summary. Findings from the official hooks docs: a `PreCompact`
-  hook (matcher `auto`) **can block** compaction (exit code 2, or JSON
-  `{"decision":"block","reason":…}`), but there is **no documented mechanism
-  to change the session's active model programmatically** — no hook field, env
-  var, or settings key; `/model` is human-only, and a message arriving via
-  cross-session messaging is plain text (commands inside it never execute).
-  Agent teams don't help (a teammate's model is fixed at spawn; no
-  model-switch handoff). Cross-session messaging (v2.1.224+, present here) is
-  adjacent: hooks receive `CLAUDE_CODE_MESSAGING_SOCKET` and a hook's own
-  child process can post back into its own session (verified-delivery path on
-  Linux/WSL2), so a blocking PreCompact hook can also inject a nudge turn —
-  but the actual `/model kimi-k3` step remains manual. **Deferred
-  alternatives:** (a) reduced-scope hook — PreCompact blocks + nudges the user
-  to run `/model kimi-k3` (unbuilt; also unverified whether PreCompact's stdin
-  JSON exposes the current model id and whether the block reason reaches
-  Claude's context vs. terminal-only); (b) tweakcc patch at the compaction
-  trigger site that swaps the session model before continuing — possible in
-  principle (the trigger and resolver are in-binary), deferred per Aryan
-  2026-08-10.
+- **M14 — PreCompact auto-model-switch (BUILT 2026-08-10, tweakcc patch
+  `auto-model-swap`).** When a `kimi-k3-256k` session hits its auto-compact
+  ceiling, the session swaps to `kimi-k3` (1M) and continues uncompacted — no
+  compaction and no manual `/model`. The patch sits in `fXs()` immediately
+  after the `KJ_` threshold gate, performs the same session-state and
+  `toolUseContext.options.mainLoopModel` mutation as `/model` without
+  persisting the default, emits a native notification, and returns
+  `{kind:"not_needed"}`. Side-door stats go through
+  `~/claude-gateway/bin/model-swap-event` to
+  `~/claude-gateway/model-swap-stats.jsonl`; a 2026-08-11 hardening pass fixed
+  the original dot-directory path mismatch that silently skipped this sink.
+  The earlier hook design is superseded: PreCompact input does not expose the
+  model id, and its block reason does not enter model context. Anchors fail
+  loudly on drift. Test: `src/patches/autoModelSwap.test.ts`; a live near-limit
+  exercise remains pending (M14a).
+- **M15 — >200k credits clamp can hit custom models (UNPATCHED).** CC's
+  Anthropic-1M billing clamp is keyed on context size rather than provider, so a
+  matching 429 can shrink any gateway model above 200k for the session. Do not
+  patch until the trigger is reproduced; candidate fix is a `claude-` id guard.
+- **M16 — auto-model-swap policy is hardcoded (DEFERRED).** The patch embeds
+  `kimi-k3-256k → kimi-k3` and runs whenever any custom model exists. Move this
+  into validated config before adding more pairs or making the behavior generic.
+- **M17 — alias/catalog staleness guards are snapshots (DEFERRED).** Built-in
+  alias collisions are checked against a copied list, while catalog id presence
+  can hide changed windows/effort until `--restore`. Future work: extract live
+  resolver collisions and stamp/compare injected-value hashes. For now, retain
+  the documented `--restore && --apply` rule for custom-model value changes.
 
 ---
 

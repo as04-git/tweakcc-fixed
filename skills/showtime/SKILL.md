@@ -62,9 +62,12 @@ downgrade, a duplicated override, or a latent `ReferenceError`. **Read first:**
    do NOT trust a render that doesn't name the current model. Cross-check against
    the offline digests in the overrides repo + the prompting checklist in the
    overrides repo's `CLAUDE.md`.
-4. **Both `CLAUDE.md` files** — the tweakcc-fixed `CLAUDE.md` (bug-class
-   diagnostics, patch-authoring) and the overrides repo's `CLAUDE.md` (the
-   lobotomization decision rule + realignment recipe).
+4. **The repo-specific guidance that actually exists** — in tweakcc-fixed, read
+   `CONTRIBUTING.md` plus the patch-author notes at the top of
+   `src/patches/index.ts` (and a local `CLAUDE.md` if one exists); in the
+   overrides repo, read its `CLAUDE.md` for the lobotomization decision rule +
+   realignment recipe. Do not block the pipeline waiting for tweakcc-fixed's
+   gitignored, machine-local `CLAUDE.md` when that file is absent.
 
 If you are doing **substantive prompt/override reshaping** (the §7 realignment, or
 a cull pass), the standing convention is: **fan out + verify, and every subagent
@@ -112,17 +115,19 @@ the driver verifies their _result_.
 
 ```bash
 # the driver resolves the repo itself — run from anywhere in the checkout
-node .claude/skills/showtime/driver.mjs versions   # installed CC vs repo's latest prompts JSON
-node .claude/skills/showtime/driver.mjs extract     # extract cli.js from the native binary -> /tmp/cli-<ver>.js
-node .claude/skills/showtime/driver.mjs report 2.1.160   # run + parse the version-bump report (old -> current)
-node .claude/skills/showtime/driver.mjs check       # FULL health check: version + stale-backup guard + idempotent --apply hygiene + smoke
+node skills/showtime/driver.mjs versions   # installed CC vs repo's latest prompts JSON
+node skills/showtime/driver.mjs extract     # extract cli.js from the native binary -> /tmp/cli-<ver>.js
+node skills/showtime/driver.mjs report 2.1.160   # run + parse the version-bump report (old -> current)
+node skills/showtime/driver.mjs check       # FULL health check: version + stale-backup guard + idempotent --apply hygiene + smoke
 ```
 
 `check` is the one to run after a bump (or any time) to confirm the install is
-on-version, patched clean (0 ✗ / 0 "failed to find" / 0 "Could not find" / 0
-"Conflicts detected" / "applied successfully"), and boots (`claude --print
-READY`). Exit 0 = all green. It re-applies idempotently, so it's safe to run
-repeatedly. It also flags the **stale-backup** condition before it can bite (§10).
+on-version, the enabled configuration applies cleanly (0 ✗ / 0 "failed to
+find" / 0 "Could not find" / 0 "Conflicts detected" / "applied successfully"),
+and the binary boots (`claude --print READY`). Exit 0 = all green. It re-applies
+idempotently, so it's safe to run repeatedly. The separate `test:pristine` gate
+in Phase 5 covers every registered patch, including default-off patches. `check`
+also flags the **stale-backup** condition before it can bite (§10).
 
 > The public driver exposes the **local** commands only: `versions`, `extract`,
 > `report`, `check`. There is no remote/sync command.
@@ -137,7 +142,7 @@ repeatedly. It also flags the **stale-backup** condition before it can bite (§1
 2. Fetch upstream for COMPARISON ONLY (never merge) ← git fetch; git show upstream JSON; our extractor is canonical
 3. Extract cli.js + run the prompt extractor        ← driver extract; promptExtractor; NEW_PROMPT_ASSIGNMENTS
 4. version-bump report -> drive the counters to 0   ← driver report; the FOUR ZEROS
-5. README bump + lint + test + build                ← pnpm lint && pnpm test && pnpm build
+5. README bump + lint + test + build                ← pnpm lint && pnpm test && pnpm test:pristine && pnpm build
 6. Stale-backup check + --apply + smoke             ← driver check
 7. LCC override realignment (the conflicts)         ← grounded workflow + the decision rule (§7)
 8. Commit each repo + push                          ← git commit -F (avoid the bad-substitution trap)
@@ -162,7 +167,7 @@ only; our extractor is canonical — see §5).
 ```bash
 claude update                 # native installer; safe no-op if already current
 claude --version              # confirm
-node .claude/skills/showtime/driver.mjs versions
+node skills/showtime/driver.mjs versions
 ```
 
 If `versions` prints `NEW VERSION: installed X > repo Y`, you have a real bump to
@@ -215,7 +220,7 @@ only `/tmp/upstream-X.Y.Z.json` for the §6 comparison.
 
 ```bash
 # 1. Extract a fresh cli.js from the PRISTINE native binary (no patching):
-node .claude/skills/showtime/driver.mjs extract /tmp/cli-X.Y.Z.js
+node skills/showtime/driver.mjs extract /tmp/cli-X.Y.Z.js
 # (or manually via the dist nativeInstallation module — the driver wraps exactly that)
 
 # 2. Set up the extractor's temp dir + SEED from OUR OWN latest prompts JSON:
@@ -265,7 +270,7 @@ python3 -c "import json; d=json.load(open('data/prompts/prompts-X.Y.Z.json'))['p
 ## §7 — Phase 4 & 5 & 6: report → README/lint/test/build → apply → smoke
 
 ```bash
-node .claude/skills/showtime/driver.mjs report <prev>   # parses the 6 counters
+node skills/showtime/driver.mjs report <prev>   # parses the 6 counters
 # or directly:  pnpm version-bump:report <prev> X.Y.Z
 ```
 
@@ -279,13 +284,13 @@ Then:
 
 ```bash
 # README: bump the "Target Claude Code versions" line to X.Y.Z
-pnpm lint && pnpm test && pnpm build
+pnpm lint && pnpm test && pnpm test:pristine && pnpm build
 ```
 
 **Apply + smoke (mind the STALE-BACKUP GOTCHA, §10):**
 
 ```bash
-node .claude/skills/showtime/driver.mjs check
+node skills/showtime/driver.mjs check
 # which is, mechanically:
 #   (stale-backup guard) -> node dist/index.mjs --apply -> parse hygiene -> claude --print READY
 ```
