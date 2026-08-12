@@ -3161,6 +3161,76 @@ function assembleComposite(node) {
   return null;
 }
 
+// A prompt that is byte-identical at several sites needs ONE CATALOGUE ENTRY
+// PER SITE: the apply consumes one site per entry, and when the binary matches
+// in more places than the catalogue has entries no site is attributable and the
+// whole group is skipped rather than spliced into whichever came first.
+//
+// Capture is gated on `lead` — the 600 characters before the node — so whether
+// a site is admitted depends on the code around it. Anthropic emits the same
+// error text from several call sites with quite different surroundings, so one
+// site clears the gate and its twins do not: `project_write: local_path was
+// replaced during the upload.` occupies 6 sites and produced 1 entry, and the
+// group then resolved as ambiguous and applied nowhere.
+//
+// If a body is model-facing at one site it is the same prompt text at every
+// site, so admit the twins. Gated on length: below this floor the "same text"
+// is something like `/mcp` (144 sites) or `(empty)`, which is a shared token
+// rather than a repeated prompt, and admitting 144 entries for it would be
+// worse than skipping. Those stay skipped by design.
+const IDENTICAL_SITE_FLOOR = 40;
+
+function backfillIdenticalSites(stringData, ast, code) {
+  const captured = new Set(
+    stringData
+      .filter(item => (item.pieces || []).length === 1)
+      .map(item => item.pieces[0])
+      .filter(value => value.trim().length >= IDENTICAL_SITE_FLOOR)
+  );
+  if (captured.size === 0) return;
+
+  const takenStarts = new Set(stringData.map(item => item.start));
+  const added = new Map();
+  const visit = node => {
+    if (!node || typeof node !== 'object') return;
+    if (Array.isArray(node)) {
+      for (const child of node) visit(child);
+      return;
+    }
+    if (
+      node.type === 'StringLiteral' &&
+      captured.has(node.value) &&
+      !takenStarts.has(node.start)
+    ) {
+      takenStarts.add(node.start);
+      added.set(node.value, (added.get(node.value) || 0) + 1);
+      stringData.push({
+        name: '',
+        id: '',
+        description: '',
+        pieces: [node.value],
+        identifiers: [],
+        identifierMap: {},
+        start: node.start,
+        end: node.end,
+      });
+    }
+    for (const key of Object.keys(node)) {
+      if (key === 'loc' || key === 'leadingComments') continue;
+      const child = node[key];
+      if (child && typeof child === 'object') visit(child);
+    }
+  };
+  visit(ast);
+
+  for (const [value, count] of added) {
+    console.log(
+      `Backfilled ${count} identical site(s) for "${value.slice(0, 60).replace(/\n/g, ' ')}${value.length > 60 ? '…' : ''}"`
+    );
+  }
+  void code;
+}
+
 function extractStrings(filepath, minLength = 500) {
   _gateCandidates.clear(); // idempotent across calls
   const code = fs.readFileSync(filepath, 'utf-8');
@@ -3440,6 +3510,7 @@ function extractStrings(filepath, minLength = 500) {
   };
 
   traverse(ast);
+  backfillIdenticalSites(stringData, ast, code);
 
   // Filter out strings that are subsets of other strings
   // Step 1: Sort by start index (ascending), then by end index (descending)
