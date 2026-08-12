@@ -364,6 +364,46 @@ function cmdCheck() {
   }
   console.log('');
 
+  // 9. which Bun built this Claude Code — a tripwire, not a gate.
+  //
+  // Patching the JS invalidates Bun's cached bytecode (it carries a hash of the
+  // source), so a patched native install reparses ~25 MB on every launch: 48 ms
+  // -> 477 ms measured on darwin, a 10x startup penalty that no size fix
+  // touches. The fix would be to REGENERATE the bytecode for the patched
+  // source, and that is blocked on one thing only: the cache is version-locked
+  // by a leading per-Bun-version tag the shipped runtime validates, and CC is
+  // built with an UNRELEASED Bun (2.1.228: v1.4.0 eb835313a, while npm's latest
+  // is 1.3.14 and no public v1.4.0 tag exists). Splicing a blob built by any
+  // obtainable Bun does not merely miss the fast path, it crashes startup.
+  //
+  // So the whole question reduces to "is CC's Bun public yet", which changes
+  // only at a version bump. Report the stamp and shout when it moves, rather
+  // than leaving a note in a file nobody re-reads.
+  const KNOWN_BUN_BUILD = 'v1.4.0 (eb835313a)';
+  console.log(C.head('Bun build stamp (bytecode-regeneration tripwire)'));
+  {
+    const bin = ccBinary();
+    let stamp = null;
+    try {
+      // Read in chunks: the binary is ~275 MB and must not be buffered whole.
+      const out = execSync(
+        `strings -a ${JSON.stringify(bin)} | grep -oE 'Bun v[0-9]+\\.[0-9]+\\.[0-9]+ \\([0-9a-f]+\\)' | sort -u | head -1`,
+        { encoding: 'utf8', maxBuffer: 4 * 1024 * 1024 }
+      ).trim();
+      stamp = out || null;
+    } catch { /* strings unavailable or no match — reported below */ }
+    if (!stamp) console.log(C.info('no Bun stamp found in the binary — skipped'));
+    else if (stamp.replace(/^Bun /, '') === KNOWN_BUN_BUILD)
+      console.log(C.ok(`${stamp} — unreleased, bytecode regeneration still blocked`));
+    else
+      console.log(C.info(
+        `${stamp} CHANGED (was Bun ${KNOWN_BUN_BUILD}). If this one is public ` +
+        `(npm view bun dist-tags), regenerating bytecode for the patched source ` +
+        `becomes possible and recovers ~430 ms of startup. Update KNOWN_BUN_BUILD.`
+      ));
+  }
+  console.log('');
+
   console.log(FAILED ? C.bad('HEALTH CHECK FAILED — see above') : C.ok('HEALTH CHECK PASSED — on-version, patched clean, mis-bind-free, injection-sites-intact, predicate-safe, fully-catalogued, boots'));
 }
 
