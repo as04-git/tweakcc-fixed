@@ -246,8 +246,34 @@ export const applySystemPrompts = async (
         hashResultIndexes.push(results.length - 1);
         continue;
       }
-      // Generate the interpolated content using the actual variables from the match
-      const interpolatedContent = getInterpolatedContent(match);
+      // Generate the interpolated content using the actual variables from the
+      // match. `substituteInInterpolations` throws on a malformed `${` — an
+      // unclosed brace, an apostrophe inside one, a comment — all of which are
+      // plausible authored text ("cost is ${100 for a run"). Uncaught, that
+      // propagated out of the whole apply as a bare stack trace naming no
+      // prompt, on native AFTER the extract step. Catch it here, where the id
+      // is known, and skip only the offending override.
+      let interpolatedContent: string;
+      try {
+        interpolatedContent = getInterpolatedContent(match);
+      } catch (error) {
+        console.log(
+          chalk.red(
+            `Malformed \${...} interpolation in "${prompt.name}" (${promptId}.md): ` +
+              `${error instanceof Error ? error.message : String(error)} - skipping`
+          )
+        );
+        groupRetained.set(regex, retained + 1);
+        results.push({
+          id: promptId,
+          name: prompt.name,
+          group: PatchGroup.SYSTEM_PROMPTS,
+          applied: false,
+          failed: true,
+          details: 'malformed ${...} interpolation in the markdown',
+        });
+        continue;
+      }
 
       // Check the delimiter character before the match to determine string type
       const matchIndex = match.index;
