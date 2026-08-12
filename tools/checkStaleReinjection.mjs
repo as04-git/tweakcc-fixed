@@ -37,16 +37,25 @@ const sets = explicit.length
     : [];
 if (!sets.length) { console.error('no override sets found'); process.exit(2); }
 
+// Reconstruct a prompt body. TWO invariants, both easy to get wrong and both
+// wrong in the first cut of this file:
+//   1. `pieces` ALREADY carry the `${` and `}` delimiters ("owned by you${",
+//      "}; includes …"), so the label is inserted BARE. Wrapping it again emits
+//      `${${LABEL}}`, which matches nothing and makes an exact pristine stub
+//      look like a curated body.
+//   2. The identifierMap key is `identifiers[i]`, NOT `i`. They coincide often
+//      enough to hide the bug.
+// This mirrors reconstructContentFromPieces in src/systemPromptSync.ts.
 const reconstruct = p => {
   const pieces = p.pieces || [];
   if (!pieces.length) return p.content || '';
-  const map = p.identifierMap || {};
   const ids = p.identifiers || [];
+  const map = p.identifierMap || {};
   let out = '';
-  pieces.forEach((piece, i) => {
-    out += piece;
-    if (i < pieces.length - 1) out += `\${${map[String(i)] ?? map[ids[i]] ?? `UNKNOWN_${i}`}}`;
-  });
+  for (let i = 0; i < pieces.length; i++) {
+    out += pieces[i];
+    if (i < ids.length) out += map[String(ids[i])] || `UNKNOWN_${ids[i]}`;
+  }
   return out;
 };
 
