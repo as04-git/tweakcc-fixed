@@ -65,6 +65,28 @@ const REWRITES: Rewrite[] = [
     replace:
       'a simple question gets a direct answer. Bold the key terms so the reply can be skimmed, and keep blocks to three sentences with a blank line between them.',
   },
+  // CC ships TWO comms blocks and picks one by model family: "# Communicating
+  // with the user" for fable/mythos (which the fable-prompt-set patch makes
+  // every model take) and "# Text output" for everyone else. Rewriting only the
+  // first left the other branch untouched, so the toggle did nothing for anyone
+  // not running the fable flip. The two share no sentence verbatim — the Text
+  // output variant says "a direct answer, not headers", the comms one "a direct
+  // answer in prose, not headers" — so the anchors cannot cross-match.
+  {
+    what: 'text-output prose-not-headers rule',
+    find: /a simple question gets a direct answer, not headers and sections\./,
+    replace:
+      'a simple question gets a direct answer. Bold the key terms so the reply can be skimmed, and keep blocks to three sentences with a blank line between them.',
+  },
+  {
+    what: 'text-output end-of-turn cap',
+    // "one or two sentences. Nothing else." is a hard cap that truncates a
+    // report on finished work; the comms-block rewrite uses the same soft
+    // ~120-word anchor instead.
+    find: /End-of-turn summary: one or two sentences\. What changed and what's next\. Nothing else\./,
+    replace:
+      'End-of-turn summary: lead with what happened, then only what changes what the user does next. A report on finished work usually lands under 120 words.',
+  },
   {
     what: 'claudeMd relevance hedge',
     // Two wordings in the wild: Anthropic's pristine, and the softened form
