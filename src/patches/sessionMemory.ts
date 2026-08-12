@@ -34,6 +34,17 @@ import { debug } from '../utils';
 import { showDiff, globalReplace } from './index';
 
 /**
+ * The pre-2.1.128 flag gate. Whether a build is "legacy" is decided by this
+ * SHAPE, never by a bare `tengu_session_memory` substring: on CC >= 2.1.217 the
+ * name survives only inside telemetry event strings, so the substring test
+ * classified every modern bundle as legacy and then treated the (expected)
+ * failure of the legacy token-limit/threshold patterns as fatal — returning
+ * null, which on a native install aborts the entire apply (#905).
+ */
+const LEGACY_EXTRACTION_GATE =
+  /function [$\w]+\(\)\{return [$\w]+\("tengu_session_memory"/;
+
+/**
  * Patch 1: Bypass tengu_session_memory flag check for extraction
  *
  * CC ≥ 2.1.128 promoted session memory past this gate — the flag
@@ -49,8 +60,7 @@ const patchExtraction = (file: string): string | null => {
     return file;
   }
 
-  const pattern = /function [$\w]+\(\)\{return [$\w]+\("tengu_session_memory"/;
-  const match = file.match(pattern);
+  const match = file.match(LEGACY_EXTRACTION_GATE);
 
   if (match && match.index !== undefined) {
     const insertIndex = match.index + match[0].indexOf('{') + 1;
@@ -194,7 +204,7 @@ const patchTokenLimits = (
   }
 
   const perSectionCode = 'Number(process.env.CC_SM_PER_SECTION_TOKENS??2000)';
-  const totalFileCode = 'Number(process.env.CM_SM_TOTAL_FILE_LIMIT??12000)';
+  const totalFileCode = 'Number(process.env.CC_SM_TOTAL_FILE_LIMIT??12000)';
 
   const replacement =
     match[1] + perSectionCode + match[2] + totalFileCode + match[3];
@@ -274,7 +284,7 @@ export const writeSessionMemory = (oldFile: string): string | null => {
   let newFile = patchExtraction(oldFile);
   if (!newFile) return null;
 
-  const usedLegacyExtraction = newFile.includes('tengu_session_memory');
+  const usedLegacyExtraction = LEGACY_EXTRACTION_GATE.test(oldFile);
 
   const withPastSessions = patchPastSessions(newFile);
   if (!withPastSessions) {
