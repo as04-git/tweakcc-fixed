@@ -123,3 +123,67 @@ describe('writeModelCustomizations', () => {
     errSpy.mockRestore();
   });
 });
+
+// A CUSTOM_MODELS entry naming a model the build's catalog has never heard of
+// produces a picker row that looks selectable and fails on first request. Three
+// such entries (claude-3-opus-20240229 and friends) shipped for a long time
+// because nothing checks: the push applies cleanly and every counter stays zero.
+describe('writeModelCustomizations catalog filtering', () => {
+  // Minimal catalog in the embedded shape: one entry addressed by its `id`, one
+  // whose CUSTOM_MODELS spelling is the dated `first_party` wire name.
+  const catalogEntry = (id: string, wire: string) =>
+    `{id:"${id}",family:"opus",display_name:"D",knowledge_cutoff:"x",` +
+    `provider_ids:{first_party:"${wire}",bedrock:"b-${wire}"}}`;
+
+  const withCatalog = (entries: string) =>
+    `models:[${entries}],aliases:{};` + FIXTURE;
+
+  it('injects only the models present in this build’s catalog', () => {
+    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    const out = writeModelCustomizations(
+      withCatalog(
+        [
+          catalogEntry('claude-opus-4-6', 'claude-opus-4-6'),
+          catalogEntry('claude-opus-4-5', 'claude-opus-4-5-20251101'),
+        ].join(',')
+      )
+    );
+
+    expect(out).not.toBeNull();
+    // Present by catalog id, and by dated wire name.
+    expect(out).toContain('"value":"claude-opus-4-6"');
+    expect(out).toContain('"value":"claude-opus-4-5-20251101"');
+    // Everything else in CUSTOM_MODELS is absent from this catalog and dropped.
+    expect(out).not.toContain('"value":"claude-sonnet-4-6"');
+    expect(logSpy).toHaveBeenCalledWith(
+      expect.stringContaining("not in this build's model catalog")
+    );
+    logSpy.mockRestore();
+  });
+
+  it('injects everything unfiltered when the catalog cannot be read', () => {
+    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    // FIXTURE alone carries no catalog entries -> filtering is skipped rather
+    // than dropping every model.
+    const out = writeModelCustomizations(FIXTURE);
+    expect(out).not.toBeNull();
+    for (const model of CUSTOM_MODELS) {
+      expect(out).toContain(`"value":${JSON.stringify(model.value)}`);
+    }
+    logSpy.mockRestore();
+  });
+
+  it('fails loudly when no CUSTOM_MODELS entry is in the catalog', () => {
+    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    const errSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const out = writeModelCustomizations(
+      withCatalog(catalogEntry('claude-not-a-real-model', 'claude-nope'))
+    );
+    expect(out).toBeNull();
+    expect(errSpy).toHaveBeenCalledWith(
+      expect.stringContaining("no CUSTOM_MODELS entry is present")
+    );
+    logSpy.mockRestore();
+    errSpy.mockRestore();
+  });
+});
