@@ -169,7 +169,10 @@ export const applySystemPrompts = async (
     }
 
     debug(`Applying system prompt: ${prompt.name}`);
-    const pattern = new RegExp(regex, 'si'); // 's' flag for dotAll mode, 'i' because of casing inconsistencies in unicode escape sequences (e.g. `\u201C` in the regex vs `\u201C` in the file)
+    // 's' for dotAll. No 'i': escapeNonAsciiForRegex already matches both hex
+    // casings of a `\uXXXX` escape, and a case-insensitive prompt regex
+    // over-matches its own prose (see foldPromptMatchContent).
+    const pattern = new RegExp(regex, 's');
 
     // Some short prompts (e.g. tool-description-bash-git-never-skip-hooks) hold
     // text that Anthropic also inlines verbatim into a longer prompt
