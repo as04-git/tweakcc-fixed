@@ -100,6 +100,7 @@ import { writeWorktreeMode } from './worktreeMode';
 import { writeAllowCustomAgentModels } from './allowCustomAgentModels';
 import { writeCustomModelCatalog } from './customModelCatalog';
 import { writeCustomModelPicker } from './customModelPicker';
+import { writeSonnet1mAvailable } from './sonnet1mAvailable';
 import { writeAgentToolModelString } from './agentToolModelString';
 import { writeContextWindowFromCatalog } from './contextWindowFromCatalog';
 import { writeAutoModelSwap } from './autoModelSwap';
@@ -290,6 +291,13 @@ const PATCH_DEFINITIONS = [
     group: PatchGroup.MISC_CONFIGURABLE,
     description:
       'Show custom models in the interactive /model picker (catalog injection alone only makes them resolvable by name)',
+  },
+  {
+    id: 'sonnet-1m-available',
+    name: 'Sonnet 1M context always available',
+    group: PatchGroup.MISC_CONFIGURABLE,
+    description:
+      'Stop "Sonnet with 1M context is not available for your account" when only the entitlement lookup is unavailable. Sonnet 5 declares native_1m in the catalog, but the native-1m fast path requires ANTHROPIC_BASE_URL to be literally api.anthropic.com, so any gateway/proxy session falls through to a cache that reports uncached/fetch_error as "not entitled". Drops that lookup from the sonnet predicate only (opus untouched); CLAUDE_CODE_DISABLE_1M_CONTEXT still works',
   },
   {
     id: 'rate-limits-from-headers',
@@ -1203,6 +1211,10 @@ export const applyCustomization = async (
       condition:
         !!config.settings.customModels &&
         config.settings.customModels.length > 0,
+    },
+    'sonnet-1m-available': {
+      fn: c => writeSonnet1mAvailable(c),
+      condition: modelCustomizationsEnabled,
     },
     'rate-limits-from-headers': {
       fn: c => writeRateLimitsFromHeaders(c),

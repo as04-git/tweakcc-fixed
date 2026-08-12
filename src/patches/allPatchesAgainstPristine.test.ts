@@ -68,6 +68,7 @@ import { writeAgentToolModelString } from './agentToolModelString';
 import { writeContextWindowFromCatalog } from './contextWindowFromCatalog';
 import { writeAutoModelSwap } from './autoModelSwap';
 import { writeCustomModelPicker } from './customModelPicker';
+import { writeSonnet1mAvailable } from './sonnet1mAvailable';
 import { writeRateLimitsFromHeaders } from './rateLimitsFromHeaders';
 import { writeCustomModelAlias } from './customModelAlias';
 import { writeWorktreeMode } from './worktreeMode';
@@ -316,6 +317,7 @@ const INVOCATIONS: Record<PatchId, (src: string) => string | null> = {
         context_window: 262144,
       },
     ]),
+  'sonnet-1m-available': c => writeSonnet1mAvailable(c),
   'rate-limits-from-headers': c => writeRateLimitsFromHeaders(c),
   'custom-model-alias': c =>
     writeCustomModelAlias(c, [
