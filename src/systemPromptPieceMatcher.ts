@@ -161,7 +161,6 @@ const compileMatcher = (spec: PromptMatchSpec): CompiledPromptMatcher => {
   return { tokens, plan: buildAnchorPlan(tokens) };
 };
 
-const nonAsciiCaseMatchers = new Map<string, RegExp>();
 
 const isWord = (value: string | undefined): boolean => {
   if (value === '$' || value === '_') return true;

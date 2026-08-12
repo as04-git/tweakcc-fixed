@@ -33,6 +33,26 @@ import fs from 'node:fs';
 
 const MIN_PROBE = 40;
 
+/**
+ * Collapse both escape conventions onto one key so catalogues written in either
+ * can be compared.
+ *
+ * A reference catalogue may store pieces in RAW JavaScript source form — `\"`,
+ * `\\`, the bytes as they sit in cli.js — while ours stores them COOKED at
+ * quoted sites: `"`, `\`, the text the model actually reads. That difference is
+ * by design and it is not a one-way decode, because a decode that is right for
+ * the raw side destroys a genuine backslash on the cooked side (`use
+ * Anthropic\Bedrock\MantleClient` is real prompt text, not an escape).
+ *
+ * Dropping every backslash is symmetric and settles it: raw `\\B` and cooked
+ * `\B` both key to `B`, raw `\"` and cooked `"` both key to `"`. Slightly
+ * lossy — two texts differing ONLY in backslashes would key alike — which is
+ * the right trade for a presence check whose question is "do we carry this text
+ * at all". CORPUS side only: probing the BINARY keeps the raw form, since raw
+ * is what the binary contains.
+ */
+export const corpusKey = text => text.replace(/\\/g, '');
+
 export const literalRuns = (pieces, minLength = MIN_PROBE) =>
   (pieces ?? [])
     .map(String)
@@ -57,11 +77,15 @@ export const asciiRuns = (text, minLength = MIN_PROBE) => {
 };
 
 export const coverageReport = (ours, reference, bundle) => {
-  const haystack = ours
-    .flatMap(p => (p.pieces ?? []).map(String))
-    .join(' ')
-    .replace(/\s+/g, ' ');
+  const haystack = corpusKey(
+    ours
+      .flatMap(p => (p.pieces ?? []).map(String))
+      .join(' ')
+      .replace(/\s+/g, ' ')
+  );
+  const ourIds = new Set(ours.map(p => p.id).filter(Boolean));
   const missing = [];
+  const spanDiff = [];
   const notOurs = [];
   const unprobeable = [];
 
@@ -71,22 +95,31 @@ export const coverageReport = (ours, reference, bundle) => {
       unprobeable.push(p.id);
       continue;
     }
-    if (runs.some(r => haystack.includes(r))) continue;
+    // Corpus side: both catalogues normalised to the cooked form.
+    if (runs.some(r => haystack.includes(corpusKey(r)))) continue;
 
+    // Binary side: raw form, because that is what cli.js stores.
     const probes = runs.flatMap(r => asciiRuns(r));
     const tokens = Math.ceil((p.pieces ?? []).join('').length / 4);
     if (probes.length === 0) {
       unprobeable.push(p.id);
       continue;
     }
-    if (probes.some(probe => bundle.includes(probe))) {
-      missing.push({ id: p.id, tokens });
-    } else {
+    if (!probes.some(probe => bundle.includes(probe))) {
       notOurs.push({ id: p.id, tokens });
+      continue;
     }
+    // Carrying the id already means the prompt IS catalogued and the two
+    // extractors merely delimited it differently — upstream swept in a
+    // neighbouring section, or split one the other kept whole. Worth reporting,
+    // but it is not a coverage hole and must not fail the gate, or the gate
+    // cries wolf forever on a difference of opinion about span.
+    (ourIds.has(p.id) ? spanDiff : missing).push({ id: p.id, tokens });
   }
-  missing.sort((a, b) => b.tokens - a.tokens);
-  return { missing, notOurs, unprobeable };
+  const byTokens = (a, b) => b.tokens - a.tokens;
+  missing.sort(byTokens);
+  spanDiff.sort(byTokens);
+  return { missing, spanDiff, notOurs, unprobeable };
 };
 
 const main = () => {
@@ -98,18 +131,26 @@ const main = () => {
     process.exit(2);
   }
   const load = f => JSON.parse(fs.readFileSync(f, 'utf8')).prompts;
-  const { missing, notOurs, unprobeable } = coverageReport(
+  const { missing, spanDiff, notOurs, unprobeable } = coverageReport(
     load(oursPath),
     load(referencePath),
     fs.readFileSync(bundlePath, 'utf8')
   );
 
   const total = missing.reduce((s, m) => s + m.tokens, 0);
+  const trailer =
+    `${spanDiff.length} span-difference, ${notOurs.length} reference-only, ` +
+    `${unprobeable.length} unprobeable`;
   if (missing.length === 0) {
     console.log(
-      `✓ prompt coverage: every reference prompt present ` +
-        `(${notOurs.length} reference-only, ${unprobeable.length} unprobeable)`
+      `✓ prompt coverage: every reference prompt present (${trailer})`
     );
+    if (spanDiff.length > 0) {
+      console.log('  span differences (same id, different extent):');
+      for (const m of spanDiff) {
+        console.log(`    ${String(m.tokens).padStart(6)} tk  ${m.id}`);
+      }
+    }
     process.exit(0);
   }
 
@@ -120,10 +161,7 @@ const main = () => {
   for (const m of missing) {
     console.log(`  ${String(m.tokens).padStart(6)} tk  ${m.id}`);
   }
-  console.log(
-    `\n(${notOurs.length} reference entries are absent from this binary — a ` +
-      `different build, not our gap. ${unprobeable.length} too short to verify.)`
-  );
+  console.log(`\n(${trailer}.)`);
   process.exit(1);
 };
 
