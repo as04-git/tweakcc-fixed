@@ -1,7 +1,9 @@
 import fs from 'node:fs/promises';
 import fsSync from 'node:fs';
+import * as fsSyncNs from 'node:fs';
 import type { Stats } from 'node:fs';
 import path from 'node:path';
+import { Readable } from 'node:stream';
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { WASMagic } from 'wasmagic';
@@ -64,6 +66,23 @@ import {
   createRegularStats,
 } from './testHelpers';
 
+/**
+ * `vi.mock('node:fs')` auto-mocks createReadStream to a function returning
+ * undefined, which the marker scan cannot consume. Give it a real readable
+ * whose bytes each test controls.
+ */
+const stubBinaryContent = (contentFor: (filePath: string) => string): void => {
+  // Spy on the NAMESPACE binding, not the default export: under
+  // `vi.mock('node:fs')` those are different objects, and `patchMarkers`
+  // imports the named `createReadStream`.
+  vi.spyOn(fsSyncNs, 'createReadStream').mockImplementation(
+    filePath =>
+      Readable.from([contentFor(String(filePath))]) as unknown as ReturnType<
+        typeof fsSyncNs.createReadStream
+      >
+  );
+};
+
 describe('config.ts', () => {
   let originalSearchPathsLength: number;
 
@@ -95,6 +114,10 @@ describe('config.ts', () => {
     (WASMagic.create as unknown as ReturnType<typeof vi.fn>).mockResolvedValue(
       mockMagicInstance
     );
+
+    // Every backup streams the source looking for tweakcc markers before it
+    // writes, so `node:fs` needs a real readable here. Default: pristine.
+    stubBinaryContent(() => 'pristine cli.js content');
   });
 
   afterEach(() => {
@@ -335,11 +358,7 @@ describe('config.ts', () => {
         'clearAllAppliedHashes'
       ).mockResolvedValue(undefined);
 
-      // Mock reading the backup file
-      const readFileSpy = vi
-        .spyOn(fs, 'readFile')
-        .mockResolvedValueOnce(Buffer.from('backup content')) // Reading backup file
-        .mockRejectedValue(createEnoent()); // Reading config file and others
+      vi.spyOn(fs, 'readFile').mockRejectedValue(createEnoent()); // config file and others
 
       // Mock file operations for the helper function. The backup file must
       // appear to exist (restore now guards on it); the target cli.js does not.
@@ -350,9 +369,9 @@ describe('config.ts', () => {
         throw createEnoent();
       });
       vi.spyOn(fs, 'unlink').mockResolvedValue(undefined);
-      const writeFileSpy = vi
-        .spyOn(fs, 'writeFile')
-        .mockResolvedValue(undefined);
+      vi.spyOn(fs, 'writeFile').mockResolvedValue(undefined);
+      const copyFileSpy = vi.spyOn(fs, 'copyFile').mockResolvedValue(undefined);
+      const renameSpy = vi.spyOn(fs, 'rename').mockResolvedValue(undefined);
       vi.spyOn(fs, 'chmod').mockResolvedValue(undefined);
 
       const ccInstInfo = {
@@ -361,21 +380,16 @@ describe('config.ts', () => {
 
       await restoreClijsFromBackup(ccInstInfo);
 
-      // Verify the backup was read
-      expect(readFileSpy).toHaveBeenCalledWith(
-        expect.stringContaining('cli.js.backup')
+      // The backup is copied straight to a sibling temp file — never buffered,
+      // and never over the live cli.js — then renamed onto it. The install is
+      // therefore either the old file or the new one, never a partial write.
+      expect(copyFileSpy).toHaveBeenCalledWith(
+        expect.stringContaining('cli.js.backup'),
+        expect.stringContaining(ccInstInfo.cliPath!)
       );
-
-      // Verify writeFile was called (at least twice - once for cli.js, once for config)
-      expect(writeFileSpy).toHaveBeenCalled();
-
-      // Find the call that wrote to cli.js (not config.json)
-      const cliWriteCall = writeFileSpy.mock.calls.find(
-        call => call[0] === ccInstInfo.cliPath
-      );
-
-      expect(cliWriteCall).toBeDefined();
-      expect(cliWriteCall![1]).toEqual(Buffer.from('backup content'));
+      const stagedPath = copyFileSpy.mock.calls[0][1] as string;
+      expect(stagedPath).not.toBe(ccInstInfo.cliPath);
+      expect(renameSpy).toHaveBeenCalledWith(stagedPath, ccInstInfo.cliPath);
     });
 
     it('should return false when no cli.js backup exists', async () => {
@@ -1693,6 +1707,7 @@ describe('config.ts', () => {
 
       const unlinkSpy = vi.spyOn(fs, 'unlink').mockResolvedValue(undefined);
       const copyFileSpy = vi.spyOn(fs, 'copyFile').mockResolvedValue(undefined);
+      const renameSpy = vi.spyOn(fs, 'rename').mockResolvedValue(undefined);
       vi.spyOn(fs, 'readFile').mockImplementation(async (p, encoding) => {
         if (p === mockCliPath && encoding === 'utf8') {
           return mockCliContent;
@@ -1706,10 +1721,55 @@ describe('config.ts', () => {
 
       const result = await startupCheck({ interactive: true });
 
-      expect(unlinkSpy).toHaveBeenCalled();
+      // The replacement is staged and renamed over the old backup. The old
+      // backup is never unlinked first: doing so destroyed the only pristine
+      // copy before knowing whether a valid replacement could be written.
       expect(copyFileSpy).toHaveBeenCalled();
+      expect(renameSpy).toHaveBeenCalled();
+      expect(
+        unlinkSpy.mock.calls.some(call =>
+          String(call[0]).endsWith('cli.js.backup')
+        )
+      ).toBe(false);
       expect(result).not.toBe(null);
       expect(result!.startupCheckInfo?.wasUpdated).toBe(true);
+    });
+
+    // N-1: a missing or corrupt config.json reads as ccVersion '', which looks
+    // like "the user updated Claude Code" and triggers a re-backup — of the
+    // binary tweakcc itself patched. Overwriting the pristine backup with a
+    // patched binary is unrecoverable, so the source is checked for markers.
+    it('refuses to overwrite the backup from an already-patched cli.js', async () => {
+      const mockCliPath = path.join(CLIJS_SEARCH_PATHS[0], 'cli.js');
+      const mockCliContent =
+        'some code VERSION:"2.0.0" more VERSION:"2.0.0" and VERSION:"2.0.0"';
+
+      vi.spyOn(fs, 'stat').mockImplementation(async filePath => {
+        if (filePath === mockCliPath) return {} as Stats;
+        if (filePath.toString().includes('cli.js.backup')) return {} as Stats;
+        throw createEnoent();
+      });
+
+      // The live install carries a tweakcc marker; the backup must survive.
+      stubBinaryContent(() => 'code __tweakccRouterClassify code');
+
+      const copyFileSpy = vi.spyOn(fs, 'copyFile').mockResolvedValue(undefined);
+      const unlinkSpy = vi.spyOn(fs, 'unlink').mockResolvedValue(undefined);
+      vi.spyOn(fs, 'readFile').mockImplementation(async (p, encoding) => {
+        if (p === mockCliPath && encoding === 'utf8') return mockCliContent;
+        if (p === CONFIG_FILE) return JSON.stringify({ ccVersion: '' });
+        throw createEnoent();
+      });
+      vi.spyOn(fs, 'writeFile').mockResolvedValue(undefined);
+      const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+
+      const result = await startupCheck({ interactive: true });
+
+      expect(copyFileSpy).not.toHaveBeenCalled();
+      expect(unlinkSpy).not.toHaveBeenCalled();
+      expect(logSpy.mock.calls.flat().join('\n')).toContain('tweakcc markers');
+      // Startup still completes — a refusal is loud, not fatal.
+      expect(result.startupCheckInfo).not.toBe(null);
     });
   });
 });

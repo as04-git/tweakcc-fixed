@@ -8,7 +8,10 @@
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
 
-import { replaceFileBreakingHardLinks, doesFileExist } from '../utils';
+import {
+  replaceFileFromSourceBreakingHardLinks,
+  doesFileExist,
+} from '../utils';
 
 // ============================================================================
 // Public API
@@ -54,9 +57,11 @@ export async function restoreBackup(
     throw new Error(`Backup file does not exist: ${backupPath}`);
   }
 
-  // Read the backup content
-  const backupContent = await fs.readFile(backupPath);
-
-  // Replace the target file, breaking hard links and preserving permissions
-  await replaceFileBreakingHardLinks(targetPath, backupContent, 'restore');
+  // Copy straight from the backup: staged sibling + rename, breaking hard
+  // links and preserving permissions, without buffering the whole file.
+  await replaceFileFromSourceBreakingHardLinks(
+    targetPath,
+    backupPath,
+    'restore'
+  );
 }

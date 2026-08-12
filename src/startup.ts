@@ -1,4 +1,4 @@
-import fs from 'node:fs/promises';
+import chalk from 'chalk';
 
 import {
   findClaudeCodeInstallation,
@@ -19,7 +19,32 @@ import {
   StartupCheckInfo,
   TweakccConfig,
 } from './types';
-import { backupClijs, backupNativeBinary } from './installationBackup';
+import {
+  backupClijs,
+  backupNativeBinary,
+  NonPristineBackupError,
+} from './installationBackup';
+
+/**
+ * Run a backup, surfacing a refusal instead of aborting startup.
+ *
+ * A refusal means the installed Claude Code is already patched, so there is
+ * nothing pristine to capture. That is worth shouting about — without a
+ * pristine backup `--restore` cannot undo anything — but it must not take the
+ * whole tool down, and it must leave whatever backup already exists untouched.
+ *
+ * @returns whether a backup was actually written
+ */
+async function backupOrWarn(backup: () => Promise<void>): Promise<boolean> {
+  try {
+    await backup();
+    return true;
+  } catch (error) {
+    if (!(error instanceof NonPristineBackupError)) throw error;
+    console.log(chalk.yellow(error.message));
+    return false;
+  }
+}
 
 export interface StartupCheckResult {
   startupCheckInfo: StartupCheckInfo | null;
@@ -88,8 +113,7 @@ export async function completeStartupCheck(
   let hasBackedUp = false;
   if (!(await doesFileExist(CLIJS_BACKUP_FILE))) {
     debug(`startupCheck: ${CLIJS_BACKUP_FILE} not found; backing up cli.js`);
-    await backupClijs(ccInstInfo);
-    hasBackedUp = true;
+    hasBackedUp = await backupOrWarn(() => backupClijs(ccInstInfo));
   }
 
   // Backup native binary if we don't have any backup yet (for native installations)
@@ -101,12 +125,20 @@ export async function completeStartupCheck(
     debug(
       `startupCheck: ${NATIVE_BINARY_BACKUP_FILE} not found; backing up native binary`
     );
-    await backupNativeBinary(ccInstInfo);
-    hasBackedUpNativeBinary = true;
+    hasBackedUpNativeBinary = await backupOrWarn(() =>
+      backupNativeBinary(ccInstInfo)
+    );
   }
 
-  // If the installed CC version is different from what we have backed up, clear out our backup
-  // and make a new one.
+  // If the installed CC version is different from what we have backed up, take
+  // a fresh backup of the new version.
+  //
+  // The old backup is NOT unlinked first. `backupClijs`/`backupNativeBinary`
+  // copy to a sibling temp and rename onto the destination, so the replacement
+  // is atomic and the previous backup survives intact if anything goes wrong —
+  // including the pristine guard refusing an already-patched source. Unlinking
+  // up front destroyed the only pristine copy before we knew whether a valid
+  // replacement could even be written.
   if (realVersion !== backedUpVersion) {
     // The version we have backed up is different than what's installed.  Mostly likely the user
     // updated CC, so we should back up the new version.  If the backup didn't even exist until we
@@ -115,8 +147,7 @@ export async function completeStartupCheck(
       debug(
         `startupCheck: real version (${realVersion}) != backed up version (${backedUpVersion}); backing up cli.js`
       );
-      await fs.unlink(CLIJS_BACKUP_FILE);
-      await backupClijs(ccInstInfo);
+      await backupOrWarn(() => backupClijs(ccInstInfo));
     }
 
     // Also backup native binary if version changed
@@ -124,10 +155,7 @@ export async function completeStartupCheck(
       debug(
         `startupCheck: real version (${realVersion}) != backed up version (${backedUpVersion}); backing up native binary`
       );
-      if (await doesFileExist(NATIVE_BINARY_BACKUP_FILE)) {
-        await fs.unlink(NATIVE_BINARY_BACKUP_FILE);
-      }
-      await backupNativeBinary(ccInstInfo);
+      await backupOrWarn(() => backupNativeBinary(ccInstInfo));
     }
 
     return {
