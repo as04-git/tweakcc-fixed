@@ -43,13 +43,13 @@
 // +  t.setAppState(X=>({...X,mainLoopModel:__to,mainLoopModelForSession:null}));
 // +  t.options={...t.options,mainLoopModel:__to};
 // +  yield{type:"system",subtype:"notification",...};   // visible banner
-// +  try{ ... spawn ~/.claude-gateway/bin/model-swap-event ... }catch{}
+// +  try{ ... spawn ~/claude-gateway/bin/model-swap-event ... }catch{}
 // +  return{kind:"not_needed"}}}
 // ```
 //
-// The side-door: the patch spawns ~/.claude-gateway/bin/model-swap-event IF
+// The side-door: the patch spawns ~/claude-gateway/bin/model-swap-event IF
 // IT EXISTS (fire-and-forget, detached, stdin JSON record). That script
-// appends to ~/.claude-gateway/model-swap-stats.jsonl and can grow any other
+// appends to ~/claude-gateway/model-swap-stats.jsonl and can grow any other
 // reaction later — all policy lives OUTSIDE the binary, one anchor inside.
 // Absent script = stats silently skipped. Deliberately NOT routed through
 // CC's hook system: the event set is closed (3-4 extra anchors in high-churn
@@ -114,7 +114,7 @@ export const writeAutoModelSwap = (file: string): string | null => {
     modelVar +
     '} — switched to ${__autoModelSwapTo} for this session · continuing uncompacted`,' +
     'priority:"immediate",color:"info"};' +
-    'try{const __amsEv=[require("os").homedir(),".claude-gateway","bin","model-swap-event"].join("/");' +
+    'try{const __amsEv=[require("os").homedir(),"claude-gateway","bin","model-swap-event"].join("/");' +
     'if(require("fs").existsSync(__amsEv)){' +
     'const __amsP=require("child_process").spawn(__amsEv,[],{stdio:["pipe","ignore","ignore"],detached:!0});' +
     '__amsP.on("error",()=>{});' +

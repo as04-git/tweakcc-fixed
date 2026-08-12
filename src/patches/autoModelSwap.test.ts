@@ -24,7 +24,8 @@ describe('writeAutoModelSwap', () => {
       't.options={...t.options,mainLoopModel:__autoModelSwapTo}'
     );
     expect(out).toContain('key:"auto-model-swap"');
-    expect(out).toContain('.claude-gateway","bin","model-swap-event');
+    expect(out).toContain('"claude-gateway","bin","model-swap-event');
+    expect(out).not.toContain('".claude-gateway","bin","model-swap-event');
     // insertion lands after the threshold gate, before the rest of fXs
     const gateIdx = out!.indexOf(
       'if(!await KJ_(e,a,l,n,i,t.agentContext))return{kind:"not_needed"};'
@@ -35,7 +36,6 @@ describe('writeAutoModelSwap', () => {
     expect(swapIdx).toBeGreaterThan(gateIdx);
     expect(restIdx).toBeGreaterThan(swapIdx);
     // still syntactically valid JS (async generator context)
-    // eslint-disable-next-line @typescript-eslint/no-implied-eval
     expect(
       () => new Function('"use strict";return async function*(){' + out! + '}')
     ).not.toThrow();

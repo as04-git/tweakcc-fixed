@@ -126,6 +126,7 @@ import {
   restoreClijsFromBackup,
 } from '../installationBackup';
 import { compareVersions } from '../systemPromptSync';
+import { validateCustomModelDefinitions } from '../customModels';
 
 export { showDiff, showPositionalDiff, globalReplace } from './patchDiffing';
 export {
@@ -281,7 +282,7 @@ const PATCH_DEFINITIONS = [
     name: 'Auto model swap at compact ceiling',
     group: PatchGroup.MISC_CONFIGURABLE,
     description:
-      'When a small-context custom model (kimi-k3-256k) hits its auto-compact ceiling, swap the session to its larger-window sibling (kimi-k3) and continue uncompacted instead of compacting (session-only; spawns ~/.claude-gateway/bin/model-swap-event for stats)',
+      'When a small-context custom model (kimi-k3-256k) hits its auto-compact ceiling, swap the session to its larger-window sibling (kimi-k3) and continue uncompacted instead of compacting (session-only; spawns ~/claude-gateway/bin/model-swap-event for stats)',
   },
   {
     id: 'custom-model-picker',
@@ -776,6 +777,13 @@ export const applyCustomization = async (
   ccInstInfo: ClaudeCodeInstallationInfo,
   patchFilter?: string[] | null
 ): Promise<ApplyCustomizationResult> => {
+  // Programmatic callers can bypass config.ts entirely. Validate before the
+  // native apply path restores or rewrites an installation, not halfway through
+  // the patch sequence after one custom-model writer encounters malformed data.
+  config.settings.customModels = validateCustomModelDefinitions(
+    config.settings.customModels ?? []
+  );
+
   let content: string;
   let clearBytecode = false;
 

@@ -32,6 +32,7 @@ import {
   DEFAULT_TOOLSET,
   DEFAULT_THEME,
 } from './defaultSettings';
+import { validateCustomModelDefinitions } from './customModels';
 
 // Support XDG Base Directory Specification with backward compatibility
 // Priority:
@@ -209,6 +210,14 @@ const normalizeConfig = (config: TweakccConfig): void => {
     config.settings,
     DEFAULT_SETTINGS
   ) as Settings;
+
+  // JSON and --config-url inputs are not protected by the Settings type at
+  // runtime. Validate custom models before any patch interpolates their values
+  // into cli.js; malformed definitions fail loudly instead of crashing midway
+  // through an apply or becoming executable source text.
+  config.settings.customModels = validateCustomModelDefinitions(
+    config.settings.customModels
+  );
 
   // Merge each inputPatternHighlighter item against the default template
   // This ensures each highlighter has all required properties even if some were deleted

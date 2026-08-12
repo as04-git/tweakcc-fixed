@@ -56,8 +56,8 @@ export const buildCatalogEntry = (def: CustomModelDefinition): string => {
       ? [`slogan:${JSON.stringify(def.description)}`]
       : []),
     `provider_ids:{first_party:${JSON.stringify(def.id)}}`,
-    `context:{window:${def.context_window}}`,
-    `max_output_tokens:{default:${maxOut},upper:${maxOut}}`,
+    `context:{window:${JSON.stringify(def.context_window)}}`,
+    `max_output_tokens:{default:${JSON.stringify(maxOut)},upper:${JSON.stringify(maxOut)}}`,
     `capabilities:[${caps.map(c => JSON.stringify(c)).join(',')}]`,
     ...(def.default_effort !== undefined
       ? [`default_effort:${JSON.stringify(def.default_effort)}`]
@@ -76,8 +76,10 @@ const buildAliasEntry = (def: CustomModelDefinition): string | null =>
 //
 // We can't import cli.js's Zod schema here, but we know its shape. The point is
 // not to re-implement Zod — it's to catch the injection producing something the
-// schema would reject BEFORE it reaches a live install. `Function` is used as a
-// syntax checker only; the catalog literal is data we generated, never eval'd.
+// schema would reject BEFORE it reaches a live install. Every config-derived
+// scalar is JSON-encoded before this parser runs, and customModels are runtime-
+// validated before patching, so `Function` evaluates generated data rather than
+// executable config text.
 // ---------------------------------------------------------------------------
 const validateInjectedCatalog = (
   entries: string[],

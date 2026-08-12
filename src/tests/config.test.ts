@@ -228,6 +228,40 @@ describe('config.ts', () => {
       );
     });
 
+    describe('customModels validation', () => {
+      const mkConfig = (customModels: unknown) =>
+        JSON.stringify({
+          ccVersion: '1.0.0',
+          ccInstallationPath: null,
+          lastModified: '2024-01-01',
+          changesApplied: true,
+          settings: { ...DEFAULT_SETTINGS, customModels },
+        });
+
+      it('rejects a non-array local config instead of crashing during apply', async () => {
+        vi.spyOn(fs, 'readFile').mockResolvedValue(mkConfig('gpt-5.6-luna'));
+        await expect(readConfigFile()).rejects.toThrow(
+          'settings.customModels: itself must be an array'
+        );
+      });
+
+      it('rejects malformed numeric fields before they can become source text', async () => {
+        vi.spyOn(fs, 'readFile').mockResolvedValue(
+          mkConfig([
+            {
+              id: 'gpt-5.6-luna',
+              display_name: 'GPT-5.6 Luna',
+              family: 'gpt',
+              context_window: '372000',
+            },
+          ])
+        );
+        await expect(readConfigFile()).rejects.toThrow(
+          '[0].context_window must be a positive safe integer'
+        );
+      });
+    });
+
     describe('complexityRouter.levels normalization', () => {
       const mkConfig = (complexityRouter: unknown) =>
         JSON.stringify({

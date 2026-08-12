@@ -61,6 +61,22 @@ describe('buildCatalogEntry', () => {
     expect(entry).toContain('"xhigh_effort"');
     expect(entry).not.toContain('"max_effort"');
   });
+
+  it('JSON-encodes numeric fields so hostile runtime input cannot become code', () => {
+    const marker = '__tweakccCustomModelInjected';
+    delete (globalThis as Record<string, unknown>)[marker];
+    const hostile = {
+      ...SOL,
+      context_window: `1};globalThis.${marker}=true;({x:1`,
+    } as unknown as CustomModelDefinition;
+
+    const entry = buildCatalogEntry(hostile);
+    expect(() =>
+      new Function(`"use strict";return (${entry});`)()
+    ).not.toThrow();
+    expect((globalThis as Record<string, unknown>)[marker]).toBeUndefined();
+    expect(writeCustomModelCatalog(makeCatalog(), [hostile])).toBeNull();
+  });
 });
 
 describe('writeCustomModelCatalog', () => {
