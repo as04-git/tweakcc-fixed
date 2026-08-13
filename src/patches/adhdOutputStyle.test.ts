@@ -35,16 +35,22 @@ describe('writeAdhdOutputStyle', () => {
     expect(out).toContain("user's standing preference");
   });
 
-  it('installs the skim-first rules in the enforced register', () => {
-    // Deliberately shouted. The plain register this used to use was calibrated
-    // on Opus 4.7 and did not hold on Opus 5; see the ENFORCEMENT REGISTER note
-    // on the patch. If these assertions are relaxed back to plain directives,
-    // relax the patch text with them.
+  it('installs the extracted plain-output rules', () => {
     const out = writeAdhdOutputStyle(FILE)!;
-    expect(out).toContain('Answer in the FIRST LINE');
-    expect(out).toContain('bold the key terms');
-    expect(out).toContain('MUST land under 120 words');
-    expect(out).toContain('NEVER write an unbroken paragraph');
+    expect(out).toContain('Answer first');
+    expect(out).toContain('Keep a reply short by leaving things out');
+    expect(out).toContain('Plain does not mean more certain');
+    expect(out).toContain('reporting work that did not succeed');
+    expect(out).toContain('Instead of "load-bearing"');
+    expect(out).not.toContain('MUST land under 120 words');
+  });
+
+  it('installs the full rules in the alternate text-output prompt', () => {
+    const textOutput =
+      "End-of-turn summary: one or two sentences. What changed and what's next. Nothing else.";
+    const out = writeAdhdOutputStyle(textOutput)!;
+    expect(out).toContain('Keep a reply short by leaving things out');
+    expect(out).toContain('Plain does not mean more certain');
   });
 
   it('inserts no backticks or backslashes that could break a JS literal', () => {
