@@ -233,14 +233,18 @@ function parseStringPointer(buffer: Buffer, offset: number): StringPointer {
 /**
  * True if the module represents the native claude entrypoint.
  */
-function isClaudeModule(moduleName: string): boolean {
+export function isClaudeModule(moduleName: string): boolean {
+  const normalizedName = moduleName.replaceAll('\\', '/');
   return (
-    moduleName.endsWith('/claude') ||
-    moduleName === 'claude' ||
-    moduleName.endsWith('/claude.exe') ||
-    moduleName === 'claude.exe' ||
-    moduleName.endsWith('/src/entrypoints/cli.js') ||
-    moduleName === 'src/entrypoints/cli.js'
+    normalizedName.endsWith('/claude') ||
+    normalizedName === 'claude' ||
+    normalizedName.endsWith('/claude.exe') ||
+    normalizedName === 'claude.exe' ||
+    normalizedName.endsWith('/src/entrypoints/cli.js') ||
+    normalizedName === 'src/entrypoints/cli.js' ||
+    normalizedName === '/$bunfs/root/cli' ||
+    normalizedName === 'B:/~BUN/root/cli' ||
+    normalizedName === 'cli'
   );
 }
 

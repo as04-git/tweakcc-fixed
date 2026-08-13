@@ -1,6 +1,35 @@
 import { describe, expect, it } from 'vitest';
 
-import { computeBunSectionPlacement } from './nativeInstallation';
+import {
+  computeBunSectionPlacement,
+  isClaudeModule,
+} from './nativeInstallation';
+
+describe('isClaudeModule', () => {
+  it.each([
+    'claude',
+    '/usr/local/bin/claude',
+    'claude.exe',
+    'C:/tools/claude.exe',
+    'src/entrypoints/cli.js',
+    '/app/src/entrypoints/cli.js',
+    '/$bunfs/root/cli',
+    'B:/~BUN/root/cli',
+    'B:\\~BUN\\root\\cli',
+    'cli',
+  ])('recognizes %s as the Claude entrypoint', moduleName => {
+    expect(isClaudeModule(moduleName)).toBe(true);
+  });
+
+  it.each([
+    '/$bunfs/root/image-processor.js',
+    '/$bunfs/root/not-cli',
+    'B:/~BUN/root/cli.js',
+    '/other/cli',
+  ])('rejects %s as a non-Claude module', moduleName => {
+    expect(isClaudeModule(moduleName)).toBe(false);
+  });
+});
 
 // Ported with upstream b36a8ca (#915) alongside the placement function itself.
 //
