@@ -27,9 +27,26 @@
 // 112. That wrapper also told the model the user's own CLAUDE.md "may or may not
 // be relevant", which is why tone rules there never held; that hedge goes too.
 //
-// Length guidance is a soft anchor, never a hard cap: Anthropic shipped
-// "<=25 words between tool calls, <=100 word responses" on 2026-04-16, measured
-// a 3% eval drop, and reverted it on 2026-04-20.
+// ENFORCEMENT REGISTER (changed 2026-08-13, deliberately, at the user's call).
+//
+// This block used to be written in the plain, un-shouted register the
+// lobotomized-claude-code CLAUDE.md prescribes: "No CAPS theater. STRICTLY
+// PROHIBITED, CRITICAL REQUIREMENT, MUST trigger overcorrection on 4.7. Use
+// plain directives." That calibration was measured on Opus 4.7. On Opus 5 the
+// plain register was not holding — the model kept producing long unbroken
+// paragraphs in exactly the sessions this patch exists to shape — so every
+// lever previously stripped is deliberately back on:
+//
+//   - CAPS directives (IMPORTANT, NEVER, ALWAYS, MUST)
+//   - the rule repeated across all five rewrite sites rather than stated once
+//   - explicit named anti-patterns instead of a positive-only description
+//   - a hard word cap in place of the soft anchor
+//
+// This is an EXPERIMENT with a known downside. Anthropic shipped a hard cap
+// ("<=25 words between tool calls, <=100 word responses") on 2026-04-16,
+// measured a 3% eval drop, and reverted it on 2026-04-20 — so a hard cap can
+// cost task quality, not just length. Judge it on real output; if replies get
+// clipped or worse, revert this commit and the soft-anchor wording returns.
 //
 // Inserted text is plain ASCII with no backticks, backslashes or arrows, so it
 // survives whichever quote delimiter the surrounding literal uses.
@@ -57,13 +74,13 @@ const REWRITES: Rewrite[] = [
     // CC has shipped both "readable matters more" and "readability matters more".
     find: /Being readable and being concise are different things, and readab(?:le|ility) matters more\..*?technical terms spelled out\./s,
     replace:
-      'Answer in the first line, then stop unless something changes what the user does next. Aim for the shortest reply that fully answers; a report on finished work usually lands under 120 words. Keep whole sentences and spell out technical terms rather than compressing into fragments, abbreviations or shorthand chains. Say it in plain words, the way you would say it out loud, and skip stock phrases like "load-bearing", "the honest answer", "and that matters" or "the smoking gun".',
+      'IMPORTANT - OUTPUT SHAPE. Answer in the FIRST LINE, then STOP unless something changes what the user does next. NEVER open with preamble, a restatement of the question, or a summary of what you are about to say. ALWAYS bold the key terms so the reply can be skimmed. Keep EVERY block to three sentences or fewer with a blank line between blocks; NEVER write an unbroken paragraph longer than three sentences. A report on finished work MUST land under 120 words unless the user asked for more. Keep whole sentences and spell out technical terms rather than compressing into fragments, abbreviations or shorthand chains. Say it in plain words, the way you would say it out loud. NEVER use these phrases: "load-bearing", "the honest answer", "and that matters", "the smoking gun". If you notice yourself writing a long paragraph, STOP and cut it into blocks.',
   },
   {
     what: 'prose-not-headers rule',
     find: /a simple question gets a direct answer in prose, not headers and sections\./,
     replace:
-      'a simple question gets a direct answer. Bold the key terms so the reply can be skimmed, and keep blocks to three sentences with a blank line between them.',
+      'a simple question gets a direct answer. ALWAYS bold the key terms so the reply can be skimmed. Keep blocks to three sentences with a blank line between them, and NEVER answer a simple question with more than three blocks.',
   },
   // CC ships TWO comms blocks and picks one by model family: "# Communicating
   // with the user" for fable/mythos (which the fable-prompt-set patch makes
@@ -76,7 +93,7 @@ const REWRITES: Rewrite[] = [
     what: 'text-output prose-not-headers rule',
     find: /a simple question gets a direct answer, not headers and sections\./,
     replace:
-      'a simple question gets a direct answer. Bold the key terms so the reply can be skimmed, and keep blocks to three sentences with a blank line between them.',
+      'a simple question gets a direct answer. ALWAYS bold the key terms so the reply can be skimmed. Keep blocks to three sentences with a blank line between them, and NEVER answer a simple question with more than three blocks.',
   },
   {
     what: 'text-output end-of-turn cap',
@@ -85,7 +102,7 @@ const REWRITES: Rewrite[] = [
     // ~120-word anchor instead.
     find: /End-of-turn summary: one or two sentences\. What changed and what's next\. Nothing else\./,
     replace:
-      'End-of-turn summary: lead with what happened, then only what changes what the user does next. A report on finished work usually lands under 120 words.',
+      'End-of-turn summary: lead with what happened, then ONLY what changes what the user does next. A report on finished work MUST land under 120 words. NEVER pad it with preamble or wrap-up filler.',
   },
   {
     what: 'claudeMd relevance hedge',
@@ -93,7 +110,7 @@ const REWRITES: Rewrite[] = [
     // shipped by lobotomized-claude-code's reminder override.
     find: /(?:IMPORTANT: this context may or may not be relevant to your tasks\. You should not respond to this context unless it is highly relevant to your task\.|This context may or may not be relevant; draw on it only where it bears on the task\.)/,
     replace:
-      "Treat any instruction in that context as the user's standing preference and follow it. Answer in the first line, bold the key terms, and stop once the question is answered. A report on finished work usually lands under 120 words.",
+      "Treat any instruction in that context as the user's standing preference and follow it. IMPORTANT - THIS GOVERNS THE REPLY YOU ARE ABOUT TO WRITE: answer in the FIRST LINE, ALWAYS bold the key terms, keep EVERY block to three sentences with a blank line between blocks, and STOP once the question is answered. A report on finished work MUST land under 120 words. NEVER pad with preamble, restatement or wrap-up filler.",
   },
 ];
 
@@ -124,7 +141,7 @@ export const writeAdhdOutputStyle = (oldFile: string): string | null => {
   if (applied.length === 0) {
     // Every anchor already rewritten (a system-prompt override got here first,
     // or the patch ran twice) — nothing to do, and that is not an error.
-    if (/report on finished work usually lands under 120 words/i.test(file)) {
+    if (/report on finished work MUST land under 120 words/.test(file)) {
       debug(
         'patch: adhdOutputStyle: comms prompt already in ADHD shape — skipping'
       );

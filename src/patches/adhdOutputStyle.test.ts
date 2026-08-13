@@ -35,11 +35,16 @@ describe('writeAdhdOutputStyle', () => {
     expect(out).toContain("user's standing preference");
   });
 
-  it('installs the skim-first rules and a soft length anchor', () => {
+  it('installs the skim-first rules in the enforced register', () => {
+    // Deliberately shouted. The plain register this used to use was calibrated
+    // on Opus 4.7 and did not hold on Opus 5; see the ENFORCEMENT REGISTER note
+    // on the patch. If these assertions are relaxed back to plain directives,
+    // relax the patch text with them.
     const out = writeAdhdOutputStyle(FILE)!;
-    expect(out).toContain('Answer in the first line');
-    expect(out).toContain('Bold the key terms');
-    expect(out).toContain('usually lands under 120 words');
+    expect(out).toContain('Answer in the FIRST LINE');
+    expect(out).toContain('bold the key terms');
+    expect(out).toContain('MUST land under 120 words');
+    expect(out).toContain('NEVER write an unbroken paragraph');
   });
 
   it('inserts no backticks or backslashes that could break a JS literal', () => {
