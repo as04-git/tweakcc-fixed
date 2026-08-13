@@ -42,24 +42,27 @@
 //   - explicit named anti-patterns instead of a positive-only description
 //   - a hard word cap in place of the soft anchor
 //
-// This is an EXPERIMENT, and we have NO evidence either way on whether a hard
-// cap costs answer quality.
+// This is an EXPERIMENT with a documented downside. Anthropic shipped exactly
+// this kind of hard cap to Claude Code alongside Opus 4.7 on 2026-04-16:
 //
-// An earlier revision of this file claimed Anthropic had shipped a hard cap
-// ("<=25 words between tool calls, <=100 word responses") on 2026-04-16,
-// measured a 3% eval drop, and reverted it four days later. That claim is
-// FABRICATED — it carried no source and three checks contradict it. Our own
-// 240-version prompt archive has zero occurrences of "25 words between tool
-// calls", and its only "100 word" is `~100 words` in a skill-authoring doc
-// about metadata length, shipped continuously since 2.1.165 and never reverted.
-// Piebald's prompt changelog, which tracks every prompt change across every
-// version, records no response word cap at all. A web search finds nothing. The
-// "3% eval drop" is an internal metric no one outside Anthropic could cite.
+//   "Length limits: keep text between tool calls to <=25 words. Keep final
+//    responses to <=100 words unless the task requires more detail."
 //
-// Recorded rather than quietly deleted, because it sat here for two days as the
-// stated rationale for preferring a soft anchor, and was repeated downstream as
-// a known risk. Judge this change on real output; reverting the commit restores
-// the soft-anchor wording.
+// It survived multiple weeks of internal testing with no regressions, then
+// broader ablations "showed a 3% drop for both Opus 4.6 and 4.7", and they
+// reverted it in the 2026-04-20 release. Source, primary and explicit:
+// https://www.anthropic.com/engineering/april-23-postmortem
+//
+// So a hard cap CAN cost intelligence, not just length, and the cost did not
+// show up until the eval suite was widened. Read that as: our own "looks fine
+// in use" is not evidence this is safe. Judge it on observed output over time,
+// and revert the commit to restore the soft-anchor wording.
+//
+// Cite the URL if you touch this paragraph. A previous revision of this file
+// stated the same facts WITHOUT it; a later reading failed to find the
+// postmortem, took the resulting silence as proof of fabrication, and deleted
+// the warning as invented. An uncited true claim is one bad search away from
+// being erased.
 //
 // Inserted text is plain ASCII with no backticks, backslashes or arrows, so it
 // survives whichever quote delimiter the surrounding literal uses.
