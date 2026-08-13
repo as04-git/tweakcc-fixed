@@ -42,11 +42,24 @@
 //   - explicit named anti-patterns instead of a positive-only description
 //   - a hard word cap in place of the soft anchor
 //
-// This is an EXPERIMENT with a known downside. Anthropic shipped a hard cap
+// This is an EXPERIMENT, and we have NO evidence either way on whether a hard
+// cap costs answer quality.
+//
+// An earlier revision of this file claimed Anthropic had shipped a hard cap
 // ("<=25 words between tool calls, <=100 word responses") on 2026-04-16,
-// measured a 3% eval drop, and reverted it on 2026-04-20 — so a hard cap can
-// cost task quality, not just length. Judge it on real output; if replies get
-// clipped or worse, revert this commit and the soft-anchor wording returns.
+// measured a 3% eval drop, and reverted it four days later. That claim is
+// FABRICATED — it carried no source and three checks contradict it. Our own
+// 240-version prompt archive has zero occurrences of "25 words between tool
+// calls", and its only "100 word" is `~100 words` in a skill-authoring doc
+// about metadata length, shipped continuously since 2.1.165 and never reverted.
+// Piebald's prompt changelog, which tracks every prompt change across every
+// version, records no response word cap at all. A web search finds nothing. The
+// "3% eval drop" is an internal metric no one outside Anthropic could cite.
+//
+// Recorded rather than quietly deleted, because it sat here for two days as the
+// stated rationale for preferring a soft anchor, and was repeated downstream as
+// a known risk. Judge this change on real output; reverting the commit restores
+// the soft-anchor wording.
 //
 // Inserted text is plain ASCII with no backticks, backslashes or arrows, so it
 // survives whichever quote delimiter the surrounding literal uses.
