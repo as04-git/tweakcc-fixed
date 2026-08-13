@@ -230,8 +230,8 @@ describe('case sensitivity', () => {
   // the flag gone the hazard cannot arise at all, but keep it pinned.
   it('does not equate Kelvin signs with ASCII k', async () => {
     const matcher = spec(['kkkkkkkkkkkk']);
-    expect(await findAllPromptPieceMatches(matcher, '\u212A'.repeat(12))).toEqual(
-      []
-    );
+    expect(
+      await findAllPromptPieceMatches(matcher, '\u212A'.repeat(12))
+    ).toEqual([]);
   });
 });
