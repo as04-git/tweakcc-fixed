@@ -29,13 +29,23 @@
 //   5. the `/model` picker options
 //   6. the effort resolver
 //
-// Effort keys on the RESOLVED MODEL, not on plan mode. The alias already encodes
-// the mode — planning resolves to Fable, executing to Opus — so the model the
-// effort resolver is handed says which side of the pairing we are on, with no
-// need for a plan-mode getter inside it. It also composes with the complexity
-// router, which splices the same function at a different point (right after its
-// `=ENV();` prefix): this rides the top of the body, so when fableplan is
-// selected it answers first and the router keeps every other model.
+// Effort is decided in `uM` — the one function that is handed the permission
+// mode — and read back in the effort resolver through a global.
+//
+// It used to key on the resolved model instead ("the alias already encodes the
+// mode, so the model the effort resolver is handed says which side we are on").
+// That was WRONG, and shipped: every call site of the effort resolver passes
+// `options.mainLoopModel`, the SESSION model, never the per-request plan-resolved
+// one — `k3(m.options.mainLoopModel,…)` x6, `yW(…options.mainLoopModel,…)` x6,
+// and the spinner's `Qbt(h??fs(),…)`. So while planning it was handed the RESTING
+// model (Opus), the substring test missed, and Claude Code reported "thinking
+// with medium effort" during a Fable plan turn. Deriving both halves from the
+// same decision is the only way they cannot disagree.
+//
+// Still composes with the complexity router, which splices the same function at
+// a different point (right after its `=ENV();` prefix): this rides the top of
+// the body, so when fableplan is selected it answers first and the router keeps
+// every other model.
 
 // Scope note, because it nearly went the other way. The splices call helpers
 // declared far from where they are injected — the effort resolver reaches for
@@ -54,6 +64,11 @@ import { debug } from '../utils';
 import { showDiff } from './index';
 
 const ALIAS = 'fableplan';
+
+// Written by the model resolver, read by the effort resolver. `__tweakcc` is the
+// repo's patched-binary marker prefix, so a binary carrying it is correctly
+// detected as patched.
+const EFFORT_GLOBAL = 'globalThis.__tweakccFablePlanEffort';
 
 /**
  * Splice 1 — the alias whitelist.
@@ -120,9 +135,14 @@ const patchPlanResolver = (
     return null;
   }
   const [, prefix, , , mode, , , selected] = match;
+  // Both halves of the pairing come out of ONE branch. The global is cleared on
+  // the way past for every other alias, so switching away from fableplan cannot
+  // leave a stale effort pinned for the rest of the session.
   const injection =
-    `if(${selected}==="${ALIAS}")return ${aliasToModel}(` +
-    `${mode}==="plan"?"${config.planModel}":"${config.execModel}");`;
+    `if(${selected}==="${ALIAS}"){${EFFORT_GLOBAL}=` +
+    `${mode}==="plan"?"${config.planEffort}":"${config.execEffort}";` +
+    `return ${aliasToModel}(${mode}==="plan"?"${config.planModel}":"${config.execModel}")}` +
+    `${EFFORT_GLOBAL}=void 0;`;
   const replacement = prefix + injection;
   const newFile =
     file.slice(0, match.index) +
@@ -251,19 +271,18 @@ const patchModelPicker = (
 };
 
 /**
- * Splice 6 — reasoning effort, keyed on the resolved model.
+ * Splice 6 — reasoning effort, read back from the model resolver's decision.
  *
- * The alias already encodes the mode, so the model handed to the effort
- * resolver says which side of the pairing this request is on — no plan-mode
- * getter needed inside it. Rides the top of the resolver body, which is a
- * different anchor from the complexity router's (`=ENV();`), so the two
- * compose: fableplan answers for its own two models, the router keeps the rest.
+ * The effort resolver is never handed the per-request model — every call site
+ * passes `options.mainLoopModel` — so it cannot work out which side of the
+ * pairing a turn is on by itself. `uM` can, because it receives the permission
+ * mode, so it records the answer and this reads it.
+ *
+ * Rides the top of the resolver body, a different anchor from the complexity
+ * router's (`=ENV();`), so the two compose: this answers only while fableplan is
+ * the selected alias, and the router keeps every other model.
  */
-const patchEffortResolver = (
-  file: string,
-  config: FablePlanConfig,
-  selectedAlias: string
-): string | null => {
+const patchEffortResolver = (file: string): string | null => {
   const pattern =
     /(function ([$\w]+)\(([$\w]+),([$\w]+)\)\{)(if\(!([$\w]+)\(\3\)\)return;let [$\w]+=[$\w]+\(\3\),[$\w]+=[$\w]+\(\3\),[$\w]+=[$\w]+\(\);)/;
   const match = file.match(pattern);
@@ -275,11 +294,7 @@ const patchEffortResolver = (
     console.error('patch: fablePlan: failed to find the effort resolver');
     return null;
   }
-  const model = match[3];
-  const injection =
-    `if(${selectedAlias}()==="${ALIAS}")` +
-    `return String(${model}).includes("${config.planModel}")` +
-    `?"${config.planEffort}":"${config.execEffort}";`;
+  const injection = `if(${EFFORT_GLOBAL}!==void 0)return ${EFFORT_GLOBAL};`;
   const replacement = match[1] + injection + match[5];
   const newFile =
     file.slice(0, match.index) +
@@ -380,20 +395,7 @@ export const writeFablePlan = (
   if (!picked) return null;
   file = picked;
 
-  // The selected-alias getter is the `o=NAME()` captured by the plan resolver;
-  // re-read it here rather than threading it through, so a shape change in one
-  // does not silently mis-wire the other.
-  const selectedAlias = file.match(
-    /let\{permissionMode:[$\w]+,mainLoopModel:[$\w]+,exceeds200kTokens:[$\w]+=!1\}=[$\w]+,[$\w]+=([$\w]+)\(\);/
-  )?.[1];
-  if (!selectedAlias) {
-    console.error(
-      'patch: fablePlan: failed to read the selected-alias getter for effort'
-    );
-    return null;
-  }
-
-  const efforted = patchEffortResolver(file, config, selectedAlias);
+  const efforted = patchEffortResolver(file);
   if (!efforted) return null;
   file = efforted;
 

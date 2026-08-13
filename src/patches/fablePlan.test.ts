@@ -49,6 +49,9 @@ describe('writeFablePlan', () => {
     const out = writeFablePlan(cli, config())!;
     expect(out).toContain('o==="fableplan"');
     expect(out).toContain('as(t==="plan"?"fable":"opus")');
+    // and clears the effort global on the way past every other alias, so
+    // switching away cannot leave a stale effort pinned for the session
+    expect(out).toContain('globalThis.__tweakccFablePlanEffort=void 0;');
     // CC's own branches survive untouched — this must not change any other model
     expect(out).toContain(
       'if((o==="opusplan"||o==="opusplan[1m]")&&t==="plan"&&!n)'
@@ -63,13 +66,21 @@ describe('writeFablePlan', () => {
     expect(out).toContain('case"fableplan":return zZe(t);');
   });
 
-  it('keys effort on the resolved model, not on plan mode', () => {
-    // The alias already encodes the mode, so the model handed to the resolver
-    // says which side of the pairing this request is on.
+  it('decides effort where the permission mode is known, not from the model', () => {
+    // Regression: effort used to key on the model string handed to the effort
+    // resolver. Every call site passes `options.mainLoopModel` — the SESSION
+    // model — so during a Fable plan turn it saw the RESTING model (Opus), the
+    // substring test missed, and CC displayed "thinking with medium effort".
+    // `uM` is the only function handed the permission mode, so it decides both.
     const out = writeFablePlan(cli, config())!;
     expect(out).toContain(
-      'if(tW()==="fableplan")return String(e).includes("fable")?"xhigh":"medium";'
+      'globalThis.__tweakccFablePlanEffort=t==="plan"?"xhigh":"medium";'
     );
+    expect(out).toContain(
+      'if(globalThis.__tweakccFablePlanEffort!==void 0)return globalThis.__tweakccFablePlanEffort;'
+    );
+    // the model must NOT be consulted for effort any more
+    expect(out).not.toContain('String(e).includes(');
   });
 
   it('offers the clear-context option Claude Code defaults off', () => {
@@ -91,7 +102,9 @@ describe('writeFablePlan', () => {
       config({ planModel: 'opus', execModel: 'sonnet', planEffort: 'max' })
     )!;
     expect(out).toContain('as(t==="plan"?"opus":"sonnet")');
-    expect(out).toContain('String(e).includes("opus")?"max":"medium"');
+    expect(out).toContain(
+      'globalThis.__tweakccFablePlanEffort=t==="plan"?"max":"medium";'
+    );
     expect(out).toContain('"label":"Opus Plan Mode"');
   });
 
