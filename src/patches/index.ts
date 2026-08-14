@@ -453,7 +453,7 @@ const PATCH_DEFINITIONS = [
     name: 'ADHD-friendly output style',
     group: PatchGroup.MISC_CONFIGURABLE,
     description:
-      'Rewrites the always-on "# Communicating with the user" prompt for skim-first reading: answer in the first line, bold the key terms, short blocks, and a soft "usually under 120 words" anchor. Removes the three clauses that drive Claude-speak: the "load-bearing" update cue (the prompt is where that tic comes from), the "readable matters more" ranking, and the "in prose, not headers and sections" ban on the structure skim-readers rely on. Also restates the shape rule in the per-turn CLAUDE.md reminder, where recency makes it stick, and drops that reminder\'s "may or may not be relevant" hedge which labelled your own CLAUDE.md as ignorable.',
+      'Rewrites the always-on "# Communicating with the user" prompt for skim-first reading. There is no word limit anywhere in it: length follows the substance, and the rules cut kinds of content instead, which is what testing showed actually works. Answer in the first line; show the command, path or value rather than describing it; say each thing once; keep both sides of a count and every qualifier; bold the key terms and keep paragraphs short. Removes the three clauses that drive Claude-speak: the "load-bearing" update cue (the prompt is where that tic comes from), the "readable matters more" ranking, and the "in prose, not headers and sections" ban on the structure skim-readers rely on. Also restates the rules in the per-turn CLAUDE.md reminder, where recency makes them stick, and drops that reminder\'s "may or may not be relevant" hedge which labelled your own CLAUDE.md as ignorable.',
     modelFacing: true,
   },
   {
