@@ -92,6 +92,7 @@ export function MiscView({ onSubmit }: MiscViewProps) {
     maxEffortDefault: false,
     autonomousOperationAllModels: false,
     adhdOutputStyle: false,
+    outputStyleTurnReminder: false,
     autoModeClassifierModel: 'default' as AutoModeClassifierModel,
     suppressDeferredTools: false,
     claudemdContextOncePerConversation: true,
@@ -797,6 +798,20 @@ export function MiscView({ onSubmit }: MiscViewProps) {
           updateSettings(settings => {
             ensureMisc();
             settings.misc!.adhdOutputStyle = !settings.misc!.adhdOutputStyle;
+          });
+        },
+      },
+      {
+        id: 'outputStyleTurnReminder',
+        title: 'Per-turn reminder for custom output styles',
+        description:
+          'Claude Code reminds the model which output style is active once per turn, but only for its three built-in styles. The renderer looks the style up in the built-in table and returns nothing when it is missing, and custom styles are merged into a copy of that table rather than into the table itself. So a style you wrote yourself is injected into the system prompt once and never restated, while Proactive or Explanatory are restated every turn. This makes the reminder fire for custom styles too, using the name you configured. A style that defines its own turnReminder gets that text; otherwise it gets one short sentence pointing back at the style.',
+        getValue: () => settings.misc?.outputStyleTurnReminder ?? false,
+        toggle: () => {
+          updateSettings(settings => {
+            ensureMisc();
+            settings.misc!.outputStyleTurnReminder =
+              !settings.misc!.outputStyleTurnReminder;
           });
         },
       },

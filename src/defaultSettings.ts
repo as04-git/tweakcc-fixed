@@ -747,6 +747,7 @@ export const DEFAULT_SETTINGS: Settings = {
     maxEffortDefault: false,
     autonomousOperationAllModels: false,
     adhdOutputStyle: false,
+    outputStyleTurnReminder: false,
     autoModeClassifierModel: 'default',
     suppressDeferredTools: false,
     claudemdContextOncePerConversation: false,

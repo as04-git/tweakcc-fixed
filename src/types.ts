@@ -149,6 +149,7 @@ export interface MiscConfig {
   maxEffortDefault: boolean;
   autonomousOperationAllModels: boolean;
   adhdOutputStyle: boolean;
+  outputStyleTurnReminder: boolean;
   autoModeClassifierModel: AutoModeClassifierModel;
   suppressDeferredTools: boolean;
   claudemdContextOncePerConversation: boolean;
