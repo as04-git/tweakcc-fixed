@@ -30896,5 +30896,414 @@
   },
   "374eda6005cf31d43906c632317b6ff0cecc2cdf": { "facing": "ui" },
   "86222f89030f0e115df7bcc86747ff4e00abce09": { "facing": "ui" },
-  "919337a3765b3ee5f9504db5e1ddcb6a39feee92": { "facing": "ui" }
+  "919337a3765b3ee5f9504db5e1ddcb6a39feee92": { "facing": "ui" },
+  "92e4f43b1d2473a03ffd1b9d75f17a7a5008ade2": {
+    "facing": "model",
+    "id": "system-reminder-team-coordination-task-list-upkeep",
+    "name": "System Reminder: Team coordination task-list upkeep",
+    "desc": "Conditional clause interpolated into the Team Coordination system-reminder when the teammate has task-list tools, telling it to check the task list, create tasks when work should be divided, and mark tasks resolved"
+  },
+  "4132dc0d7b0dd1168d41f263aa76e9251db48b94": { "facing": "ui" },
+  "15a38b16894c6667fb240cf98821e1397401edaa": {
+    "facing": "model",
+    "id": "skill-claude-code-docs-plugin-eval",
+    "name": "Skill: Claude Code docs plugin-eval reference",
+    "desc": "Full offline reference file shipped as references/plugin-eval.md in the claude-code docs skill, covering claude plugin eval, plugin eval init, case format, graders, flags, results JSON, sandbox internals, CI and /skill-doctor"
+  },
+  "a20f52899d8a4d7a85920b84f87a72c3a15bcb8e": {
+    "facing": "model",
+    "id": "skill-claude-code-docs-plugin-eval-quickref",
+    "name": "Skill: Claude Code docs plugin-eval quick reference",
+    "desc": "Quick-reference file shipped as references/plugin-eval-quickref.md and also inlined into the docs skill prompt, orienting the model on claude plugin eval, plugin eval init and /skill-doctor availability"
+  },
+  "3d165a18f21ba06f8cb35351c0852fe354aadb4a": {
+    "facing": "model",
+    "id": "system-prompt-plugin-eval-enabled-session-status",
+    "name": "System Prompt: Plugin eval enabled-session status",
+    "desc": "Announces that plugin eval is enabled in the current session and explains how clients that cannot receive the organization rollout can set the enablement variable without relying on project settings"
+  },
+  "85d8ea392568b344d3a5ee05abc88022a63f7adf": {
+    "facing": "model",
+    "id": "system-prompt-plugin-eval-not-enabled-session-status",
+    "name": "System Prompt: Plugin eval not-enabled session status",
+    "desc": "Tells the model that claude plugin eval is gated off in this session, to say so plainly rather than claim the command does not exist, and not to guess enablement variable names"
+  },
+  "bcdfe2d6f98d4cd12233e4253f89bb39cd8a5843": {
+    "facing": "model",
+    "id": "skill-artifact-pr-review-html-template",
+    "name": "Skill: Artifact PR review HTML template",
+    "desc": "HTML body-fragment template the Artifact PR-review skill gives the model, with escaping rules for untrusted PR strings, design tokens, slot markers and the baked decisions script"
+  },
+  "a442cbf9933690d95b852d8593b3fa08696fe93e": { "facing": "ui" },
+  "46932bed563730d9fe77197b700b7d42df97ce36": { "facing": "ui" },
+  "ca3ab01d6f1ab70491e56c7654eb66a32fff485c": { "facing": "ui" },
+  "35eb2b440023ad8ee2be05df232fe476583da7cf": { "facing": "ui" },
+  "0812364ce48ec51ba6f28abf7ac6df8ed71b89bf": {
+    "facing": "model",
+    "id": "data-task-notification-artifact-auto-edit-patch-failed-withheld-tail",
+    "name": "Data: Task notification artifact auto-edit patch failed withheld tail",
+    "desc": "Standalone clause used when the explanatory reply was withheld, telling the session that a requested automatic edit could not be applied to the artifact's current source, that the artifact was not changed, and that it should read the thread and make the change itself"
+  },
+  "fd7446e449affe83742700b2c2f58f534067d029": {
+    "facing": "model",
+    "id": "data-task-notification-artifact-auto-edit-refused-reply-withheld",
+    "name": "Data: Task notification artifact auto-edit refused and reply withheld",
+    "desc": "Task-notification detail for the case where a requested automatic artifact edit was refused and the explanatory reply was also withheld, telling the session to read the thread and make the change itself"
+  },
+  "f5741fa8bbcc8b5092070a82c252a43e0ed5fe5f": { "facing": "ui" },
+  "a6069a8fd382eda833c813327ff2ec0cb3e654b1": {
+    "facing": "model",
+    "id": "tool-result-artifact-reply-duplicate-standing-reply",
+    "name": "Tool Result: Artifact reply refused as duplicate of standing reply",
+    "desc": "Artifact tool result explaining that the reply was not posted because a Claude reply already stands after every \"sent to Claude\" request on the thread, and that acknowledge_duplicate: true is needed for a genuinely new follow-up"
+  },
+  "d8e1015028eaea3ae0abe574d5651b3b259904e9": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-acknowledge-duplicate",
+    "name": "Tool Parameter: Artifact acknowledge_duplicate",
+    "desc": "Schema description for the Artifact tool acknowledge_duplicate parameter, permitting a reply when one already stands and warning that it is only for a deliberate follow-up that adds something new"
+  },
+  "6f4078f00d314bed28d90205b2f83997945c2147": { "facing": "ui" },
+  "142267510442a069506e88fe5641d947c2adb684": {
+    "facing": "model",
+    "id": "data-task-notification-artifact-auto-edited-reply-failed-acknowledgement-tail",
+    "name": "Data: Task notification artifact auto-edit landed but summary reply failed with acknowledgement standing",
+    "desc": "Tail of the auto-edit task notification for when the artifact was changed but the summary reply failed to post and only the session acknowledgement stands, instructing it to post the promised summary with acknowledge_duplicate: true or revert"
+  },
+  "c97ec2af04e067ef30a8e39e9f4a2367c2c3574e": {
+    "facing": "model",
+    "id": "data-task-notification-artifact-auto-replied-followup-withheld",
+    "name": "Data: Task notification artifact promised follow-up reply withheld",
+    "desc": "Task-notification detail stating that the promised follow-up reply to an artifact comment thread was withheld and the acknowledgement stands as this session's reply, so the session should review the thread and make any requested change itself"
+  },
+  "9b5e65d99eafd0dea2bfecf2d11c225ebed3c175": {
+    "facing": "model",
+    "id": "data-artifact-watch-startup-current-artifact-of-interest",
+    "name": "Data: Artifact watch startup current artifact of interest",
+    "desc": "Meta message injected when the session was started with claude --watch-artifact, naming the watched artifact as the current artifact of interest and telling the model to re-read it before editing or republishing"
+  },
+  "58ba72b10535ac17e46d2668e71c2d1585496fe6": {
+    "facing": "model",
+    "id": "data-artifact-watch-not-carried-into-session",
+    "name": "Data: Artifact watch not carried into this session",
+    "desc": "Meta message correcting the model when an earlier transcript contains a claude --watch-artifact meta message that does not apply to the current session, telling it that it is not watching that artifact"
+  },
+  "dc017ad99774866ac8d9ddb1705e17a63b028825": { "facing": "internal" },
+  "3c858f192f925376d1600d89577c94a02bf0428c": {
+    "facing": "model",
+    "id": "system-prompt-skill-doctor-available-session-status",
+    "name": "System Prompt: /skill-doctor available session status",
+    "desc": "States that /skill-doctor is available in this session, injected into the availability line of the embedded plugin-eval reference in the claude-code docs skill prompt"
+  },
+  "944613d46245660110bcdd870ef71fa24fedb81e": {
+    "facing": "model",
+    "id": "system-prompt-skill-doctor-not-available-session-status",
+    "name": "System Prompt: /skill-doctor not-available session status",
+    "desc": "States that /skill-doctor is not available in this session (early access) and that the model may describe it but must not tell the user to run it"
+  },
+  "df19bca4e80d0e985c307d957d60c59c7bfe6668": {
+    "facing": "model",
+    "id": "system-prompt-plugin-eval-embedded-reference-wrapper",
+    "name": "System Prompt: Plugin eval embedded offline reference wrapper",
+    "desc": "Wrapper block that heads the embedded offline reference in the claude-code docs skill prompt, stating the current session's plugin eval and /skill-doctor status before the quick-reference body"
+  },
+  "8b90ba64f8ebe6c3dac844f7ed79d0c67497fc03": { "facing": "ui" },
+  "84a3ca60b3572466ad3f03811b6cda622cc58f4f": {
+    "facing": "model",
+    "id": "data-poll-event-delivery-chunked",
+    "name": "Data: Poll event delivery chunked notice",
+    "desc": "System-tagged line appended to a poll-event delivery telling the model that more queued events follow in the next delivery, oldest first, and that nothing was dropped"
+  },
+  "34e7d43b05f8a07bfec0d10c7869bfb4c5dd0905": { "facing": "ui" },
+  "71007b48fa9bba77010b5b61fdd387836530b6a9": { "facing": "internal" },
+  "c46af53d998aeb1548f719afa39170646dbdfbd1": { "facing": "ui" },
+  "275f58e2738655a583c4d69b9d851e7aa0a7f604": { "facing": "ui" },
+  "b5d48c2be896645a3a9b0055c7f9729030195927": {
+    "facing": "model",
+    "id": "data-task-notification-artifact-auto-react-stop-body",
+    "name": "Data: Task notification artifact auto-reply stopped body",
+    "desc": "Body of the task notification emitted when artifact auto-reply subscriptions stop, joining the per-artifact discard records with the re-arm note"
+  },
+  "7bbce2173e5f54141ed06e38f67ece8e40f7d1f1": {
+    "facing": "model",
+    "id": "data-task-notification-artifact-auto-react-stop-republish-note",
+    "name": "Data: Task notification artifact auto-reply re-arm note",
+    "desc": "Note inside the auto-reply-stopped task notification explaining that a future publish re-arms the subscriptions and that the session should not republish just to re-enable auto-replies"
+  },
+  "2e9815791ae6c05c2dbeb30e1c7dafca7cdef4ea": { "facing": "internal" },
+  "01eae68a8b9e17dd048df50ba5e25f0ddf1616cc": { "facing": "internal" },
+  "ddd780a614234560ffbee915cf4200ef122a8f10": { "facing": "ui" },
+  "820c450e039b539a17a8b63a77a45e9fc1b6ded2": { "facing": "ui" },
+  "84174631003ae9e9c52aa843ae9ae208153ad83a": {
+    "facing": "model",
+    "id": "data-task-notification-artifact-auto-reply-withheld-lead",
+    "name": "Data: Task notification artifact auto-reply withheld lead",
+    "desc": "Lead sentence of the task notification reporting that the auto-reply to an artifact comment thread was withheld, naming the thread, the artifact and the withholding reason"
+  },
+  "4426a3ac9414d0251b3efe957dd8243201aefbf9": {
+    "facing": "model",
+    "id": "data-task-notification-artifact-auto-edit-noop-withheld-tail",
+    "name": "Data: Task notification artifact auto-edit no-op withheld tail",
+    "desc": "Tail of the withheld-reply task notification stating that the artifact already matches the requested change so it was not modified, and that the session should review the thread if the request meant something else"
+  },
+  "c7e85789b723ff48f4ee976c056d60f2df52d1a8": {
+    "facing": "model",
+    "id": "data-task-notification-artifact-auto-edited-summary-reply-lead",
+    "name": "Data: Task notification artifact auto-edited with summary reply lead",
+    "desc": "Lead of the task notification reporting that the session auto-edited an artifact in response to a comment thread and posted a summary reply"
+  },
+  "69ad49cff57b713d6411e48687930d8a65f564a4": {
+    "facing": "model",
+    "id": "data-task-notification-artifact-auto-edited-unresolved-thread-tail",
+    "name": "Data: Task notification artifact auto-edited unresolved thread tail",
+    "desc": "Tail appended to the auto-edited notification when the thread may still be open, telling the session to check the comments, resolve the thread if the change is right, and not to post another reply"
+  },
+  "8da0f749aed45a99ce554c01df9cdd0222ea219e": {
+    "facing": "model",
+    "id": "data-task-notification-artifact-auto-replied-resolved-thread-tail",
+    "name": "Data: Task notification artifact acknowledgement on resolved thread tail",
+    "desc": "Tail appended to the acknowledgement-only auto-reply notification when the thread is already resolved, telling the session not to post another reply and not to reply merely to confirm no change was needed"
+  },
+  "79bf2163c9f28203ab4aa9cd937d35fdd57b7df1": {
+    "facing": "model",
+    "id": "data-task-notification-artifact-auto-posted-reply-standing-tail",
+    "name": "Data: Task notification artifact auto-posted reply already standing tail",
+    "desc": "Shared tail telling the session that the auto-posted reply is already in the thread and it must not post another because the commenter can see it"
+  },
+  "969ebf7dbe94d58d588d1c6b0b063f76660652a0": {
+    "facing": "model",
+    "id": "data-task-notification-artifact-thread-resolve-after-acting-tail",
+    "name": "Data: Task notification artifact resolve thread after acting tail",
+    "desc": "Second half of the auto-posted-reply tail, telling the session to resolve the thread with the Artifact tool once it has finished acting and when to leave it open"
+  },
+  "70ad84cc55a41b2b8562cca9176d5166fd2a453e": {
+    "facing": "model",
+    "id": "data-task-notification-artifact-no-confirmation-reply-tail",
+    "name": "Data: Task notification artifact no confirmation-only reply tail",
+    "desc": "Tail telling the session not to reply merely to confirm that no change was needed because the standing reply already covers it"
+  },
+  "02163bd8c6f7427b20c98ab872b89e4b629da149": {
+    "facing": "model",
+    "id": "data-task-notification-artifact-act-then-reply-and-resolve-tail",
+    "name": "Data: Task notification artifact act then reply and resolve tail",
+    "desc": "Tail instructing the session, once it has acted on an artifact comment thread, to check the thread first, post a brief reply saying what it did unless one already stands, and resolve the thread"
+  },
+  "0492c83d0ab10610d3841f791ad6dacaa0a1d739": {
+    "facing": "model",
+    "id": "data-task-notification-artifact-resolve-after-promised-reply-tail",
+    "name": "Data: Task notification artifact resolve after promised reply tail",
+    "desc": "Tail instructing the session to resolve the artifact comment thread once the promised reply is posted, and when to leave it open instead"
+  },
+  "6bab147857b2bc0d0f3c811c118906ed30791da7": {
+    "facing": "model",
+    "id": "data-task-notification-artifact-live-updates-monitor-description",
+    "name": "Data: Artifact live-updates monitor task description",
+    "desc": "Description of the ambient websocket monitor task for artifact live updates, naming the artifact and how the watch was armed, which is echoed to the model in every monitor task notification for that task"
+  },
+  "f9a5d01e0ef5d474702ba813c70509d4bfa0c020": { "facing": "internal" },
+  "1468781dcdbf1efa5ce6a4cafbf89d3523b6067c": { "facing": "ui" },
+  "ac6758ab5729392db6b8b7897e1bb7deba87ded8": { "facing": "ui" },
+  "dbac115365d05e9ba9a7ca9d59e28e0ffaac7e6c": { "facing": "ui" },
+  "69309c255f9bf055be23e0046e9d28144b7aa871": { "facing": "ui" },
+  "dcf501311933d9fdb54c36264b8e7e17d8157d9e": { "facing": "ui" },
+  "ad05fef71ef213103d52b5c9dcbeaeee4dabec81": { "facing": "ui" },
+  "762bcb544b9e8dc439fad15826635bb4a689face": { "facing": "ui" },
+  "b42d294a4922f6579ff2d41c05bef5c8141d9fbb": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-frontmatter-parse-failed-empty-metadata",
+    "name": "Plugin validate: frontmatter parse failed, empty metadata",
+    "desc": "Consequence clause appended when a skill/command frontmatter fails to parse: the component loads with every frontmatter field silently dropped."
+  },
+  "726d4fe061cefeb759f4330fbb1b87e788177d4e": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-frontmatter-parse-failed-agent-not-loaded-tail",
+    "name": "Plugin validate: project agent does not load (tail)",
+    "desc": "Tail half of that clause: with no frontmatter name the file is treated as a co-located reference document and skipped."
+  },
+  "6206ac4202ee7be12b89d703dbf158be5324ced1": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-frontmatter-parse-failed-agent-not-loaded-lead",
+    "name": "Plugin validate: project agent does not load (lead)",
+    "desc": "Lead half of the consequence clause for a project agent whose frontmatter failed to parse."
+  },
+  "e4921eae33db6a27843336dda3adb0cbc6100689": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-frontmatter-parse-failed-agent-name-from-filename",
+    "name": "Plugin validate: agent name falls back to the filename",
+    "desc": "Consequence clause for a non-project agent whose frontmatter failed to parse: the name comes from the filename and every other field is dropped."
+  },
+  "4080f2294dcd84cef71a548b6b4108d88662cb08": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-frontmatter-not-mapping",
+    "name": "Plugin validate: frontmatter is not a YAML mapping",
+    "desc": "Error pushed by the /plugin validate frontmatter checker when the parsed YAML is not a key/value mapping."
+  },
+  "3ba0371d0ca4d49823f8002cce9ada2c6409a19d": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-shell-invalid-value",
+    "name": "Plugin validate: invalid shell value",
+    "desc": "Error emitted when a skill/command frontmatter `shell:` is neither bash nor powershell."
+  },
+  "3f0d9a2fe49ffccdbec1ffbcc48a5398237e4999": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-hooks-not-regular-file",
+    "name": "Plugin validate: hooks.json is not a regular file",
+    "desc": "Warning emitted when hooks.json is a symlink, FIFO or directory and was therefore not read."
+  },
+  "4c1171fd6c8ed12211cee064401af3449038622f": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-component-dir-symlink-warning-tail",
+    "name": "Plugin validate: component directory symlink warning tail",
+    "desc": "Tail of the warning saying component directories are not followed through symlinks and must be validated at their real path."
+  },
+  "de98b51797b1b2a86ed733a3d03c3e6ed61af441": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-component-not-regular-file-tail",
+    "name": "Plugin validate: component path not a regular file",
+    "desc": "Tail of the warning counting components skipped because the path is not a regular file."
+  },
+  "6600531fa1c85400544141d5875a0e948784ad3f": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-files-over-size-cap",
+    "name": "Plugin validate: files past the size cap",
+    "desc": "Warning counting component files that exceeded the read size cap and were not validated."
+  },
+  "84acc32819055431e30d88550645d8e1ae689585": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-enclosing-claude-dir-symlink",
+    "name": "Plugin validate: enclosing .claude is a symlink",
+    "desc": "Lead sentence of the error saying the enclosing .claude directory is a symlink so nothing was validated."
+  },
+  "d222ffb51e6186b1c78710cc8f8d9c0729272c63": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-component-dirs-not-followed",
+    "name": "Plugin validate: component dirs are not followed",
+    "desc": "Error telling the caller to pass the real directory because component dirs are read without following symlinks."
+  },
+  "2c821b5dbb601e27722eee14b5964e6244df562b": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-claude-dir-symlink-warning-tail",
+    "name": "Plugin validate: .claude symlink warning tail",
+    "desc": "Tail half of the warning that a symlinked .claude directory must be validated at its real path."
+  },
+  "7348cfeb592a4c537152bc92b82c6e5616f45154": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-claude-dir-symlink-warning",
+    "name": "Plugin validate: .claude directory is a symlink",
+    "desc": "Full warning emitted when the .claude directory is a symlink and nothing under it was validated."
+  },
+  "6b29b6d3018509820c4409b4870a393e7d047839": { "facing": "ui" },
+  "c27361350e87ebedfe0e811d7167813a0d31a201": { "facing": "ui" },
+  "6febc252ed8de6291acbb1caa1f71e67654efe88": { "facing": "ui" },
+  "6726090a27ba27ab75cfab9c479e97eeb9753542": { "facing": "ui" },
+  "c4fe446fbd89424ba0fda17ddb4fe80d42c99181": { "facing": "ui" },
+  "f3358e4e46998e99000f5aae0b6b574e32c3617b": { "facing": "ui" },
+  "db2baa3fcae475538d0c10696300dffea41b87db": { "facing": "ui" },
+  "94453b00f63ef775f488bcf7ebfdc1ade318dd10": { "facing": "ui" },
+  "66ffdb2e470f20377dae1eeed67e2bbf8fa77924": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-usage",
+    "name": "/plugin validate usage",
+    "desc": "Usage text returned when /plugin validate is invoked without a path."
+  },
+  "6ead9a353417a5ef31a3d5ebb0a78f8f3592e719": { "facing": "ui" },
+  "13f52fe42074fd93273433bdb79d1cf13a9decfc": { "facing": "ui" },
+  "5a9daea19f76bf65542568cd2e8d1fd95ef02bec": { "facing": "ui" },
+  "6c893cc60ea0ea0f4c8c4bd88cb18654e30e74ad": { "facing": "ui" },
+  "b4fa068cfffb1bebf2ee87b487701ae98ea10d92": { "facing": "ui" },
+  "569102aa48aac3b3bc962c2c1a82ec601f335c54": {
+    "facing": "model",
+    "id": "data-task-notification-artifact-auto-reply-esc-stopped-body",
+    "name": "Artifact auto-reply stopped on Esc: notification body",
+    "desc": "Body wrapper of the task notification emitted when Esc stops artifact auto-reply subscriptions; carries the re-arm note."
+  },
+  "2bf2cb8e490ae0bf80a6412a677ab8acc014db26": {
+    "facing": "model",
+    "id": "data-task-notification-artifact-auto-reply-stopped-rearm-note",
+    "name": "Artifact auto-reply re-arm note",
+    "desc": "Tells Claude that a future publish re-arms stopped auto-replies and not to republish just to re-enable them."
+  },
+  "984ee89eb26de2e9cfa546d0635a2fadc3acf395": {
+    "facing": "model",
+    "id": "data-task-notification-artifact-auto-replies-stop-disclosure-body",
+    "name": "Artifact auto-replies stop disclosure body",
+    "desc": "Composed body of the task notification sent when the kill-all-agents gesture disarms artifact auto-replies."
+  },
+  "bde01c8da0120cf4b5dc5864c96435c0e289e091": {
+    "facing": "model",
+    "id": "data-task-notification-artifact-auto-replies-disarmed-session",
+    "name": "Artifact auto-replies disarmed for the session",
+    "desc": "Task-notification line telling Claude auto-replies stay disarmed for the rest of this session."
+  },
+  "f2b013e5ff2502717e0835b04b9c16bf1b8374f6": {
+    "facing": "model",
+    "id": "data-task-notification-artifact-auto-replies-none-active-to-stop",
+    "name": "No artifact subscription was active to stop",
+    "desc": "Task-notification line for the kill-agents gesture when no auto-reply subscription was active."
+  },
+  "e393bd8a24e3df1c98a58b291aff8f149e0de3cb": {
+    "facing": "model",
+    "id": "skill-artifact-template-live-editor-capabilities-note",
+    "name": "Live-editor template capabilities note",
+    "desc": "Live-editor variant of the artifact template's \"needs more than static HTML\" section appended to the doc/sheet/slides SKILL.md."
+  },
+  "3fccba46724dd6b86cd0e07a82e0538cb3be64db": {
+    "facing": "model",
+    "id": "skill-claude-code-help-plugin-cli-subcommands",
+    "name": "claude-code skill: plugin CLI subcommand list header",
+    "desc": "Header of the `claude plugin` CLI subcommand listing injected into the claude-code skill's Current Build section."
+  },
+  "f5d0c3be4aff4c00efb80f0ff0e99e21184c8975": {
+    "facing": "model",
+    "id": "skill-claude-code-help-plugin-eval-reference",
+    "name": "claude-code skill: plugin eval reference pointer",
+    "desc": "Instruction pointing Claude at references/plugin-eval-quickref.md and plugin-eval.md for any plugin-eval or /skill-doctor question."
+  },
+  "460c60c7fb73f911e09e9324a305793ca3f76553": { "facing": "ui" },
+  "164acefd65e26ae784e0e77f615e69cd99dbe303": { "facing": "ui" },
+  "e836d5c3a58e3f2846d172c3af86a629eb0084f6": {
+    "facing": "model",
+    "id": "data-artifact-watch-not-restarted-tail",
+    "name": "Artifact watch could not be restarted",
+    "desc": "Tail of the meta message telling Claude a previous artifact watch did not carry over and is not active."
+  },
+  "a1bbf68a873b7d80bb3a4d7e5f1182404a69dd21": { "facing": "ui" },
+  "b35f8a5b691d8b6dc155f741c7aea91ba5e63005": { "facing": "ui" },
+  "4bfe8302a148e1527c3f0d0307159a7caeaeca3b": { "facing": "ui" },
+  "ec19570eb13fac41b9835aa7474e82db5d7f15ef": { "facing": "ui" },
+  "3d4661083ac3f1ca3c186cd3878897be5a51cebb": { "facing": "ui" },
+  "7f8a8cf69baa7c939a27a57ed56263803f0f119b": { "facing": "ui" },
+  "aa0f6219ae5b5762847da2da92056e3398aa7e28": { "facing": "ui" },
+  "ca37e46a37e5113d314d2529a8a3e6d31096bbc5": { "facing": "ui" },
+  "cbe4bd40b269e921d5d99c7262bd449e0bbb063a": { "facing": "ui" },
+  "dd2a763c5d70136401b9eb6c8c71d281c6e4f4ea": { "facing": "ui" },
+  "a420e46c3e6db1adb300ea87ff22edbc6ad3cbec": { "facing": "ui" },
+  "5af5930a1e95122bab4fde250bcb44146604697d": { "facing": "ui" },
+  "c7aedade7b7b9aed53953ee2970cf2ddb182c2ac": { "facing": "internal" },
+  "3bff8ec075652c8286f2dc6a875b9499f4b510a4": { "facing": "internal" },
+  "4472f606b026c0397446913a40c0894966f5870c": { "facing": "internal" },
+  "13c4d610a9c3448e12ffbac2408abfe8fbd23fc3": { "facing": "ui" },
+  "45b7f5f345020cbfa0b0f438f3f57c9d1dda62ac": { "facing": "internal" },
+  "f0f202ddf4a5538afaf62b3047c40294c3ddb464": { "facing": "internal" },
+  "a28b1f9889255f075bd23796149ea0ebd91008e5": { "facing": "internal" },
+  "61510511f867cd39519f227cef88b8d81697dd16": { "facing": "ui" },
+  "ce4d50d6fd35655b83a51f33cf2b5fc58fb8fa8e": { "facing": "ui" },
+  "a790cb8c0801c072f2b48bf19bbe3206f72e7d0a": { "facing": "ui" },
+  "ef7d6a847ca29e79a3b805576edb59dd2fc47f74": { "facing": "ui" },
+  "89646370d0ad545b7448412b97aea1e95286fd18": { "facing": "ui" },
+  "90a90d1283196cfaf562309e8cf951344e5af917": { "facing": "internal" },
+  "c41e4581def32b91bd8d884f59f03a818da98783": { "facing": "internal" },
+  "f22a38386193f6af491eb804638d2e8391961776": { "facing": "internal" },
+  "2393acc0b2089b1886ae27c84cdb41bfe725a0d0": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-claude-dir-symlink-warning-lead",
+    "name": "Plugin validate: .claude symlink warning (lead)",
+    "desc": "Lead half of the warning that a symlinked .claude directory was not followed, so nothing under it was validated."
+  },
+  "65f1354f7e602134a3bf010fdc401c44cb638bef": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-frontmatter-parse-failed-agent-not-loaded-lead",
+    "name": "Plugin validate: project agent does not load (lead)",
+    "desc": "Lead half of the consequence clause for a project agent whose frontmatter failed to parse."
+  }
 }
