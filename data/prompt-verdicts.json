@@ -6252,5 +6252,260 @@
     "verdict": "pristine-keep",
     "version": "2.1.228",
     "why": "This is operation-specific runtime feedback: it explains that a Write failed because a Read deny rule covers the file. The Edit analogue cannot substitute for the Write result."
+  },
+  "slash-command-plugin-validate-claude-dir-symlink-warning-lead": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Unique, load-bearing, slop-free literal error text for a conditional /plugin validate path that costs zero when the command is not run."
+  },
+  "slash-command-plugin-validate-claude-dir-symlink-warning-tail": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Distinct site, distinct subject; the 73% surface overlap is boilerplate phrasing, not coverage. Mechanics text must stay verbatim."
+  },
+  "slash-command-plugin-validate-component-dir-symlink-warning-tail": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Unique site with a unique plugin/project conditional; no carrier exists."
+  },
+  "slash-command-plugin-validate-component-dirs-not-followed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Only copy of the 'pass the real directory instead' remediation; conditional and free when /plugin validate is not used."
+  },
+  "slash-command-plugin-validate-component-not-regular-file-tail": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Distinct emission site carrying its own skipped-component count; shared parenthetical is not coverage."
+  },
+  "slash-command-plugin-validate-enclosing-claude-dir-symlink": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Shortest possible statement of a unique condition; nothing to trim and no carrier."
+  },
+  "slash-command-plugin-validate-files-over-size-cap": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Pure mechanics with a runtime cap and eight positional variable slots; unique in the corpus."
+  },
+  "slash-command-plugin-validate-frontmatter-not-mapping": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Only copy of a validation-gate error message with a live type-discrimination expression."
+  },
+  "slash-command-plugin-validate-frontmatter-parse-failed-agent-name-from-filename": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Unique agent-specific failure semantics; the doctor skill's superficially similar sentence is about skills and a different fallback."
+  },
+  "slash-command-plugin-validate-frontmatter-parse-failed-agent-not-loaded-lead": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "States the project-agent hard-failure outcome that no other prompt states; also a sentence fragment that cannot survive partial edits."
+  },
+  "slash-command-plugin-validate-frontmatter-parse-failed-agent-not-loaded-tail": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Only copy of the co-located-reference-document classification rule; a fragment that must stay verbatim to complete its sentence."
+  },
+  "slash-command-plugin-validate-frontmatter-parse-failed-empty-metadata": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Unique validator output for the loads-with-empty-metadata outcome, with a live variable slot; conditional on /plugin validate so it costs nothing when unused."
+  },
+  "data-artifact-watch-not-carried-into-session": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Unique conditional runtime notice with a frozen flag literal, a state correction, and a remedy; nothing in the corpus conveys it and there is nothing non-mechanical to cut."
+  },
+  "data-artifact-watch-not-restarted-tail": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Frozen fragment, already minimal, and its only near-sibling reports a different failure mode."
+  },
+  "data-artifact-watch-startup-current-artifact-of-interest": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Unique ordering contract plus three variable bindings; wholly mechanics."
+  },
+  "data-poll-event-delivery-chunked": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Distinct channel, distinct guarantee (chunking + nothing dropped) that no sibling states."
+  },
+  "data-task-notification-artifact-act-then-reply-and-resolve-tail": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Only copy of the check-then-reply-then-resolve sequence with its duplicate guard; the similar tails are alternates that omit those steps."
+  },
+  "data-task-notification-artifact-auto-edit-noop-withheld-tail": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Alternate-branch text, not duplicated text; carries a next-action sentence its near-twin does not have."
+  },
+  "data-task-notification-artifact-auto-edit-patch-failed-withheld-tail": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Mutually exclusive branch of the patch-failed pair; wiping it silences the reply-withheld path."
+  },
+  "data-task-notification-artifact-auto-edit-refused-reply-withheld": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Only message for the refused-edit + withheld-reply combination, and it binds three identifier slots."
+  },
+  "data-task-notification-artifact-auto-edited-reply-failed-acknowledgement-tail": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Only copy of the acknowledgement-stands recovery path and the pre-emptive acknowledge_duplicate instruction for it."
+  },
+  "data-task-notification-artifact-auto-edited-summary-reply-lead": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Success-branch lead of a three-way fork; the other two arms report failure and withholding."
+  },
+  "data-task-notification-artifact-auto-posted-reply-standing-tail": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Alternate branch with its own interpolated slot and reason clause; the similar tails fire in different thread states."
+  },
+  "data-task-notification-artifact-auto-react-stop-body": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Structural joiner for the discard records plus the re-arm contract; its 0.71 twin is the Esc-stop path with a different wrapper."
+  },
+  "data-task-notification-artifact-auto-replied-followup-withheld": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Branch-exclusive notification: unique runtime slots plus the only instruction to review and act in a path where no sibling notice is emitted at all. No slop to remove."
+  },
+  "data-task-notification-artifact-auto-replied-resolved-thread-tail": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Branch-exclusive: carries the resolved-thread state fact plus the do-not-double-post and no-confirmation-reply contracts, and is the sole carrier of both in its branch."
+  },
+  "data-task-notification-artifact-auto-reply-esc-stopped-body": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Site-exclusive re-arm/disarm mechanics for the Esc path; the closest sibling is a different notification that omits the kill-all-agents clause."
+  },
+  "data-task-notification-artifact-auto-reply-withheld-lead": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Sole carrier of the withheld state and reason for the auto-edit reply path; already one minimal sentence."
+  },
+  "data-task-notification-artifact-no-confirmation-reply-tail": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Same words, different emission sites, no co-emission in the branches that matter — this fragment is the only copy on the withheld paths."
+  },
+  "data-task-notification-artifact-resolve-after-promised-reply-tail": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "One arm of a two-arm ternary; the sibling tails encode different preconditions and post-conditions, so no carrier covers this text."
+  },
+  "data-task-notification-artifact-thread-resolve-after-acting-tail": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Branch-exclusive, and its leave-open condition is the only one written for the case where an auto-posted reply already stands."
+  },
+  "skill-artifact-template-live-editor-capabilities-note": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Load-bearing splice text with a live variable slot and no carrier; nothing in it is slop."
+  },
+  "skill-claude-code-docs-plugin-eval-quickref": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "The always-embedded orientation half of a deliberate two-tier reference, and the only copy of these facts that is in context without a file read."
+  },
+  "skill-claude-code-help-plugin-cli-subcommands": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Structural label with a runtime slot plus one non-inferable mechanic; other prompts reference it rather than repeat it."
+  },
+  "system-reminder-token-usage": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "This id is already fully owned by the system-reminders mechanism and must not get a maintained-set file. src/systemPromptSync.ts (loadShadowSet + syncPrompt, ~line 934) skips any id in the shadow set, with the comment that auto-creating it 'would just resurrect the dead duplicate every apply'; src/patches/systemPrompts.ts:499 likewise filters shadowed prompts out of the named-prompt pass. The reminder is therefore already suppressed (empty shadow body = no telemetry leak into context, per that file's own frontmatter, ccVersion 2.1.141). The correct stage-2 action is no action: no file exists in any of the four sets (opus-5, opus-4-8, fable-5, opus-4-7), and none should be created. Recording this as wipe-merge would incorrectly instruct stage 2 to write a duplicate empty override in the set and reintroduce a second control point for the same string."
+  },
+  "tool-parameter-artifact-acknowledge-duplicate": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Both checks come back clean: unique, load-bearing, no removable slop. Every sentence is frozen under the tripwire (restrictive quantifiers, the 'sent to Claude' sentinel, the acknowledge_duplicate parameter name) or states the validation gate itself. The deployed opus-5 file is already verbatim pristine at ccVersion 2.1.233, so pristine-keep means no change to disk."
+  },
+  "tool-result-artifact-reply-duplicate-standing-reply": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Unique error-path contract with no slop: the comment id interpolation, the discarded-draft state, the read-before-resend ordering and the exact recovery parameter all appear only here. Every sentence trips the frozen tripwire, so nothing can be rewritten or compressed, and nothing is redundant enough to delete outright. The deployed opus-5 file is already verbatim pristine at ccVersion 2.1.233, so pristine-keep means no change to disk."
+  },
+  "slash-command-plugin-validate-hooks-not-regular-file": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Sole carrier of the hooks.json-specific validate warning; every word is frozen (filename + enumeration) and no sibling conveys it. Both checks pass, so pristine-keep is the correct outcome. Deployed body already equals pristine."
+  },
+  "slash-command-plugin-validate-shell-invalid-value": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Unique validation error carrying the exact accepted enum and the truncation cap. No overlap anywhere in the corpus, no slop. Deployed body already equals pristine."
+  },
+  "slash-command-plugin-validate-usage": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Sole carrier of the /plugin validate usage text and of the directory-resolution contract; user-facing CLI help where a rewrite would change printed output. Both checks pass. Deployed body already equals pristine."
+  },
+  "system-prompt-plugin-eval-embedded-reference-wrapper": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Structural carrier for three interpolations plus the section header — deleting or reordering it would strand the status strings and the reference body. Unique, load-bearing, and the single caps word is not worth a rewrite of a load-bearing wrapper."
+  },
+  "system-prompt-skill-doctor-available-session-status": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Sole carrier of a session-specific availability fact that the conditional rules in the quickref depend on to resolve. Unique, load-bearing, no slop."
+  },
+  "system-prompt-skill-doctor-not-available-session-status": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Both checks pass: the availability fact has no carrier, and the do-not clause is frozen mechanics whose only near-carrier requires inference. Splitting at the semicolon is barred by the tripwire, so keep the sentence whole."
+  },
+  "system-reminder-agent-mention": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Already trimmed at the shadow; the maintained set must stay empty for this id. Creating any file — trimmed or wiped — would resurrect a duplicate that the sync layer exists to suppress. Stage 2 should take no action."
+  },
+  "system-reminder-compact-file-reference": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Shadowed and already trimmed; the set file's absence is the correct state. Any stage-2 write here would resurrect a duplicate the sync layer deliberately skips."
+  },
+  "system-reminder-plan-file-reference": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Shadowed and already trimmed. The set file's absence is correct; writing one would resurrect a duplicate on every apply. Stage 2 should take no action."
+  },
+  "skill-claude-code-help-plugin-eval-reference": {
+    "verdict": "wipe-merge",
+    "version": "2.1.233",
+    "why": "Every claim — read the quickref then the matching section of references/plugin-eval.md, the /skill-doctor scope, 'offline floor', 'no public docs page yet' — is already in skill-claude-code-docs-config-guide, which is SKILL_PROMPT (Zlg) and is joined with this '# Current Build' line by z8w(), so the carrier is co-delivered in the same rendered prompt. Verified at the binary, and stage 3 confirmed all four quotes verbatim in the deployed carrier. Wiped in all four sets."
+  },
+  "system-reminder-team-coordination-task-list-upkeep": {
+    "verdict": "wipe-merge",
+    "version": "2.1.233",
+    "why": "The call-TaskList-after-finishing loop, the create-a-task-when-blocked-or-divided rule and the mark-resolved rule are each carried at equal or greater precision by the co-delivered task tool descriptions (task-update, tasklist-teammate-workflow, taskcreate, task-completed-call-tasklist). The string carries no number, path, enum, tool identifier or ordering word. The parent slot ${TASK_LIST_COORDINATION_INSTRUCTIONS} still occurs in system-reminder-team-coordination, so the empty body leaves clean text. Residual accepted: 'periodically' was the only mid-work polling cadence cue; every carrier is event-anchored. Wiped in all four sets."
+  },
+  "skill-claude-code-docs-plugin-eval": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Trim REFUTED by stage 3 and reverted to pristine. The proposed deletion of the trailing '## Answering style' section left the file's own section map still naming it, a false in-body cross-reference; two clauses (the question-to-section routing cues and 'do not quote internal flag names', which guards a hidden --interview alias the body does carry) had no retained equivalent. Conditional reference file, so pristine costs nothing until read."
+  },
+  "system-prompt-plugin-eval-enabled-session-status": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Trim REFUTED by stage 3 and reverted to pristine. The cited carrier (the quickref) is inlined only at the HIb() site; at the j8w()/z8w() Current Build site the status renders with no inline quickref, and `settings.local.json` appears in no always-rendered text. The cut would have dropped a trust boundary — project-scoped settings are untrusted pre-workspace-trust, so a committed enablement value silently leaves the command gated off."
+  },
+  "system-prompt-plugin-eval-not-enabled-session-status": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Trim REFUTED by stage 3 and reverted to pristine. One cited carrier (skill-claude-code-help-plugin-eval-reference) was wiped to an empty body in the same round, so it covers nothing, and the claimed quickref co-location does not exist — the target has an empty identifierMap. This is an always-injected Current Build line while every surviving carrier lives in a skill file that renders only when the claude-code skill fires."
   }
 }
