@@ -6507,5 +6507,605 @@
     "verdict": "pristine-keep",
     "version": "2.1.233",
     "why": "Trim REFUTED by stage 3 and reverted to pristine. One cited carrier (skill-claude-code-help-plugin-eval-reference) was wiped to an empty body in the same round, so it covers nothing, and the claimed quickref co-location does not exist — the target has an empty identifierMap. This is an always-injected Current Build line while every surviving carrier lives in a skill file that renders only when the claude-code skill fires."
+  },
+  "tool-result-artifact-data-island-validated-header": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Unique emission site for read_page_data validated entries; the header is the only thing telling the model which schema/url/version the rows belong to. Rewriting would break the frozen slot layout."
+  },
+  "tool-result-artifact-decisions-island-absent": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Only string that distinguishes 'no decisions' from 'wrong page type' for the workshop decisions island; nothing else in the corpus says it."
+  },
+  "tool-result-artifact-deleted-or-no-access": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Distinct failure cause for artifact update; the model needs both branches to decide between re-publishing new and asking the user for access."
+  },
+  "tool-result-artifact-env-mismatch": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Distinct env-mismatch site with its own var pair; frozen (env enum slots)."
+  },
+  "tool-result-artifact-favicon-emoji": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Only place stating the favicon argument's accepted encoding; the example is the disambiguator."
+  },
+  "tool-result-artifact-file-binary-needs-buffer": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Unique type contract for binary file content in the artifact file map."
+  },
+  "tool-result-artifact-file-exceeds-per-file-size-limit": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Per-file cap with the binary base64 sub-clause; six frozen slots, unique in corpus."
+  },
+  "tool-result-artifact-file-json-wire-size-limit": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Distinct request-level limit; five frozen slots."
+  },
+  "tool-result-artifact-file-unreadable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Only string reporting unreadable source files during an artifact publish, and it carries the list of offending paths."
+  },
+  "tool-result-artifact-files-changed-to-symlink": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Unique TOCTOU symlink-swap report with the retry instruction; security-relevant, must stay verbatim."
+  },
+  "tool-result-artifact-files-index-html-reserved": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Only statement of the reserved-path rule and the exact remediation (move content to `html`, drop the mapping)."
+  },
+  "tool-result-artifact-files-map-empty": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Unique empty-map validation error."
+  },
+  "tool-result-artifact-files-network-path": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Distinct gate with its own var pair; the sandbox boundary statement must stay verbatim."
+  },
+  "tool-result-artifact-files-not-regular-file": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Unique file-type gate for the artifact file map; two sites share one pristine body."
+  },
+  "tool-result-artifact-files-outside-working-dir": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Distinct source-path sandbox gate; verbatim retention required for the boundary claim."
+  },
+  "tool-result-artifact-files-path-absolute": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Only statement that published paths are artifact-root-relative; easy to confuse with the source-side rule, so it must stay explicit."
+  },
+  "tool-result-artifact-files-path-backslash": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Unique cross-platform path-separator contract."
+  },
+  "tool-result-artifact-files-path-dot-segments": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Unique published-path normalization gate."
+  },
+  "tool-result-artifact-files-path-empty": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Unique empty-key gate, distinct from the empty-map gate."
+  },
+  "tool-result-artifact-files-path-illegal-url-chars": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Only place naming the three rejected URL characters."
+  },
+  "tool-result-agent-mcp-required-missing": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Every clause is mechanics — enumeration of server lists, the \"none\" sentinel, the /mcp command name — so the tripwire freezes the whole string, and it is the only text emitted at this failure site."
+  },
+  "tool-result-agent-name-invalid": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Restrictive quantifier (\"only\"), a two-plus enumeration of allowed characters, and a numeric cap (64) — frozen verbatim-or-delete, and load-bearing since it is the only statement of the Agent name schema."
+  },
+  "tool-result-agent-output-check-tool": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Contains a tool-name parameter, so it is frozen; deleting it would leave the agent-status result with no pointer to where the output is readable."
+  },
+  "tool-result-agent-output-file": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Carries a filesystem path variable and an ordering imperative — frozen mechanics, and the only text telling the model where a completed agent's result lives."
+  },
+  "tool-result-agent-resume-forked-skill-scoping-mismatch": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "The distinguishing fact is \"does not match its task record\", which neither sibling states; wiping it would make three separate resume failures indistinguishable to the model."
+  },
+  "tool-result-agent-stopped-by-user": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "The sibling's text never reaches the model on the resume path, so its wording is not coverage at this emission point; the \"only ... if the user explicitly asks\" restrictive quantifier is frozen."
+  },
+  "tool-result-agent-type-denied": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Rule name, rule argument and \".source\" are enum/parameter mechanics the model needs to fix the permission — frozen and unique across all 3 emission sites."
+  },
+  "tool-result-agent-worktree-isolation-guard": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Path-canonical mechanics plus the corrective instruction, frozen. Note the active opus-5 file keeps the ${VAR_2(...dir.canonical, ...worktree.canonical, ...)} call that fable-5 drops — keeping opus-5 as-is preserves the binary's hint payload."
+  },
+  "tool-result-ambiguous-agent-id": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Two-item enumeration plus the literal \"name@team\" identifier format — frozen mechanics, and the only text that tells the model how to re-address the call."
+  },
+  "tool-result-archive-extract-unvalidatable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Security/approval reason string; the enumeration and the redirection mechanism are frozen, and cutting it would strip the justification the user sees when approving."
+  },
+  "tool-result-artifact-action-requires-url": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Parameter name (`url`), enum action values and a two-item recovery enumeration — frozen; the tool-description carriers are not emitted at the rejection point."
+  },
+  "tool-result-artifact-capability-change-hint": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Literal parameter payload `capabilities: {}` and the change-vs-clear distinction are frozen mechanics not stated anywhere else in the corpus."
+  },
+  "tool-result-artifact-capability-unavailable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Explains why a publish silently carried no capabilities this session; no sibling conveys it and there is no bloat."
+  },
+  "tool-result-artifact-clear-grants-fragment": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Ordering word (\"until\") plus the security-relevant fact that grants remain live before the clear lands; as a fragment it cannot be reworded without breaking the composed sentence."
+  },
+  "tool-result-artifact-composed-review-mermaid-lane-note": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Routing contract with a named lane, frozen; it is the only text explaining why a mermaid-carrying review page was rejected as raw HTML."
+  },
+  "tool-result-artifact-composed-review-publishing-not-enabled": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "\"do not retry here; a new session is required once it is enabled\" is a do-not guarding a runtime gate — mechanics, frozen. Present in opus-5 and opus-4-8; absent from fable-5 and opus-4-7, which is a set-coverage matter, not a reason to cut."
+  },
+  "tool-result-artifact-composed-review-publishing-turned-off": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Every clause is a runtime-gate contract with an ordering word and a time threshold; the do-not caps retry rate, so it stays verbatim. Cost is zero unless an operator flips the switch mid-session."
+  },
+  "tool-result-artifact-contract-pin-yanked": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Echoes the live pin value and names the literal parameter value 'latest' plus its semantic consequence — frozen; the trailing clause is a fragment that continues into the capability-declaration branch."
+  },
+  "tool-result-artifact-contract-unreachable-fragment": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Mid-sentence fragment ending in an em dash — any rewrite breaks the assembled error string; the retry condition is ordering mechanics."
+  },
+  "tool-result-artifact-data-island-absent": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Interpolated schema name, URL and version plus a two-item cause enumeration — frozen mechanics that keep the model from re-reading the same page."
+  },
+  "tool-result-artifact-files-path-reserved-thumbnail": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Only copy of the _thumb.html/_thumb.img reserved-name rejection; it is the error contract for that check. Frozen anyway: names a parameter (`files`) and a sentinel (reserved thumbnail path)."
+  },
+  "tool-result-artifact-files-publish-blocked-read-rule-fragment": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Second half of one runtime sentence split by an interpolation; it pairs with tool-result-artifact-files-publish-blocked-read-rule-prefix. Cutting it truncates the emitted message mid-sentence and removes the remediation."
+  },
+  "tool-result-artifact-files-publish-blocked-read-rule-prefix": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Opening half of the files-publish-blocked ArtifactInputError, completed by the -fragment id. Distinct code site from the deny-rule variants; wiping it leaves that path with no message."
+  },
+  "tool-result-artifact-files-resolves-network-path": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Distinct validation branch (realpath-resolved vs literal path); wiping it silences that check. Frozen sentence — no rewrite permitted."
+  },
+  "tool-result-artifact-files-resolves-outside-working-dir": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Continuation half of the outside-working-directory error; it carries the symlink hint and the containment rule. Frozen ('only', working-directory path constraint)."
+  },
+  "tool-result-artifact-files-shape-invalid": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Only copy of the shape-rejection message; it names the two accepted shapes (enumeration of two items → frozen)."
+  },
+  "tool-result-artifact-files-tilde-not-expanded": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Unique mechanics — the fact that `~` is not expanded is not inferable and appears nowhere else in the corpus. Frozen (sentinel `~`, enumeration of two path forms)."
+  },
+  "tool-result-artifact-files-total-size-exceeded": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Runtime cap message with a computed threshold. Frozen: numeric threshold, parameter name, and a 'may total at most' limit clause."
+  },
+  "tool-result-artifact-files-unsafe-symlink": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Only copy of the files-level unsafe-symlink error. Frozen: three-item enumeration, `..` sentinel, security/containment contract."
+  },
+  "tool-result-artifact-fix-declaration-fragment": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Middle fragment of a runtime republish error; deleting it truncates the emitted sentence and loses the 'upgrading will not help' signal that stops a wasted retry loop."
+  },
+  "tool-result-artifact-gc-loop-missing-content": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Fragment of the anti-retry-loop error; it is the only thing that tells the model the harness already stopped retrying. Cutting it invites an infinite republish loop."
+  },
+  "tool-result-artifact-html-preamble": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Unique truncation caveat — without it the model treats a partial HTML dump as complete. Ordering word ('follows') plus a state contract; frozen."
+  },
+  "tool-result-artifact-interaction-schema-unavailable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "The available-schemas enumeration is the recovery path — it is the only place the model learns which schema names are registered. Frozen: enum listing, `(none)` sentinel, parameter name."
+  },
+  "tool-result-artifact-json-escaping-inflation-note": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Explains a non-obvious size failure the model cannot infer from the byte count it sees. Frozen: three-item enumeration."
+  },
+  "tool-result-artifact-label-too-long": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Overlap is real but the overlapping sentence is frozen (numeric threshold 60, parameter name `label`), so it is verbatim-or-delete — and deleting it leaves an error message that no longer says what failed, breaking the error contract. Keep whole."
+  },
+  "tool-result-artifact-list-count-header": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Output-shape string with three scope branches and an ordering contract. Frozen: enum values (\"shared\"/\"all\"/mine), ordering word, and it is the header the listing rows are read against."
+  },
+  "tool-result-artifact-list-empty-truncated": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Distinct branch of the listing result. Its unique signal — that a zero-result window does not mean zero artifacts, and where the older ones live — is the only thing preventing a false 'you have none' report."
+  },
+  "tool-result-artifact-list-extra-params-error": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Validation-error contract. Frozen throughout: restrictive quantifier 'only', two-item parameter enumeration, the literal action value \"list\", and parameter names `limit`/`scope`/`action`."
+  },
+  "tool-result-artifact-list-truncation-note": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Sole carrier of the limit ceiling (50) and of the recency-based windowing behaviour. Frozen: numeric threshold, parameter name `limit`."
+  },
+  "tool-result-artifact-publish-needs-contract": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Only copy of this publish failure's cause and remedy; conditional (fires only on this error), so it costs nothing when off."
+  },
+  "tool-result-artifact-publish-reads-blocked": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Sole deny reason returned at this permission gate; wiping it would blank the model's explanation of why publishing was refused."
+  },
+  "tool-result-artifact-republished-by-another-session": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Only copy of the concurrent-republish staleness signal, and it binds three runtime vars; wiping would drop the version number and the workshop read path."
+  },
+  "tool-result-artifact-root-network-path": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Sole text at its validation gate, with the parameter name and the working-directory contract."
+  },
+  "tool-result-artifact-root-not-a-directory": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Minimal, unique, frozen (names `root`)."
+  },
+  "tool-result-artifact-root-outside-workdir": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Unique remedy at a unique gate; frozen (parameter name, path contract)."
+  },
+  "tool-result-artifact-root-relocated-since-approval": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Half of a single TOCTOU security message — deleting it would leave the emitted error a truncated sentence."
+  },
+  "tool-result-artifact-root-relocated-since-approval-2": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Second half of the same approval-time-of-check message; frozen (ordering words 'between approval and publishing')."
+  },
+  "tool-result-artifact-root-resolves-network-path": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Distinct security check (post-realpath) with its own message; unique in the corpus."
+  },
+  "tool-result-artifact-root-symlink-unresolvable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Only copy of the root-symlink resolution contract and its remedy; frozen enumeration must stay verbatim."
+  },
+  "tool-result-artifact-shared-version-pinned": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Only publish-time warning that an update is invisible to viewers, and the only string naming the remediation surface."
+  },
+  "tool-result-artifact-stored-capability": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Carries live state (the stored declaration) the model cannot otherwise see; the generic rule elsewhere is not a substitute for the value."
+  },
+  "tool-result-artifact-supporting-file-carries-review-machinery": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Unique guard message; the 'nothing was published' contract prevents the model assuming partial publication."
+  },
+  "tool-result-artifact-supporting-file-nul-byte": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Only copy of the NUL-byte encoding contract at this validation gate."
+  },
+  "tool-result-artifact-supporting-file-utf16-bom": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Only copy of this encoding requirement as an emitted error."
+  },
+  "tool-result-artifact-too-large-highlight-note": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Unique number and unique cause — without it the model cannot tell why the page exceeded the cap."
+  },
+  "tool-result-artifact-too-large-mermaid-note": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Unique number/trigger pair that explains an otherwise inexplicable size overrun."
+  },
+  "tool-result-artifact-too-many-servers-fragment": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Deleting it would leave the too-many-servers error a truncated sentence; the fragment is the only text at its splice point."
+  },
+  "tool-result-artifact-live-subscription-artifact-not-found": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Unique failure cause for one mutually exclusive branch of the live-subscribe skip switch; nothing in the corpus emits this text, and only one branch fires per call so the shared 'Live subscription: skipped' prefix is not duplication."
+  },
+  "tool-result-artifact-live-subscription-cancelled": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Only copy of this abort branch; contains the ordering fact 'before the connection opened' (ordering word, frozen) that distinguishes it from ws-open-error."
+  },
+  "tool-result-artifact-live-subscription-control-plane-override": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Unique environment-configuration cause; no carrier anywhere states it."
+  },
+  "tool-result-artifact-live-subscription-invalid-slug": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Only copy of the malformed-URL branch — a distinct, non-inferable cause (the URL is not a nameable artifact rather than a missing one)."
+  },
+  "tool-result-artifact-live-subscription-no-credential": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Unique server-side cause naming the live-channel credential; distinguishes an authorization gap from a transport failure."
+  },
+  "tool-result-artifact-live-subscription-read-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Unique transient-read-failure branch; the enumeration and the retry advice are the parts that differentiate it from the permanent skips, and the enumeration is frozen."
+  },
+  "tool-result-artifact-live-subscription-remote-session": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Unique runtime status for the remote-session branch; the 'do not hold the watch' clause guards a runtime capability boundary and stays verbatim if retained."
+  },
+  "tool-result-artifact-live-subscription-session-context": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Unique eligibility contract; both enumerations are frozen and non-inferable."
+  },
+  "tool-result-artifact-live-subscription-watch-cap": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Cap value, slot-occupancy enumeration, and the recovery ordering are all unique and frozen; nothing to cut."
+  },
+  "tool-result-artifact-live-subscription-ws-open-error": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Only copy of the transport-failure branch; the environment qualifier is the non-inferable part."
+  },
+  "tool-result-artifact-manifest-connector-merge-warning": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Unique failure-mode contract with a runtime error tag; rewriting would break both the tag and the variable bindings."
+  },
+  "tool-result-artifact-multi-file-publish-unavailable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Unique server-rejection branch with a state fact (extra files not published) and two remedies; the five ${VAR} slices (including .slice(0,200)) are load-bearing plumbing."
+  },
+  "tool-result-artifact-multifile-not-enabled": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Sentence fragment composed into a surrounding error string — trimming it would break the composed sentence, and the state fact is the only copy at this site."
+  },
+  "tool-result-artifact-no-inline-content-steer": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Unique parameter contract naming the `content` parameter — a parameter name, frozen — and it is the steer that redirects a wrong call."
+  },
+  "tool-result-artifact-no-version-not-committed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Unique 200-without-version branch; the retry instruction carries its own slug ${VAR} binding and the 'not treating it as success' clause is the outcome contract."
+  },
+  "tool-result-artifact-not-found": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Only copy of the plain artifact-not-found error at its site; nothing to cut."
+  },
+  "tool-result-artifact-oversized-tools-fragment": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Editing a spliced fragment risks breaking the composed sentence, and the shared tail clause is not duplication in cost terms since only one site emits per error."
+  },
+  "tool-result-artifact-partial-inline-files-created": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Unique mid-sentence error fragment naming the slug to republish to; nothing to cut without breaking the concatenated sentence."
+  },
+  "tool-result-artifact-pin-readback-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Only copy of the readback-failure branch and of the retry-vs-latest decision for it; the yanked-pin sibling does not cover an unreadable pin."
+  },
+  "tool-result-artifact-pr-review-body-network-element": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Sole carrier of this publish-time validation reason, interpolated into the ArtifactInputError; a security contract (blocked element classes on review pages)."
+  },
+  "tool-result-artifact-pr-review-body-title-element": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Sole carrier of the title-element validation reason; each enumerated failure mode is a distinct check the model must distinguish."
+  },
+  "tool-result-artifact-pr-review-decisions-acted-without-resolve": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Only copy of the acted-provenance gate plus the id that failed it; the skill teaches the mechanism, not this constraint."
+  },
+  "tool-result-artifact-pr-review-decisions-island-shape": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Sole carrier of the island-shape validation reason; wiping it would interpolate an empty reason into the ArtifactInputError."
+  },
+  "tool-result-artifact-pr-review-decisions-item-state": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Sole carrier of this validation reason; it is what tells the model which of the several island checks rejected the publish."
+  },
+  "tool-result-artifact-pr-review-decisions-state-not-a-concern": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Distinct validation branch; collapsing it into the sibling would make two different failures indistinguishable to the model."
+  },
+  "tool-result-artifact-pr-review-decisions-state-unknown-id": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Distinct validation branch, sole carrier."
+  },
+  "tool-result-artifact-pr-review-head-moved": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Sole carrier of the head-moved identity mismatch and of the reviewed SHA it prints; the trailing 'but ' concatenates into the sibling fragment, so any edit breaks the sentence."
+  },
+  "tool-result-artifact-pr-review-head-moved-2": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Sole carrier of the remediation and of the current-head coordinates; the 'step 1' back-reference is an ordering contract."
+  },
+  "tool-result-artifact-pr-review-identity-from-invocation": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Only copy of the rule that the invocation, not the model-authored payload, fixes the review target — a trust/authority contract the model cannot infer."
+  },
+  "tool-result-artifact-pr-review-no-skill-invocation-in-session": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Sole carrier of the gate and of the exact remediation command; this is also what makes the skill's presence in context a precondition for the other pr_review errors."
+  },
+  "tool-result-artifact-pr-review-republish-cli-version-drift": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Distinct branch; the shared tail is not concurrent duplication, and deleting it would leave the error with no reason. The parenthetical is the only place the model learns old-page decisions survive and the fresh page starts open."
+  },
+  "tool-result-artifact-pr-review-script-injection": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Sole carrier of a security validation reason plus the only list of what trips it; without the enumeration the model cannot locate the offending construct."
+  },
+  "tool-result-artifact-pr-review-target-unresolvable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Only copy of the invocation-time target-resolution contract, the gh-auth diagnostic, and the do-not-retry conclusion."
+  },
+  "tool-result-artifact-public-read-not-enabled": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Sole carrier; distinguishes a capability-not-enabled failure from a permission denial, which changes whether the model retries or asks the user."
+  },
+  "tool-result-artifact-publish-conflict-lead": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Sole carrier of the publish-conflict diagnosis and the re-read instruction; the dangling paren makes it uneditable without breaking the sentence."
+  },
+  "tool-result-artifact-publish-conflict-merge-tail": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Sole closing fragment of the publish-conflict message; deleting it would leave an unbalanced paren and no remediation."
+  },
+  "tool-result-artifact-publish-update-instructions": {
+    "verdict": "wipe-merge",
+    "version": "2.1.233",
+    "why": "Full coverage by two deployed carriers that ship with the tool itself; the fragment adds no fact and repeats on every publish."
+  },
+  "tool-result-artifact-list-empty-not-proof-shared": {
+    "verdict": "trim",
+    "version": "2.1.233",
+    "why": "Partial overlap: the conclusion is carried by an always-present sibling, the mechanism is unique. The sentence trips no tripwire item — no restrictive quantifier from the list, no enumeration, no number, no path/enum/tool name, no ordering word — so it is trimmable."
+  },
+  "tool-result-artifact-live-subscription-arming": {
+    "verdict": "trim",
+    "version": "2.1.233",
+    "why": "Unique fact = 'the live watch is arming in the background' (status the model cannot infer). The notify semantics are stated verbatim in the Artifact action parameter description and again in the attach note, so that clause is a restatement. Head clause has no frozen tokens removed; the deleted span carries no quantifier, enumeration, number, path, tag, or ordering word, so the tripwire does not freeze it."
+  },
+  "tool-result-artifact-live-subscription-egress-denied": {
+    "verdict": "trim",
+    "version": "2.1.233",
+    "why": "Keep the unique cause ('network egress to the claude.ai edge is denied by policy' — names a policy gate and the claude.ai edge, frozen verbatim). Cut the consequence clause: it is covered by the tool parameter and carries no quantifier, enumeration, number, path, error tag, or ordering word, so it is not frozen."
+  },
+  "tool-result-artifact-live-subscription-flag-off": {
+    "verdict": "trim",
+    "version": "2.1.233",
+    "why": "Keep the cause verbatim — it names the live-subscribe feature flag and locates it in this session's cached config (flag name + location, frozen). Cut only the duplicated consequence clause, which contains no frozen token."
+  },
+  "tool-result-artifact-pr-review-decisions-omitted-writer-decision": {
+    "verdict": "trim",
+    "version": "2.1.233",
+    "why": "The identification of the omitted item is unique and stays; the remediation sentence is duplicated by the skill that must be in context for this error to fire at all (a composed pr_review republish only happens inside the skill flow, per tool-result-artifact-pr-review-no-skill-invocation-in-session). The fable-5 and opus-4-7 sets already carry exactly this trim; opus-5 and opus-4-8 were left at pristine."
+  },
+  "tool-result-artifact-supporting-file-contenttype-not-servable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Trim REFUTED by stage 3 and reverted to pristine. The deleted sentence's claim that a SERVED supporting file does not hand the viewer a file to keep is carried nowhere else — a corpus-wide grep for 'served file' hits only this prompt. The cited carrier covers only downloads the page starts itself (<a download>, script-driven saves), never the supporting-file serving path."
   }
 }
