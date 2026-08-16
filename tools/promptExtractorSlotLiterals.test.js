@@ -165,9 +165,17 @@ describe('the shipped allowlist stays load-bearing', () => {
     expect(bad.map(v => v.text)).toEqual([]);
   });
 
-  it('records only the two verdicts the tool defines', () => {
+  it('records only the three verdicts the tool defines', () => {
+    // `not-a-slot` is not a judgement about the text — it marks a resolver
+    // artifact, where the literal is an ARGUMENT to a call whose return value
+    // is the real slot value. Only `catalogue` mints an id.
     const kinds = new Set(Object.values(allow).map(v => v.verdict));
-    expect([...kinds].sort()).toEqual(['catalogue', 'glue']);
+    expect([...kinds].sort()).toEqual(['catalogue', 'glue', 'not-a-slot']);
+  });
+
+  it('mints ids from `catalogue` only', () => {
+    const withId = Object.values(allow).filter(v => v.id);
+    expect(withId.every(v => v.verdict === 'catalogue')).toBe(true);
   });
 
   it('keeps every catalogue id present in the current prompts JSON', () => {

@@ -2834,6 +2834,26 @@ function loadSlotLiterals() {
   _slotLiterals = buildSlotLiteralIndex(raw);
   return _slotLiterals;
 }
+// Debug seam: `TWEAKCC_DUMP_CANDIDATES=<path>` writes one JSON line per string
+// node the extractor considers, as {start, end, kind, cacheBody}.
+//
+// It exists because the cache key for a TEMPLATE literal is not the text anyone
+// reading the binary would write down. `cacheBody` is `pieces.join('')` — the
+// source with the IDENTIFIER inside each `${…}` removed — so
+// `${Rt(s,"line")}` is keyed as `${Rt(,"line")}`. A verdict recorded against
+// the obvious form silently never binds: 125 of 128 rows from the 2.1.233
+// local-jsx audit missed for exactly this, and nothing reported an error,
+// because a cache miss just means "fall through to the static gates".
+// Dump the candidates and key against what the extractor actually hashes.
+const CANDIDATE_DUMP_PATH = process.env.TWEAKCC_DUMP_CANDIDATES || null;
+let _candidateDumpFd = null;
+function dumpCandidate(rec) {
+  if (!CANDIDATE_DUMP_PATH) return;
+  if (_candidateDumpFd === null)
+    _candidateDumpFd = fs.openSync(CANDIDATE_DUMP_PATH, 'w');
+  fs.writeSync(_candidateDumpFd, JSON.stringify(rec) + '\n');
+}
+
 const slotNorm = s => s.replace(/\s+/g, ' ').trim();
 const slotHash = s =>
   crypto.createHash('sha256').update(slotNorm(s)).digest('hex').slice(0, 16);
@@ -3782,6 +3802,7 @@ function extractStrings(filepath, minLength = 500) {
       // keys sit beyond a long preceding string value.
       const lead = code.slice(Math.max(0, node.start - 600), node.start);
       const slotLiteral = Boolean(slotLiteralVerdict(node.value));
+      dumpCandidate({ start: node.start, end: node.end, kind: 'string', cacheBody: node.value });
       if (shouldCapture(node.value, node.value, lead, minLength, { slotLiteral })) {
         stringData.push({
           name: '',
@@ -3955,6 +3976,7 @@ function extractStrings(filepath, minLength = 500) {
       const slotLiteral = (node.quasis || []).some(q =>
         Boolean(slotLiteralVerdict(q.value.cooked ?? q.value.raw))
       );
+      dumpCandidate({ start: node.start, end: node.end, kind: 'template', cacheBody: tbody });
       if (shouldCapture(fullContent, tbody, lead, minLength, { slotLiteral })) {
         stringData.push({
           name: '',

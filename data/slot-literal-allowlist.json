@@ -655,5 +655,40 @@
     "id": "data-permission-callback-expected-return-shape",
     "name": "Data: Permission callback — expected return shape",
     "desc": "States the exact object a permission callback must return, which is what the model is told when it returns something else."
+  },
+  "43c4deec555b4c7e": {
+    "verdict": "glue",
+    "reason": "non-Error fallback filling the interpolated cause in \"Failed to branch conversation: ${a}\"",
+    "promptId": "slash-command-btw-branch-failed",
+    "label": "SLASH_COMMAND_BTW_BRANCH_FAILED_VAR_0",
+    "text": "Unknown error occurred"
+  },
+  "577e449237858c77": {
+    "verdict": "glue",
+    "reason": "fallback noun filling the interpolated terminal name",
+    "promptId": "slash-command-terminal-setup-cannot-run-from-terminal",
+    "label": "SLASH_COMMAND_TERMINAL_SETUP_CANNOT_RUN_FROM_TERMINAL_VAR_0",
+    "text": "your current terminal"
+  },
+  "1818654e91ec4567": {
+    "verdict": "not-a-slot",
+    "reason": "argument to iNl(...) at 18892020, not the value of the slot: the slot holds iNl's RETURN value. Identifier resolution walks the whole declarator init, so call arguments come along with it.",
+    "promptId": "slash-command-resume-session-not-found",
+    "label": "SLASH_COMMAND_RESUME_SESSION_NOT_FOUND_VAR_0",
+    "text": "claude attach <id>"
+  },
+  "bb3ff032daa10c47": {
+    "verdict": "not-a-slot",
+    "reason": "the second argument to the same iNl(...) call at 18892020; same resolution artifact",
+    "promptId": "slash-command-resume-session-not-found",
+    "label": "SLASH_COMMAND_RESUME_SESSION_NOT_FOUND_VAR_0",
+    "text": "Open the background session in this terminal."
+  },
+  "aee19dce4fb96371": {
+    "verdict": "not-a-slot",
+    "reason": "inside a process.stderr.write template at 18893483 — written to the terminal, never to the model, and not part of this prompt's slot",
+    "promptId": "slash-command-resume-session-not-found",
+    "label": "SLASH_COMMAND_RESUME_SESSION_NOT_FOUND_VAR_1",
+    "text": "it crashed repeatedly"
   }
 }

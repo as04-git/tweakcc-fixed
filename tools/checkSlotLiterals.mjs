@@ -33,6 +33,19 @@
  * function. Deeper dataflow would trade findings for false positives; a slot
  * whose value comes from further away yields nothing rather than a guess.
  *
+ * It still produces some. When a declarator's init is a CALL —
+ * `let o = await iNl(e, "claude attach <id>", "Open the background session…")`
+ * — the slot holds the call's RETURN value, but every literal in the init is
+ * collected, so the arguments come along. Three verdicts exist for that reason:
+ *
+ *   catalogue    carries an instruction; mint an id (see the warning below)
+ *   glue         reaches the model but only labels an interpolated value
+ *   not-a-slot   a resolution artifact — this text is not in the slot at all
+ *
+ * `not-a-slot` is not a judgement about the text. It records that the finding
+ * was chased to its emission site and is a limitation of the resolver, so the
+ * next reader does not re-derive it.
+ *
  * Verdicts are stored by content hash in an allowlist, so a reviewed-and-benign
  * slot stays quiet across versions (same design as the detection-coverage
  * allowlist and the classification cache: content-keyed, version-independent).
