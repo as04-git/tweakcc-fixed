@@ -37,6 +37,16 @@
  * slot stays quiet across versions (same design as the detection-coverage
  * allowlist and the classification cache: content-keyed, version-independent).
  *
+ * ⚠ `data/slot-literal-allowlist.json` is LOAD-BEARING, not just a silencer.
+ * `tools/promptExtractor.js` reads every `catalogue` entry twice: once to
+ * bypass the prose gate so the literal is captured at all, and once to give the
+ * capture its `id`/`name`/`desc`. **Never prune an entry merely because this
+ * tool stopped reporting it** — a `catalogue` entry stops being reported the
+ * moment it succeeds, because the literal is then in the catalogue and the
+ * already-catalogued check suppresses it. Deleting it would un-name the prompt
+ * on the next extraction and orphan every override bound to that id. Prune only
+ * a `glue` entry whose literal is genuinely gone from the binary.
+ *
  * Usage:
  *   node tools/checkSlotLiterals.mjs <cli.js> <prompts-X.Y.Z.json> [--update-allowlist]
  * Exit code 1 when unreviewed slot literals remain.
@@ -89,7 +99,17 @@ export function isCandidateText(text) {
   return true;
 }
 
-/** Every string-bearing node in a subtree, as {text, start}. */
+/**
+ * Every string-bearing node in a subtree, as {text, raw, start}.
+ *
+ * Both forms are needed. `text` is the cooked value — what the model actually
+ * receives, and what the allowlist hashes. `raw` is the source text, which is
+ * the form a catalogued prompt's `pieces` store, so the "is this already
+ * catalogued?" test has to compare against it. Testing only the cooked form
+ * reported five already-catalogued prompts as uncatalogued findings, every one
+ * of them a string containing an escape: `\\` in the JSON-retry hint, an
+ * escaped backtick in the MCP remote-auth suffix.
+ */
 function collectLiterals(node, acc = []) {
   if (!node || typeof node !== 'object') return acc;
   if (Array.isArray(node)) {
@@ -97,10 +117,18 @@ function collectLiterals(node, acc = []) {
     return acc;
   }
   if (node.type === 'StringLiteral') {
-    acc.push({ text: node.value, start: node.start });
+    acc.push({
+      text: node.value,
+      raw: node.extra && node.extra.raw ? node.extra.raw.slice(1, -1) : node.value,
+      start: node.start,
+    });
   } else if (node.type === 'TemplateLiteral') {
     for (const q of node.quasis) {
-      acc.push({ text: q.value.cooked ?? q.value.raw, start: q.start });
+      acc.push({
+        text: q.value.cooked ?? q.value.raw,
+        raw: q.value.raw,
+        start: q.start,
+      });
     }
   }
   for (const key of Object.keys(node)) {
@@ -110,6 +138,18 @@ function collectLiterals(node, acc = []) {
   }
   return acc;
 }
+
+const decodeUnicodeEscapes = s =>
+  s
+    .replace(/\\u\{([0-9a-fA-F]+)\}/g, (_m, h) =>
+      String.fromCodePoint(parseInt(h, 16))
+    )
+    .replace(/\\u([0-9a-fA-F]{4})/g, (_m, h) =>
+      String.fromCharCode(parseInt(h, 16))
+    );
+
+/** The three shapes a catalogued `pieces` entry can be compared against. */
+const forms = lit => [lit.text, lit.raw, decodeUnicodeEscapes(lit.raw)];
 
 const isScope = node =>
   node.type === 'BlockStatement' || node.type === 'Program';
@@ -283,8 +323,15 @@ export function findSlotLiterals(source, catalogue) {
       for (const sub of subtrees) {
         for (const lit of collectLiterals(sub)) {
           if (!isCandidateText(lit.text)) continue;
-          if (catalogued.has(norm(lit.text))) continue;
-          if (cataloguedBlob.includes(lit.text.trim())) continue;
+          // Already catalogued in any of three forms. `pieces` are not raw and
+          // not cooked but a MIX: raw source with unicode escapes decoded
+          // (decodeUnicodeEscapesInPiece in the extractor). A string carrying
+          // both an escaped backtick and a `—` em dash therefore matches
+          // neither pure form — the cooked one differs at the backtick, the raw
+          // one at the dash — which is how the MCP remote-auth suffix and the
+          // SendMessage cross-session guidance read as uncatalogued.
+          if (forms(lit).some(f => catalogued.has(norm(f)))) continue;
+          if (forms(lit).some(f => cataloguedBlob.includes(f.trim()))) continue;
           findings.push({
             promptId: prompt.id,
             slot,

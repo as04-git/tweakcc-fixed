@@ -2757,9 +2757,19 @@
   "8882d0708fb3c71f5bdcbbf12573765cf9681d93": { "facing": "ui" },
   "3408ed2792394c46222d4bc51a24ef43b5330a8e": { "facing": "ui" },
   "43ad69ed3574f3afa20129815d1f157b200c968e": { "facing": "ui" },
-  "b282caed39d718613ce3f38d52a957214dfe6351": { "facing": "model" },
+  "b282caed39d718613ce3f38d52a957214dfe6351": {
+    "facing": "model",
+    "id": "slash-command-web-setup-github-token-rejected",
+    "name": "Slash Command: /web-setup — GitHub rejected the token",
+    "desc": "Tells the model GitHub rejected the token and names gh auth login as the fix."
+  },
   "6143a8fb7584d715bf25b0ba8a11911988768f49": { "facing": "ui" },
-  "0447613eba01d3c90a4d6b01b25466b32fc282ad": { "facing": "model" },
+  "0447613eba01d3c90a4d6b01b25466b32fc282ad": {
+    "facing": "model",
+    "id": "slash-command-web-setup-server-unreachable",
+    "name": "Slash Command: /web-setup — server unreachable",
+    "desc": "Tells the model the server could not be reached and the connection should be checked."
+  },
   "0e43bfd14412f8ee0147b7af08a22c9f3721b06a": { "facing": "ui" },
   "7934932e3997fc1a23932b552e7eb7d7de341383": { "facing": "ui" },
   "45ae782655acc5a5cb4941bf4fd9e67517a2355c": { "facing": "ui" },
@@ -8414,7 +8424,12 @@
     "name": "Tool Result: MCP servers blocked by managed policy",
     "desc": "tool-result note telling the model the listed MCP servers are blocked by the org's managed policy (administrative block, retrying won't help)"
   },
-  "0edb6dc137f660c8e1ac6256e3bc8ad379efdc8a": { "facing": "model" },
+  "0edb6dc137f660c8e1ac6256e3bc8ad379efdc8a": {
+    "facing": "model",
+    "id": "slash-command-mcp-no-servers-configured",
+    "name": "Slash Command: /mcp — no servers configured",
+    "desc": "Tells the model no MCP servers are configured and points at claude doctor for config files that failed validation."
+  },
   "d90f66bedf14f01453f8d4e31839b1a6fdcc997d": { "facing": "ui" },
   "a2e18e6fbcb5bbfcfea375fe562df97fd61e8008": { "facing": "internal" },
   "e8d9b2927892874272137a86bf7953956ecb0daa": { "facing": "internal" },
@@ -11426,7 +11441,12 @@
   "65d7824f8a5706cd3d80a4591209d9d6d256c6b6": { "facing": "internal" },
   "ead1988cc5904e499f959e03d788c7baa3ba53b2": { "facing": "internal" },
   "f2f76cfd0fad6c79e2731c4b4cccc476a7a37581": { "facing": "internal" },
-  "75641cae909b8cc1593461613a71c5ea5f6b2ce3": { "facing": "model" },
+  "75641cae909b8cc1593461613a71c5ea5f6b2ce3": {
+    "facing": "model",
+    "id": "tool-result-workflow-meta-must-be-first-statement",
+    "name": "Tool Result: Workflow script — meta must be the first statement",
+    "desc": "The Workflow tool parse error stating that the `export const meta` block must be the first statement in the script. Returned by validateInput and thrown from call(), so it reaches the model whether or not a slash command is involved."
+  },
   "b554fb5317c16feaa60aa453a3fed1897f325475": { "facing": "internal" },
   "9aa21a514ee81dad2f84106a739741af2a808bb7": { "facing": "internal" },
   "f19881e925480aef74cf43031d712029106f2670": { "facing": "internal" },
@@ -15242,9 +15262,19 @@
   "58c14f90cf3b6c63343a24caf68d1707356e676b": { "facing": "ui" },
   "e13d38c349a7227b53ec2247266e1e052a05d630": { "facing": "ui" },
   "b7076734d91cc141bcba4628ea466d66a98c4f4a": { "facing": "ui" },
-  "294fa57a0088d48bb795421e7138582befed6e91": { "facing": "model" },
+  "294fa57a0088d48bb795421e7138582befed6e91": {
+    "facing": "model",
+    "id": "slash-command-plugin-tag-usage",
+    "name": "Slash Command: /plugin tag — usage",
+    "desc": "The /plugin tag usage text: creating a {name}--v{version} git tag for a plugin, and the flags it accepts."
+  },
   "ede7c9cc77c95f053050bb3f97422782f7626e82": { "facing": "ui" },
-  "a00d24551309d4d774747d7a6319c21b9500c03d": { "facing": "model" },
+  "a00d24551309d4d774747d7a6319c21b9500c03d": {
+    "facing": "model",
+    "id": "slash-command-plugin-no-plugins-installed",
+    "name": "Slash Command: /plugin — no plugins installed",
+    "desc": "Tells the model no plugins are installed and names /plugin install as the way to add one."
+  },
   "3ef33794f7c66c081036f4d502d5810c847edfda": { "facing": "internal" },
   "b312ee87a7c82de4376edfea8aa5b489b1aba58d": { "facing": "ui" },
   "295ceba3af8a6d6eb6deeaff9a93f73ce3cf0a11": { "facing": "ui" },
@@ -15281,8 +15311,18 @@
   },
   "eb0e109e36e3c0343ad8c21f605a7c41a5df48a8": { "facing": "internal" },
   "07b34c0f09fd2ffc5940e96442da2f7a96d9bb81": { "facing": "ui" },
-  "a96391aac2a376414e3751be1802c24effd45d6d": { "facing": "model" },
-  "7e908c043ecd4e58a70088e8274df37b606d67ba": { "facing": "model" },
+  "a96391aac2a376414e3751be1802c24effd45d6d": {
+    "facing": "model",
+    "id": "slash-command-resume-conversation-from-different-directory",
+    "name": "Slash Command: /resume — conversation is from a different directory",
+    "desc": "Warns that the conversation being resumed was recorded in a different working directory."
+  },
+  "7e908c043ecd4e58a70088e8274df37b606d67ba": {
+    "facing": "model",
+    "id": "slash-command-resume-session-still-running-as-agent",
+    "name": "Slash Command: /resume — session still running as a background agent",
+    "desc": "Tells the model the session cannot be resumed here because it is still running as a background agent, and where to attach or stop it."
+  },
   "ee48ce4f68ad847f7eeb84158af9dc084ad32cf5": { "facing": "ui" },
   "e981c9adf2debc6b08979e33e3d955a79076e3dd": { "facing": "ui" },
   "09d91696f742c77b3dfe930b1d25c058742b7f34": { "facing": "ui" },
@@ -15342,12 +15382,42 @@
   "0e8022c87a0b053e0d3e41a6ebf4a08f675423a9": { "facing": "ui" },
   "9d25aef838e863630f28cb2ff837c070568110fc": { "facing": "ui" },
   "f7c0658b4ead4750f7d896e80b1b4b9bfe66ebc3": { "facing": "ui" },
-  "8a4cdbe78d81e2c23098d14e6894798256f9e904": { "facing": "model" },
-  "b9dc126e5534bbf40ee31d2d306d1b1ee732d9cb": { "facing": "model" },
-  "7fa8f09c47796ebf28e5227db640f1f0db1b756f": { "facing": "model" },
-  "bca3f2e160f6613164c20e546baf4f62038955fd": { "facing": "model" },
-  "03f727688a136cc8221e9fdf343cf796afb4d016": { "facing": "model" },
-  "70139165c9e9077b2296bf98f4f107223ce9aecd": { "facing": "model" },
+  "8a4cdbe78d81e2c23098d14e6894798256f9e904": {
+    "facing": "model",
+    "id": "slash-command-plan-open-cloud-workspace-unsupported",
+    "name": "Slash Command: /plan open — plan lives in the cloud workspace",
+    "desc": "Explains that a cloud-workspace plan cannot be opened in a local editor, and what to do instead."
+  },
+  "b9dc126e5534bbf40ee31d2d306d1b1ee732d9cb": {
+    "facing": "model",
+    "id": "slash-command-plan-share-cloud-workspace-unsupported",
+    "name": "Slash Command: /plan share — cannot publish from this machine",
+    "desc": "Explains that a cloud-workspace plan cannot be published from the local machine yet."
+  },
+  "7fa8f09c47796ebf28e5227db640f1f0db1b756f": {
+    "facing": "model",
+    "id": "slash-command-plan-view-needs-newer-runtime",
+    "name": "Slash Command: /plan — viewing needs a newer session runtime",
+    "desc": "Tells the model that viewing plans in cloud sessions requires a newer session runtime than this one."
+  },
+  "bca3f2e160f6613164c20e546baf4f62038955fd": {
+    "facing": "model",
+    "id": "slash-command-plan-cloud-fetch-failed",
+    "name": "Slash Command: /plan — could not fetch from the cloud session",
+    "desc": "Tells the model the plan could not be fetched from the cloud session and the action should be retried."
+  },
+  "03f727688a136cc8221e9fdf343cf796afb4d016": {
+    "facing": "model",
+    "id": "slash-command-plan-publish-unavailable",
+    "name": "Slash Command: /plan — publishing unavailable in this session",
+    "desc": "Tells the model that publishing plans is not available in the current session."
+  },
+  "70139165c9e9077b2296bf98f4f107223ce9aecd": {
+    "facing": "model",
+    "id": "slash-command-plan-publish-failed",
+    "name": "Slash Command: /plan share — publish failed",
+    "desc": "Tells the model the plan could not be published and names retrying or running with --debug as the next steps."
+  },
   "777e2b1290a745b98b994b1281226d60b5b7eaf3": { "facing": "ui" },
   "2568f97d25d1f2f184edf64add582f05a71c8658": { "facing": "ui" },
   "b270ea2d292190ebf7a5057a0f431ae054b5dfd9": { "facing": "ui" },
@@ -15386,8 +15456,18 @@
   "c80ba25e638855d4bb99550d7d6d84df2642486b": { "facing": "ui" },
   "ceee380f722f4c4b02a842f22ec32023762e7641": { "facing": "ui" },
   "e4c1eb106ec911a70f781f5baa3b937c2eb81e56": { "facing": "ui" },
-  "979e753f2a780647cb246dab1cc68da73ff0ec1b": { "facing": "model" },
-  "7ad80fe822d81668f15d58b1404c8227d71cfb9f": { "facing": "model" },
+  "979e753f2a780647cb246dab1cc68da73ff0ec1b": {
+    "facing": "model",
+    "id": "slash-command-sandbox-requires-wsl2",
+    "name": "Slash Command: /sandbox — requires WSL2",
+    "desc": "Tells the model sandboxing needs WSL2 and that WSL1 is not supported."
+  },
+  "7ad80fe822d81668f15d58b1404c8227d71cfb9f": {
+    "facing": "model",
+    "id": "slash-command-sandbox-unsupported-platform",
+    "name": "Slash Command: /sandbox — unsupported platform",
+    "desc": "Tells the model sandboxing is only supported on macOS, Linux and WSL2."
+  },
   "1046933c5a3f25c6e82d4c152e7f0153a7e8ecdb": { "facing": "ui" },
   "9b26f6bbe3a0334fcb05d7567a9381d894caa746": { "facing": "ui" },
   "5dc59e24e9282c2b9fafb86cd5d9113ec0eb5ea6": { "facing": "ui" },
@@ -15460,8 +15540,18 @@
   "e57e591696fa23b01168a18666238180421a5e21": { "facing": "ui" },
   "a798586bf2cfb80c980cda01b3c86777e88332cc": { "facing": "ui" },
   "1af7aa437486a3fab2393ef5eb71f78d9414259b": { "facing": "ui" },
-  "07b8d7ec2cf47975b5df2fd7b6b155cf11c5cccf": { "facing": "model" },
-  "745679bba5b9b360870c3f61a11a78da6f9b57ac": { "facing": "model" },
+  "07b8d7ec2cf47975b5df2fd7b6b155cf11c5cccf": {
+    "facing": "model",
+    "id": "tool-result-background-session-persistence-disabled",
+    "name": "Tool Result: Cannot background — session persistence disabled",
+    "desc": "Tells the model /background cannot fork a job because session persistence is off, so the forked job would have nothing to resume."
+  },
+  "745679bba5b9b360870c3f61a11a78da6f9b57ac": {
+    "facing": "model",
+    "id": "tool-result-background-nothing-to-background-yet",
+    "name": "Tool Result: Nothing to background yet",
+    "desc": "Tells the model there is no conversation to fork into a background job until a message has been sent."
+  },
   "0699ba9efe7835584f2e1c31ffa7f333efb0f582": { "facing": "ui" },
   "51e9fb0ce79c7c58960285465198d3f99bb55d06": { "facing": "ui" },
   "09a85ccce8f7587c566ea726edcdb07795e7bc06": { "facing": "ui" },
@@ -15489,7 +15579,12 @@
   "65f00346cee5f8203a173b2a255976f1aa2d33b1": { "facing": "ui" },
   "30251864612e4b4c48aefe41ff546827937160ed": { "facing": "ui" },
   "b2409b4bf5d5d38042b8040f4449071149f6326e": { "facing": "ui" },
-  "8983335dc9ecd8dd75476cf128735b25d7824cf5": { "facing": "model" },
+  "8983335dc9ecd8dd75476cf128735b25d7824cf5": {
+    "facing": "model",
+    "id": "slash-command-effort-auto-level",
+    "name": "Slash Command: /effort — the auto level",
+    "desc": "The /effort usage line describing the auto level, which uses the default effort for the current model."
+  },
   "65b92f265a4ac5e19726f594217c2491fb84bb98": { "facing": "ui" },
   "14f04766fd9f9b30769f019f8e35936a4bd39b70": { "facing": "ui" },
   "79cd9abd3005cf8b721cae4d130ff82917a85a6b": { "facing": "ui" },
@@ -15577,7 +15672,12 @@
   "432075b0abe6f1c7f3a64f257edfea20d08fa251": { "facing": "ui" },
   "5ecc618207b83374a5ca760e406c57bb60d929c0": { "facing": "ui" },
   "c7d58e44b7705cebdbf15eb61ce45e2d54e065d6": { "facing": "ui" },
-  "3d4182b006ce9fa3ec5683cb3b0696dfca3510d5": { "facing": "model" },
+  "3d4182b006ce9fa3ec5683cb3b0696dfca3510d5": {
+    "facing": "model",
+    "id": "slash-command-web-setup-not-signed-in",
+    "name": "Slash Command: /web-setup — not signed in",
+    "desc": "Tells the model the user is not signed in to Claude and that /login must run first."
+  },
   "e7bff6603ca4821c8edf8fa3bebfc4cf952cbeca": { "facing": "ui" },
   "e26f5b7b5e59b66545dfd0652133ca97d9d21695": {
     "facing": "model",
@@ -18865,7 +18965,12 @@
     "desc": "Tool prompt for refreshing one or all connected MCP servers tool lists and interpreting per-server results"
   },
   "a0c8e3b98bf2faea685feef591e7d1ea7fda5b40": { "facing": "internal" },
-  "3a3a29009c62f9a068e61f81792a492a4126ecfd": { "facing": "model" },
+  "3a3a29009c62f9a068e61f81792a492a4126ecfd": {
+    "facing": "model",
+    "id": "data-usage-credits-request-notifies-admins",
+    "name": "Data: Usage credits — the request notifies admins",
+    "desc": "Explains that requesting usage credits notifies the organization admins and that the request is reviewed and sent from an interactive session."
+  },
   "738825fc2b7494043112adbc70564b9858044171": { "facing": "internal" },
   "b83ea16a5ff8a161896e5f6dd81bce62bdb66e88": {
     "facing": "model",
@@ -30731,7 +30836,12 @@
   "c6b1629a1bf6d4436d927a9dacb91f1eec95d384": { "facing": "internal" },
   "9a939080c4e25fc9da276bbb3b392cebe35c48b8": { "facing": "internal" },
   "f52b2125e222374a173146f52198237b02e391bd": { "facing": "ui" },
-  "abb4d7636991fa026784e78ae294351401ca3245": { "facing": "model" },
+  "abb4d7636991fa026784e78ae294351401ca3245": {
+    "facing": "model",
+    "id": "data-fork-restricted-launch-flags-list",
+    "name": "Data: Fork — restricted launch flags",
+    "desc": "Names the launch restrictions a forked session would not inherit: a custom system prompt, a tool allowlist, or restricted settings."
+  },
   "effe6675e057b98e60e0b3076149861f4084a074": { "facing": "ui" },
   "a1965f508d1765d01a7500513c19a7abc9be9233": { "facing": "ui" },
   "b1db67cdc71d57680dd9a15c8105c72100b4cf9c": { "facing": "ui" },

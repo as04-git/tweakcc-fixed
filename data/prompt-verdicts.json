@@ -7107,5 +7107,335 @@
     "verdict": "pristine-keep",
     "version": "2.1.233",
     "why": "Trim REFUTED by stage 3 and reverted to pristine. The deleted sentence's claim that a SERVED supporting file does not hand the viewer a file to keep is carried nowhere else — a corpus-wide grep for 'served file' hits only this prompt. The cited carrier covers only downloads the page starts itself (<a download>, script-driven saves), never the supporting-file serving path."
+  },
+  "system-reminder-queued-notifications-none-remaining": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "One sentence stating the queue is now empty. The model reports queue state to the user; nothing else says it is zero."
+  },
+  "system-prompt-agent-namer-avoid-taken-names": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "A hard constraint on the generated name. Removing it produces duplicate agent names."
+  },
+  "system-reminder-team-coordination-task-list-resource-line": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "The task-list path, listed among team resources. Its sibling branch (…-task-list-upkeep) tells the model to use the list; without this line it has no path to use."
+  },
+  "tool-result-routine-run-log-next-cursor-note": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Defines the direction next_cursor pages in. Paging is wrong without it and no other prompt states the direction."
+  },
+  "system-reminder-nested-memory-attachment-managed-policy-label": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Marks an attachment as org policy rather than user preference, which changes how much weight it carries. Three words, no redundancy."
+  },
+  "system-reminder-nested-memory-attachment-automemory-label": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Marks an attachment as the persisting auto-memory. The persistence claim is the part the model acts on."
+  },
+  "system-reminder-nested-memory-attachment-global-instructions-label": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Marks an attachment as the private global instructions for all projects, which is what makes them apply outside this repo."
+  },
+  "tool-description-taskcreate-teammate-assignment-note": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Extends what TaskCreate does when task tools are shared. Six words, and it is the only statement that a created task can be picked up by someone else."
+  },
+  "slash-command-plugin-validate-symlink-validate-real-paths": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "States that validation follows symlinks, so the real paths need validating separately. Without it the model reports a partial validation as complete."
+  },
+  "tool-description-task-list-id-field": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Documents the id field and names the two tools that consume it. The field is unusable without knowing what accepts it."
+  },
+  "slash-command-effort-auto-level": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "One line of the /effort usage text describing the auto level. Dropping it leaves an option undocumented."
+  },
+  "agent-prompt-explore-glob-via-bash-line": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "The Explore agent's file-pattern instruction in the Bash-routed variant. It names the tool to use; there is no fallback instruction."
+  },
+  "agent-prompt-explore-grep-via-bash-line": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "The Explore agent's content-search instruction in the Bash-routed variant. Same: it names the tool."
+  },
+  "agent-prompt-explore-glob-dedicated-tool-line": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "The dedicated-tool variant of the same instruction, used when a Glob tool is exposed."
+  },
+  "agent-prompt-explore-grep-dedicated-tool-line": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "The dedicated-tool variant of the same instruction, used when a Grep tool is exposed."
+  },
+  "tool-result-artifact-publish-private-until-shared": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "States the visibility outcome the model is asking consent about. The consent question is meaningless without the outcome."
+  },
+  "tool-result-artifact-publish-replacing-unrecognized-address": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Warns that an existing page will be replaced at an address the session cannot identify — the riskier of the two replace warnings."
+  },
+  "tool-result-artifact-publish-replacing-existing-page": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Warns that a named existing page will be replaced. Destructive-action detail, minimum length."
+  },
+  "tool-result-artifact-publish-viewers-see-pinned-version": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "States that viewers are pinned to an earlier version, so publishing will not change what they see."
+  },
+  "tool-result-artifact-publish-viewers-see-updates": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "States that everyone shared with sees the change immediately. This is the consequence the consent turns on."
+  },
+  "tool-result-artifact-publish-share-status-unconfirmed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Flags that share status is unknown, which is the reason the consent decision is uncertain rather than routine."
+  },
+  "system-prompt-slash-command-unavailable-over-remote-control": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Tells the model the command cannot run over Remote Control, in the form that also names the consumed token."
+  },
+  "system-prompt-slash-command-unavailable-over-remote-control-bare": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "The same refusal without the consumed-token clause. Both branches exist in the binary; each is minimal."
+  },
+  "system-prompt-slash-command-needs-interactive-terminal": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Explains that the command needs an interactive panel and names where to run it. Without the second clause the model has no recovery."
+  },
+  "system-prompt-slash-command-unavailable-in-session": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "States the command is unavailable here. Five words, no alternative wording available."
+  },
+  "tool-result-workflow-meta-must-be-first-statement": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "The exact structural rule a workflow script must satisfy. Returned by the Workflow tool validateInput and thrown from call(), so the model sees it as a fixable error; dropping it leaves a retry loop with no rule."
+  },
+  "tool-result-notebook-outputs-too-large-posix-recovery": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "The literal command for reading the cell whose outputs were withheld. It is the entire recovery path on POSIX."
+  },
+  "tool-result-notebook-outputs-too-large-powershell-recovery": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "The Windows equivalent of the same recovery command. Long only because PowerShell is."
+  },
+  "data-fork-restricted-launch-flags-list": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Names the launch restrictions a fork would not inherit, which is the reason the fork is refused."
+  },
+  "data-login-success-env-token-shell-profile-warning": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Explains why a fresh login can appear not to take effect. Without it the model has no account of the contradiction the user will report."
+  },
+  "tool-result-background-session-persistence-disabled": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "States the cause of the refusal, not just the refusal, so the model can tell the user what to change."
+  },
+  "tool-description-statusline-setup-ps1-example-request": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "The example request the statusline-setup agent works from. It is the task statement, not decoration."
+  },
+  "slash-command-plan-cloud-fetch-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "A transient-failure message that names retrying as the response. Minimal."
+  },
+  "slash-command-plan-publish-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Names two next steps (retry, --debug) for a failed publish. Both are actionable and neither is stated elsewhere."
+  },
+  "slash-command-web-setup-server-unreachable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Distinguishes a connectivity failure from an auth failure, which changes what the model tells the user to check."
+  },
+  "skill-artifact-live-editor-capabilities-without-commenting": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Enumerates the live-editor capabilities in the build with commenting removed. Four words; the enumeration IS the content."
+  },
+  "skill-artifact-live-editor-capabilities-with-commenting": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "The same enumeration for the build that still ships commenting."
+  },
+  "slash-command-sandbox-unsupported-platform": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Names the supported platforms, which is what makes the refusal actionable."
+  },
+  "slash-command-sandbox-requires-wsl2": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Distinguishes WSL2 from WSL1 — the specific distinction the user needs to act on."
+  },
+  "data-permission-callback-expected-return-shape": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "States the exact object a permission callback must return. It is a schema; there is nothing to trim without breaking it."
+  },
+  "system-reminder-plan-mode-follow-five-phase-workflow": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "The terse sparse-continuation pointer. Already the shortest form of its instruction."
+  },
+  "system-reminder-plan-mode-follow-plan-workflow": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "The sparse plan-mode continuation. It deliberately points back rather than restating the workflow, which is the trim already made upstream."
+  },
+  "slash-command-web-setup-github-token-rejected": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Names gh auth login as the fix for a rejected token. The fix is the useful half."
+  },
+  "slash-command-mcp-no-servers-configured": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Three distinct recovery paths (claude doctor for silently-invalid config, the CLI help, the docs). The doctor clause is the non-obvious one: it covers config that exists but failed validation, which otherwise looks identical to no config."
+  },
+  "slash-command-plugin-no-plugins-installed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "States the empty state and the command that fixes it."
+  },
+  "slash-command-web-setup-not-signed-in": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Names /login as the prerequisite. Seven words."
+  },
+  "tool-result-background-nothing-to-background-yet": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Explains that there is nothing to fork yet and what makes one available."
+  },
+  "tool-result-cron-scheduled-persisted-location": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Names where the schedule was written, which is how the model reasons about it surviving the session."
+  },
+  "tool-description-input-constraint-at-least-one-of": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "The generated anyOf constraint line. Removing it makes the parameter groups look independent."
+  },
+  "tool-description-input-constraint-exactly-one-of": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "The generated oneOf constraint line, and the stricter of the pair."
+  },
+  "slash-command-plan-publish-unavailable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "States the capability is absent in this session rather than broken, which is a different thing to tell the user."
+  },
+  "data-usage-credits-request-notifies-admins": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Discloses that the request notifies org admins before it is sent. A consent fact; removing it hides a side effect from the user."
+  },
+  "system-prompt-skill-disabled-via-skill-overrides": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Names both the cause (a skillOverrides entry) and the fix (remove it). Neither is inferable from the other."
+  },
+  "slash-command-resume-session-still-running-as-agent": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Explains why the resume is refused and gives the two ways out (attach, or stop it there first)."
+  },
+  "tool-result-send-message-account-list-unchecked-reason": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "The reason clause behind an unverified peer. It distinguishes \"could not check\" from \"checked and absent\"."
+  },
+  "tool-result-send-message-cloud-list-unfetchable-reason": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "The other reason clause for the same unverified-peer message."
+  },
+  "slash-command-plan-open-cloud-workspace-unsupported": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "States the limitation and both alternatives (view via /plan, revise by asking or via the approval dialog). The alternatives are the actionable part."
+  },
+  "slash-command-plan-share-cloud-workspace-unsupported": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "States the limitation and the one workable path. Already minimal."
+  },
+  "slash-command-resume-conversation-from-different-directory": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Warns that the resumed conversation came from elsewhere, which the model needs before trusting its paths."
+  },
+  "system-prompt-unknown-slash-command-no-suggestion": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "The bare unknown-command message. Three words plus the name."
+  },
+  "system-prompt-unknown-slash-command-with-suggestion": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "The same message carrying a near-match suggestion, which is the recovery path."
+  },
+  "slash-command-plugin-tag-usage": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "The /plugin tag usage block: the tag format it produces, what it validates, and the pointer to the CLI for the flags this surface does not accept. Each line answers a different question."
+  },
+  "tool-result-mcp-task-output-read-truncated-remainder": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Names Read as the way to recover the truncated remainder. Without it the truncation is a dead end."
+  },
+  "slash-command-plan-view-needs-newer-runtime": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "Attributes the failure to the session runtime rather than the plan, which changes what the user is told to do."
+  },
+  "system-prompt-nl-datetime-parser-date-only-format": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "The required output format for a date with no time. A format spec; nothing to trim."
+  },
+  "system-prompt-nl-datetime-parser-full-datetime-format": {
+    "verdict": "pristine-keep",
+    "version": "2.1.233",
+    "why": "The required output format for a full date-time with timezone."
   }
 }
