@@ -875,7 +875,15 @@ const EDITED_TEXT_FILE_INJECTION: ReminderInjection = {
   // file-modified-externally only matches a stock install because this
   // registry's defaultBody happens to mirror the pristine branch text — once a
   // user customizes edited-text-file.md, its anchor vanishes too.
+  // CC 2.1.234 rewrote this reminder and renamed both ids this entry consumed:
+  // file-modification-detected-budget-exceeded -> edited-file-diff-omitted-snippet-budget
+  // file-modified-externally                   -> edited-file-changed-since-read
+  // A stale shadow list is not inert — the named-prompt pass then iterates ids
+  // whose cli.js region this patch has already spliced, and `syncPrompt` keeps
+  // recreating their .md in every set.
   shadows: [
+    'system-reminder-edited-file-changed-since-read',
+    'system-reminder-edited-file-diff-omitted-snippet-budget',
     'system-reminder-file-modification-detected-budget-exceeded',
     'system-reminder-file-modified-externally',
   ],
@@ -1199,6 +1207,9 @@ const MEMORY_UPDATE_INJECTION: ReminderInjection = {
   name: 'Memory-update reminder',
   description:
     'Fires after dream / consolidation writes new memory files. Conditional. Empty .md body = silent updates.',
+  // The stale-copy sentence is part of this reminder's body, so this patch
+  // splices the region the named prompt would otherwise anchor on.
+  shadows: ['system-reminder-memory-update-loaded-copy-stale'],
   placeholders: {
     source: '${YT3[H.source]}',
     summary: '${H.summary}',
