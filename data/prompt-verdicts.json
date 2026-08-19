@@ -158,6 +158,11 @@
     "version": "2.1.221",
     "why": "Read in full: \"For times without dates, use today's date.\" \u2014 42 chars, zero slop. Binary check places it in the same 8-line utility-parser prompt as the id above. Corpus scan for \"today's date\" returns only this id plus unrelated schedule/date-changed prompts. Its mirror system-prompt-nl-datetime-parser-date-only-rule ('For dates without times, do not include a time component.') is deployed pristi"
   },
+  "agent-prompt-eval-authoring-interview-eval-dir-note": {
+    "verdict": "pristine-keep",
+    "version": "2.1.235",
+    "why": "Corpus-unique, load-bearing (variable contract + naming convention + per-value injection guard), zero slop; conditional single-site clause so disuse is not a wipe reason."
+  },
   "agent-prompt-eval-baseline-grader": {
     "injectionPath": "Opening user-prompt fragment in a plugin-eval baseline-grader model call.",
     "verdict": "pristine-keep",
@@ -704,6 +709,41 @@
     "version": "2.1.228",
     "why": "Proposed trim, reverted to pristine. refuted on q3: Five frozen mechanics are absent character-for-character from the proposed body, including the STATUS, DOC_META, and PURPOSE slot instructions. The document-body discipline and owner/date requirement are also removed."
   },
+  "data-artifact-fast-ack-option-change-now": {
+    "verdict": "pristine-keep",
+    "version": "2.1.235",
+    "why": "Positional contract: the selection prompt says 'pick 1 for a specific, self-contained change' and the options assemble into ${FAST_ACKNOWLEDGEMENT_OPTIONS_BLOCK}; wiping it leaves option 1 empty and posts nothing. Unique, no slop."
+  },
+  "data-artifact-fast-ack-option-check-artifact-first": {
+    "verdict": "pristine-keep",
+    "version": "2.1.235",
+    "why": "Option 4 ('4 when answering requires checking the Artifact\u2019s contents first'); corpus-unique, positionally load-bearing, no slop."
+  },
+  "data-artifact-fast-ack-option-follow-up-another-look": {
+    "verdict": "pristine-keep",
+    "version": "2.1.235",
+    "why": "Option 5 ('5 when you have already replied earlier in this thread (or trigger=redesignated) and the newest comment is a follow-up that is not clearly an edit request'); unique literal held in a numbered slot."
+  },
+  "data-artifact-fast-ack-option-question-answer-shortly": {
+    "verdict": "pristine-keep",
+    "version": "2.1.235",
+    "why": "Option 3 of the selector's numbered list ('Pick 3 when the newest comment is a question to be answered in the thread with no change requested'); unique literal, positional contract, zero slop."
+  },
+  "data-artifact-fast-ack-option-read-then-change": {
+    "verdict": "pristine-keep",
+    "version": "2.1.235",
+    "why": "Option 2 of the numbered list the selector chooses from ('2 when the change is broad or you would need to read the Artifact to scope it'); corpus-unique literal, wiping it breaks the numbering. No slop."
+  },
+  "data-artifact-fast-ack-option-revising-after-earlier-reply": {
+    "verdict": "pristine-keep",
+    "version": "2.1.235",
+    "why": "Option 6 ('6 when you have already replied earlier in this thread and the newest comment asks for a further or corrected change'); corpus-unique, positional contract, no slop."
+  },
+  "data-artifact-list-assets-auto-classifier-input": {
+    "verdict": "pristine-keep",
+    "version": "2.1.235",
+    "why": "Sole carrier of a permission-scope fact the auto-permission classifier reads; wiping it would strip that scope from the classifier's input and widen what auto-approval covers. Unique, load-bearing, zero slop."
+  },
   "data-artifact-live-subscription-monitor-label": {
     "injectionPath": "Background artifact-subscription monitor description, echoed as the Monitor event title in an injected task notification.",
     "verdict": "pristine-keep",
@@ -752,6 +792,11 @@
     "verdict": "pristine-keep",
     "version": "2.1.227",
     "why": "This is the permission classifier\u2019s exact action summary: target thread, artifact identity or fallback address, reversible effect, and appended metadata. Those variables and semantics are runtime mechanics the classifier cannot infer from a generic resolve-tool description."
+  },
+  "data-artifact-resume-replies-auto-classifier-watch-relatch-fragment": {
+    "verdict": "pristine-keep",
+    "version": "2.1.235",
+    "why": "Only copy of the re-arm disclosure in the resume_replies classifier's own input string; wiping it lets the classifier rule on a call whose watch side effect it cannot see. Corpus-unique, no slop."
   },
   "data-artifact-resume-watch-auto-classifier-input": {
     "verdict": "pristine-keep",
@@ -2050,6 +2095,11 @@
     "version": "2.1.226",
     "why": "Both claims are load-bearing: the permission-prompt tool returned a schema-invalid result, and the interpolated variable supplies the specific failure. data-canusetool-invalid-permission-deny reports the analogous failure for a different callback, so it does not cover this surface."
   },
+  "data-permission-value-withheld-marker": {
+    "verdict": "pristine-keep",
+    "version": "2.1.235",
+    "why": "Substituted in place of an unrenderable permission rule or command value; the 'one-time options only' clause is the approval-scope contract and has no carrier. Unique, load-bearing, zero slop."
+  },
   "data-platform-availability": {
     "injectionPath": "Conditional reference file consulted by the build-with-Claude/API skill for provider-platform availability questions.",
     "verdict": "pristine-keep",
@@ -2215,6 +2265,11 @@
     "verdict": "pristine-keep",
     "version": "2.1.226",
     "why": "All three claims are unique mechanics: the field contains the tool's Output object rather than model-facing string content; its shape is keyed by tool name and must remain unknown for MCP/dynamic tools; Agent/Task completion excludes the model-directed trailer, adds totals, and should be rendered structurally. Corpus searches for \u201cStructured tool output\u201d and \u201cAgent/Task tool\u201d found no other deployed carrier. The density is appropriate for a schema description."
+  },
+  "data-subagent-type-required-general-purpose-unavailable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.235",
+    "why": "Unique, load-bearing parameter-validation contract at its own injection site; zero slop and fully frozen, so neither trim nor wipe is available."
   },
   "data-task-notification-agent-stop-resume-note": {
     "injectionPath": "Conditional task-notification inserted into the orchestrator context when an agent stops with no live background children.",
@@ -2547,6 +2602,11 @@
     "version": "2.1.226",
     "why": "The dynamically counted completion status is the notification's payload, not behavioral scaffolding. No sibling reports the same concrete completion event, and removing the tagged text would erase state the model needs to react to."
   },
+  "data-task-notification-coalesced-completed-frame": {
+    "verdict": "pristine-keep",
+    "version": "2.1.235",
+    "why": "Structural frame with no removable content; deleting it would break the <\\task-notification> user message it wraps."
+  },
   "data-task-notification-directory-added-hook-failed": {
     "injectionPath": "Tool result/task-notification after an /add-dir DirectoryAdded hook failure.",
     "verdict": "pristine-keep",
@@ -2563,6 +2623,11 @@
     "verdict": "trim",
     "version": "2.1.231",
     "why": "Trim the duplicated instruction/security prose but retain the unique runtime notification wrapper and all slots; full wipe would remove the pending-state signal."
+  },
+  "data-task-notification-remote-tasks-completed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.235",
+    "why": "The only copy of the remote-task branch of the coalesced completion notification; a wipe would blank the notification body the model reads."
   },
   "data-task-notification-shell-interactive-prompt-stall": {
     "injectionPath": "Failure/task-notification after a background shell monitor detects an interactive-prompt stall.",
@@ -2864,10 +2929,100 @@
     "version": "2.1.233",
     "why": "Structural label with a runtime slot plus one non-inferable mechanic; other prompts reference it rather than repeat it."
   },
+  "skill-claude-code-help-plugin-details-description": {
+    "verdict": "pristine-keep",
+    "version": "2.1.235",
+    "why": "Sole description of `claude plugin details` anywhere in the corpus; it is one row of a CLI inventory, so a wipe leaves the subcommand listed with no meaning."
+  },
+  "skill-claude-code-help-plugin-disable-description": {
+    "verdict": "pristine-keep",
+    "version": "2.1.235",
+    "why": "Only copy; already at the floor."
+  },
+  "skill-claude-code-help-plugin-enable-description": {
+    "verdict": "pristine-keep",
+    "version": "2.1.235",
+    "why": "Only copy; already at the floor."
+  },
+  "skill-claude-code-help-plugin-eval-description": {
+    "verdict": "pristine-keep",
+    "version": "2.1.235",
+    "why": "Frozen throughout and the only description at its own injection site; the docs-file overlap is a different, non-co-loaded surface, so it does not carry the claim at the moment this text is read."
+  },
+  "skill-claude-code-help-plugin-eval-description-target-forms": {
+    "verdict": "pristine-keep",
+    "version": "2.1.235",
+    "why": "Frozen enumeration; the only in-list statement of which target forms resolve. The docs overlap is real but sits behind a separate load, and the reference pointer that would reach it is already wiped."
+  },
+  "skill-claude-code-help-plugin-eval-init-description": {
+    "verdict": "pristine-keep",
+    "version": "2.1.235",
+    "why": "Frozen flag and path contract, and the only description of `claude plugin eval init` in the inline subcommand list."
+  },
   "skill-claude-code-help-plugin-eval-reference": {
     "verdict": "wipe-merge",
     "version": "2.1.233",
     "why": "Every claim \u2014 read the quickref then the matching section of references/plugin-eval.md, the /skill-doctor scope, 'offline floor', 'no public docs page yet' \u2014 is already in skill-claude-code-docs-config-guide, which is SKILL_PROMPT (Zlg) and is joined with this '# Current Build' line by z8w(), so the carrier is co-delivered in the same rendered prompt. Verified at the binary, and stage 3 confirmed all four quotes verbatim in the deployed carrier. Wiped in all four sets."
+  },
+  "skill-claude-code-help-plugin-init-description": {
+    "verdict": "pristine-keep",
+    "version": "2.1.235",
+    "why": "Only copy of the scaffold path and the auto-load identifier; both are frozen strings the model cannot infer."
+  },
+  "skill-claude-code-help-plugin-install-description": {
+    "verdict": "pristine-keep",
+    "version": "2.1.235",
+    "why": "Unique, load-bearing, zero slop. Frozen under the tripwire: contains a parameter/syntax token (plugin@marketplace) and a path-like enum. Conditionally loaded with the claude-code-guide skill, so it costs zero when the skill is not read, and it is the only copy of the marketplace-qualifier syntax anywhere in the corpus. Body already equals pristine \u2014 nothing to trim without losing the syntax fact."
+  },
+  "skill-claude-code-help-plugin-list-description": {
+    "verdict": "pristine-keep",
+    "version": "2.1.235",
+    "why": "Irreducible factual label for a distinct subcommand; both emission sites are identical so a single override binds cleanly. No corpus duplicate. Nothing to cut."
+  },
+  "skill-claude-code-help-plugin-marketplace-add-description": {
+    "verdict": "pristine-keep",
+    "version": "2.1.235",
+    "why": "Frozen under the tripwire: a three-item enumeration of accepted source types (URL, path, GitHub repo). That enumeration is the only statement of what `claude plugin marketplace add` accepts anywhere in the corpus, so it is verbatim-or-delete and deleting loses the contract."
+  },
+  "skill-claude-code-help-plugin-marketplace-list-description": {
+    "verdict": "pristine-keep",
+    "version": "2.1.235",
+    "why": "Unique, minimal label containing the restrictive quantifier 'all' (frozen). Nothing duplicated, nothing to trim."
+  },
+  "skill-claude-code-help-plugin-marketplace-remove-description": {
+    "verdict": "pristine-keep",
+    "version": "2.1.235",
+    "why": "Irreducible distinct-subcommand label with no corpus duplicate. Wiping it would blank one row of the rendered subcommand table."
+  },
+  "skill-claude-code-help-plugin-marketplace-update-description": {
+    "verdict": "pristine-keep",
+    "version": "2.1.235",
+    "why": "Frozen: states the default-argument behaviour ('updates all if no name specified') with the restrictive quantifier 'all' and a conditional on the optional [name] parameter. That default is stated nowhere else in the corpus, so it is verbatim-or-delete and deletion loses a real contract."
+  },
+  "skill-claude-code-help-plugin-prune-description": {
+    "verdict": "pristine-keep",
+    "version": "2.1.235",
+    "why": "Unique statement of what prune removes \u2014 scoped to auto-installed dependencies that are no longer needed, i.e. the destructive-scope contract for the subcommand. Not inferable from the id, no duplicate, no bloat."
+  },
+  "skill-claude-code-help-plugin-tag-description": {
+    "verdict": "pristine-keep",
+    "version": "2.1.235",
+    "why": "The packet's 0.47 similarity lead to slash-command-plugin-tag-usage is real overlap in wording but not coverage: wiping this id blanks one row of the CLI subcommand list, and the usage text only appears after an invocation error. The line is also frozen under the tripwire \u2014 it carries the {name}--v{version} tag-name format, the filename plugin.json, the quantifier 'any', and a two-item agreement condition. Verbatim-or-delete, and delete is wrong."
+  },
+  "skill-claude-code-help-plugin-uninstall-description": {
+    "verdict": "pristine-keep",
+    "version": "2.1.235",
+    "why": "Irreducible distinct-subcommand label, no corpus duplicate, nothing to trim."
+  },
+  "skill-claude-code-help-plugin-update-description": {
+    "verdict": "pristine-keep",
+    "version": "2.1.235",
+    "why": "Unique row of the subcommand table, and the parenthetical '(restart required to apply)' is a mechanics fact \u2014 when the update takes effect \u2014 stated nowhere else for the CLI path. Frozen and load-bearing; nothing to cut."
+  },
+  "skill-claude-code-help-plugin-validate-description": {
+    "verdict": "pristine-keep",
+    "version": "2.1.235",
+    "why": "Conditionally-loaded skill content whose only near-match lives on a different, mutually exclusive emission surface. Wiping it would blank the description cell for `claude plugin validate <path>` in a table the model reads to answer plugin questions, converting a fact into an absence for zero token saving on a normal turn."
   },
   "skill-claude-guide-detected-language-readme": {
     "verdict": "pristine-keep",
@@ -3275,6 +3430,11 @@
     "verdict": "pristine-keep",
     "version": "2.1.233",
     "why": "Reports that the remote control-channel request for context usage threw, so the model knows the figures are missing because of a transport failure rather than because usage is zero. One line carrying a single fact; nothing to trim and no other prompt supplies it."
+  },
+  "slash-command-context-remote-reply-undisplayable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.235",
+    "why": "Unique diagnostic distinguishing an unrenderable reply from a transport failure and from an unsupported session. The distinction changes what the model should do next (do not retry vs. retry), and no sibling states it."
   },
   "slash-command-context-remote-unavailable": {
     "verdict": "pristine-keep",
@@ -4218,6 +4378,16 @@
     "version": "2.1.232",
     "why": "It is the richer of the two same-call copies and the sole carrier of the 160-character cap, the change-request/question branch mapping, and the 'do not answer yet' gate."
   },
+  "system-prompt-artifact-comment-fast-acknowledgement-selection": {
+    "verdict": "pristine-keep",
+    "version": "2.1.235",
+    "why": "Every claim is a frozen mechanic \u2014 input enum contract, the six-way option mapping, the two 0-fallback branches \u2014 and none of it appears anywhere else in the corpus. The only stylistic blemish (CAPS 'ONE') is inside frozen text, so trim would violate the tripwire."
+  },
+  "system-prompt-artifact-comment-fast-acknowledgement-selector": {
+    "verdict": "pristine-keep",
+    "version": "2.1.235",
+    "why": "Stage 1 ruled wipe-merge and its coverage is real: the selection user message and the thread-framing block both ship in the same request and state all three claims, and the digit contract is separately enforced by maxOutputTokensOverride:5 and a /^\\s*([0-9])\\s*$/ parser. Downgraded on delivery risk rather than content \u2014 this is the sole system block of a helper query built as `systemPrompt: am([Mcv])` where `am` is the identity function, so an empty body would send one empty system entry on a path no local gate exercises. Its identical sibling -writer (am([Dcv])) is trimmed to 215 chars rather than wiped, and no override in any set empties a single-const helper system prompt."
+  },
   "system-prompt-artifact-comment-fast-acknowledgement-writer": {
     "verdict": "pristine-keep",
     "version": "2.1.232",
@@ -4673,6 +4843,11 @@
     "verdict": "pristine-keep",
     "version": "2.1.228",
     "why": "Proposed trim, reverted to pristine. refuted on q3: Although the listed frozen sentences survive, the trim deletes the load-bearing no-human-input consent guard and changes another exact event-attribution gate. Those runtime safeguards do not survive verbatim."
+  },
+  "system-reminder-bash-output-audience-note": {
+    "verdict": "trim",
+    "version": "2.1.235",
+    "why": "Sentence 1 is a uninferable harness fact and stays verbatim; sentence 2 is a derived directive the model reaches on its own, and the Opus-5 digest records verbosity/over-detailed reporting as a regression (p.2, 'responses tend to be lengthier and more detailed than is desirable'), not a deficit needing a relay nudge. Cutting it loses no information at a per-Bash-call injection site."
   },
   "system-reminder-bound-conversation-activity-authority-warning": {
     "verdict": "pristine-keep",
@@ -5536,6 +5711,11 @@
     "version": "2.1.233",
     "why": "The example request the statusline-setup agent works from. It is the task statement, not decoration."
   },
+  "tool-description-task-choose-listed-agent-type": {
+    "verdict": "pristine-keep",
+    "version": "2.1.235",
+    "why": "The only place in the corpus that tells the model the `fork` literal is a valid subagent_type when general-purpose is unavailable. Pure frozen mechanics with a live conditional; nothing to trim."
+  },
   "tool-description-task-get": {
     "verdict": "pristine-keep",
     "version": "2.1.228",
@@ -6028,10 +6208,20 @@
     "version": "2.1.232",
     "why": "Sole carrier of a distinct failure cause. Deleting it leaves the agent-launch failure with no explanation, so the model would retry or misdiagnose it as an agent-type deny rule."
   },
+  "tool-result-agent-type-ambiguous-none-available": {
+    "verdict": "pristine-keep",
+    "version": "2.1.235",
+    "why": "Distinct branch of the ambiguity error that both closes off the near-miss names and re-lists the usable ones. No sibling co-emits it, and every token is frozen mechanics."
+  },
   "tool-result-agent-type-denied": {
     "verdict": "pristine-keep",
     "version": "2.1.233",
     "why": "Rule name, rule argument and \".source\" are enum/parameter mechanics the model needs to fix the permission \u2014 frozen and unique across all 3 emission sites."
+  },
+  "tool-result-agent-type-not-found": {
+    "verdict": "pristine-keep",
+    "version": "2.1.235",
+    "why": "The recovery contract for the single most common Task-tool mistake \u2014 it echoes the bad value and lists the valid enum. Unique to its branch and entirely frozen text."
   },
   "tool-result-agent-worktree-isolation-guard": {
     "verdict": "pristine-keep",
@@ -6188,6 +6378,11 @@
     "version": "2.1.234",
     "why": "Unique single-site tool result for an asset-read egress block; names the blocked host var and the fix domain var. Deployed opus-5 body is byte-identical to pristine, so there is nothing to trim; a wipe would leave the model with no reason for the failure and no remediation."
   },
+  "tool-result-artifact-asset-read-invalid-input-reason": {
+    "verdict": "wipe-merge",
+    "version": "2.1.235",
+    "why": "A strictly weaker restatement of the message it ships beside in the same deny object. Zero facts are lost \u2014 the surviving carrier is the more specific of the two."
+  },
   "tool-result-artifact-asset-read-invalid-url": {
     "verdict": "pristine-keep",
     "version": "2.1.234",
@@ -6252,6 +6447,16 @@
     "verdict": "pristine-keep",
     "version": "2.1.234",
     "why": "Unique fetched-but-not-written error surfacing the underlying errno; the fallback string and the fetched-vs-saved distinction exist nowhere else."
+  },
+  "tool-result-artifact-asset-read-write-kept": {
+    "verdict": "pristine-keep",
+    "version": "2.1.235",
+    "why": "Distinct arm of a file-system error whose sole purpose is to hand the user the `.partial` recovery path; collapsing it into the -replaced sibling would assert a deletion that did not happen. Unique, frozen, load-bearing."
+  },
+  "tool-result-artifact-asset-read-write-kept-replaced": {
+    "verdict": "pristine-keep",
+    "version": "2.1.235",
+    "why": "Unique destructive-state fact ('the earlier copy at X was removed') plus the .partial sentinel path and the exact recovery instruction; no slop present and no carrier covers it."
   },
   "tool-result-artifact-asset-route-unrouted": {
     "verdict": "pristine-keep",
@@ -7093,6 +7298,11 @@
     "version": "2.1.234",
     "why": "Only copy of the cursor-format validation contract; entirely frozen tokens."
   },
+  "tool-result-artifact-list-assets-plan-mode-user-approval-required": {
+    "verdict": "pristine-keep",
+    "version": "2.1.235",
+    "why": "Distinct per-action decisionReason: the hazard clause (third-party-authored file names admitted to the conversation) exists nowhere else, and the trailing approval-routing contract is frozen mechanics."
+  },
   "tool-result-artifact-list-count-header": {
     "verdict": "pristine-keep",
     "version": "2.1.233",
@@ -7666,6 +7876,11 @@
     "version": "2.1.234",
     "why": "Unique runtime outcome: resume could not attach because a reconnect is mid-boot, plus the check-status-first ordering contract. Wiping leaves an empty tool result at this site."
   },
+  "tool-result-artifact-resume-replies-arm-in-flight": {
+    "verdict": "pristine-keep",
+    "version": "2.1.235",
+    "why": "Only copy of the in-flight-connection failure mode, its self-clearing behaviour, and the \"status\" check; every sentence trips the frozen tripwire and nothing is duplicated."
+  },
   "tool-result-artifact-resume-replies-ask-killed": {
     "verdict": "pristine-keep",
     "version": "2.1.234",
@@ -7710,6 +7925,11 @@
     "verdict": "pristine-keep",
     "version": "2.1.234",
     "why": "Deny-path message carrying the irreversibility, the recovery path (new session re-arms on publish), and the approval-suppression signal. No carrier renders in this situation with all three."
+  },
+  "tool-result-artifact-resume-replies-denied-watch-stop-latched": {
+    "verdict": "pristine-keep",
+    "version": "2.1.235",
+    "why": "Sole copy of the watch-stop denial's remediation path, its timing contract, and its approval-exemption; no slop and no full coverage anywhere."
   },
   "tool-result-artifact-resume-replies-generic-failure": {
     "verdict": "pristine-keep",
@@ -7785,6 +8005,16 @@
     "verdict": "pristine-keep",
     "version": "2.1.234",
     "why": "Interpolated fragment; deleting it would leave the approval reason without naming which stop is being reversed."
+  },
+  "tool-result-artifact-resume-replies-watch-relatch-reason-fragment": {
+    "verdict": "pristine-keep",
+    "version": "2.1.235",
+    "why": "Slot-specific splice fragment with no rendering carrier; conditional cost is zero and the disclosure is a consent contract."
+  },
+  "tool-result-artifact-resume-replies-watch-stop-latched-deny-reason": {
+    "verdict": "pristine-keep",
+    "version": "2.1.235",
+    "why": "Sole statement of the clearing condition for the watch-stop hold, expressed as a frozen restrictive gate."
   },
   "tool-result-artifact-resume-replies-wrong-session-type": {
     "verdict": "pristine-keep",
@@ -7931,6 +8161,16 @@
     "verdict": "pristine-keep",
     "version": "2.1.231",
     "why": "Confirmation, session scope, remote wake behavior, and the no-content privacy contract are load-bearing mechanics. Removing the overlapping privacy/session clauses would delete security or permission semantics."
+  },
+  "tool-result-artifact-watch-session-not-found": {
+    "verdict": "pristine-keep",
+    "version": "2.1.235",
+    "why": "Only copy of the server-lost-session cause plus its retry-suppression verdict; distinct from the originator-less and registration-failed siblings, which carry the opposite retry guidance."
+  },
+  "tool-result-artifact-watch-unavailable-in-deployment": {
+    "verdict": "pristine-keep",
+    "version": "2.1.235",
+    "why": "Distinct deployment-capability cause with its own retry-suppression verdict; nothing duplicated and nothing sloppy at twelve words."
   },
   "tool-result-artifact-write-db-invalid-url": {
     "verdict": "pristine-keep",
@@ -8889,6 +9129,11 @@
     "verdict": "pristine-keep",
     "version": "2.1.224",
     "why": "Read in full: 'Teammate \"${VAR_0}\" is running, but writing to its inbox failed \u2014 nothing was queued. Try again.' Slop check: 'Try again.' is the only candidate, and it is a transience signal rather than motivational filler \u2014 the sibling failure results in this family deliberately differ ('nothing was sent. Try again, or message the lead', 'needs your approval \u2014 nothing was sent' with no retry at all). 'nothing was queued' is the load-bearing half: it stops the model reporting a message as delivered, which is exactly the false-completion mode the Opus 5 card flags as having no gain to bank (1.2"
+  },
+  "tool-result-send-message-too-large": {
+    "verdict": "pristine-keep",
+    "version": "2.1.235",
+    "why": "Only place the cross-session message cap, the observed size, and the three concrete remedies are stated; both sentences trip the frozen tripwire on numbers and enumeration."
   },
   "tool-result-send-message-uds-exited-listing-hint": {
     "ringResolved": true,
