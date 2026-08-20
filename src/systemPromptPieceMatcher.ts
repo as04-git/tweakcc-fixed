@@ -10,7 +10,7 @@ type MatchToken =
   | { kind: 'newline' }
   | { kind: 'non-ascii'; value: string; code: number }
   | { kind: 'interpolation' }
-  | { kind: 'member' }
+  | { kind: 'member'; path?: string }
   | { kind: 'capture'; index: number };
 
 interface AnchorPlan {
@@ -83,6 +83,22 @@ const tokensForPiece = (piece: string, pieceIndex: number): MatchToken[] => {
     if (member) {
       tokens.push({ kind: 'member' });
       rest = rest.slice(member[0].length);
+    } else {
+      // Same shape carrying a PROPERTY path — `${OBJ[g.terminal]}` leaves
+      // "[g.terminal]}…" at a piece start. Only the leading identifier is
+      // minified (`G` on darwin and linux-arm64, `q` on linux-x64); the property
+      // path is Anthropic's own and identical everywhere, so generalize the
+      // identifier and keep the path literal. Without this the path pins the
+      // Mac name and the prompt is unmatchable on linux-x64 while passing on the
+      // Mac and on linux-arm64. buildSearchRegexFromPieces does the same thing;
+      // the two engines have to agree or test:matcher fails.
+      const memberPath = rest.match(
+        /^\[[A-Za-z_$][\w$]*((?:\.[\w$]+)+)\](?=\})/
+      );
+      if (memberPath) {
+        tokens.push({ kind: 'member', path: memberPath[1] });
+        rest = rest.slice(memberPath[0].length);
+      }
     }
   }
   for (let i = 0; i < rest.length; ) {
@@ -326,7 +342,25 @@ const matchTokensAt = (
       end++;
       const wordStart = end;
       while (isWord(sourceCharAt(content, end))) end++;
-      if (end === wordStart || sourceCharAt(content, end) !== ']') {
+      if (end === wordStart) {
+        if (!fail()) return null;
+        continue;
+      }
+      if (token.path) {
+        let ok = true;
+        for (let k = 0; k < token.path.length; k++) {
+          if (sourceCharAt(content, end + k) !== token.path[k]) {
+            ok = false;
+            break;
+          }
+        }
+        if (!ok) {
+          if (!fail()) return null;
+          continue;
+        }
+        end += token.path.length;
+      }
+      if (sourceCharAt(content, end) !== ']') {
         if (!fail()) return null;
         continue;
       }
@@ -441,6 +475,12 @@ const reverseTokenPositions = (
   if (token.kind === 'member') {
     if (sourceCharAt(content, end - 1) !== ']') return [];
     let start = end - 2;
+    if (token.path) {
+      for (let k = token.path.length - 1; k >= 0; k--) {
+        if (sourceCharAt(content, start) !== token.path[k]) return [];
+        start--;
+      }
+    }
     const wordEnd = start;
     while (start >= 0 && isWord(sourceCharAt(content, start))) start--;
     return start < wordEnd && sourceCharAt(content, start) === '['

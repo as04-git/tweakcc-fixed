@@ -397,6 +397,12 @@ try {
   console.log(`pristine:          ${PRISTINE}`);
   console.log(`apply ran:         ${applyOk}${applyOk ? '' : `  (exit ${applyExit}${/unbalanced|Error/.test(log) ? ', ' + (log.match(/^.*(?:Error|unbalanced).*$/m) || [''])[0].slice(0, 120) : ''})`}`);
   console.log(`Could not find:    ${cnf}`);
+  // Naming them is the whole point when this runs as the cross-platform gate:
+  // a bare count tells you a one-platform prompt exists but not which one, and
+  // the bundle it failed against is a temp file that is gone by the time you
+  // think to look.
+  for (const line of log.split('\n').filter((l) => /Could not find/.test(l)))
+    console.log(`  ${line.trim()}`);
   console.log(`cannot apply safely (warns): ${cannotApply}`);
   console.log(`introduced minified \${var}: ${introduced.length}  ${introduced.slice(0, 12).join(' ')}`);
   console.log(`introduced raw non-ASCII: ${rawNonAscii.length}  ${rawNonAscii.slice(0, 12).join(' ')}`);
