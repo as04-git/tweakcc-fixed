@@ -145,3 +145,38 @@ describe('writeFablePlan', () => {
     expect(out).toContain('"value":"fableplan"');
   });
 });
+
+describe('writeFablePlan alongside customModelAlias', () => {
+  beforeEach(() => {
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+    vi.spyOn(console, 'log').mockImplementation(() => {});
+  });
+
+  // customModelAlias splices its lookup table into the alias resolver's head,
+  // between `let t=e.trim()…` and the `switch`, and PATCH_DEFINITIONS order runs
+  // it well before this patch. The table's size scales with the user's alias
+  // count, so a window sized for the pristine bundle fails once a few aliases
+  // exist — and it fails as `--apply` refusing to repack, blaming a CC version
+  // change that never happened.
+  const withAliasMap = (src: string, aliases: number): string => {
+    const map = Object.fromEntries(
+      Array.from({ length: aliases }, (_, i) => [`a${i}`, `some-vendor-model-${i}`])
+    );
+    const injected = `let am=${JSON.stringify(map)};if(am[o])return am[o];`;
+    const at = src.indexOf('if(sM(o))switch(o){');
+    expect(at).toBeGreaterThan(-1);
+    return src.slice(0, at) + injected + src.slice(at);
+  };
+
+  it('still finds the alias resolver after customModelAlias has widened its head', () => {
+    const out = writeFablePlan(withAliasMap(cli, 4), config());
+    expect(out).not.toBeNull();
+    expect(out).toContain('case"fableplan":');
+  });
+
+  it('survives an alias table far larger than the current config', () => {
+    const out = writeFablePlan(withAliasMap(cli, 12), config());
+    expect(out).not.toBeNull();
+    expect(out).toContain('case"fableplan":');
+  });
+});

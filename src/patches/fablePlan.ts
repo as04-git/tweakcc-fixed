@@ -208,8 +208,26 @@ const patchAliasToModel = (
   file: string,
   config: FablePlanConfig
 ): { file: string; resolver: string } | null => {
+  // The window between the resolver's head and its switch used to be 120
+  // characters, which is everything the pristine bundle puts there. It is not
+  // everything WE put there: `customModelAlias` splices its alias map into
+  // exactly that gap, ahead of this patch —
+  //
+  //   let am={"k3":"kimi-k3","sol":"gpt-5.6-sol",…};if(am[o])return am[o];
+  //
+  // — and `applyPatchImplementations` runs patches in PATCH_DEFINITIONS order,
+  // where custom-model-alias sits well before fable-plan. With four aliases
+  // that insertion is 148 characters, so this pattern stopped matching and
+  // --apply refused to repack the binary, naming fable-plan as if Anthropic
+  // had changed the code shape. Nothing upstream changed; two of our own
+  // patches collided.
+  //
+  // The window scales with the user's alias count, so it is sized for room to
+  // grow rather than for today's config. Widening costs no precision: the
+  // pattern is still pinned at both ends, by a head no other function in the
+  // bundle has and by the exec model's own switch arm.
   const pattern = new RegExp(
-    `function ([$\\w]+)\\(([$\\w]+)\\)\\{let [$\\w]+=\\2\\.trim\\(\\)[\\s\\S]{0,120}?if\\([$\\w]+\\(([$\\w]+)\\)\\)switch\\(\\3\\)\\{` +
+    `function ([$\\w]+)\\(([$\\w]+)\\)\\{let [$\\w]+=\\2\\.trim\\(\\)[\\s\\S]{0,1024}?if\\([$\\w]+\\(([$\\w]+)\\)\\)switch\\(\\3\\)\\{` +
       `([\\s\\S]{0,600}?case"${config.execModel}":(return [^;]+;))`
   );
   const match = file.match(pattern);
