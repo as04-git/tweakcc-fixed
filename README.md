@@ -145,7 +145,9 @@ Lets the model organize its own prose with color:
 
 The hook is a genuinely dead branch in the markdown renderer — raw HTML is currently echoed verbatim — so non-tag HTML still passes through untouched. Colors route through Claude Code's own applicator, so 256- and 16-color terminals downgrade for free and `NO_COLOR` emits nothing.
 
-The palette follows the active theme automatically. Dark and light entries all clear **WCAG AA**. The daltonized palettes are not the standard hues filtered: dichromats perceive roughly a blue-yellow axis plus luminance, so eight distinct hues is not achievable — simulating deuteranopia over the standard set collapses `blue`/`purple` to **dE 0.5**. They were solved numerically for maximum pairwise separation under deuteranopia and protanopia instead, and ship in two variants depending on whether you want maximum distance or names that match their colors. [Design notes](docs/markdown-color-tags.md).
+The palette follows the active theme automatically. Dark and light entries all clear **WCAG AA**. The daltonized palettes are not the standard hues filtered: dichromats perceive roughly a blue-yellow axis plus luminance, so eight distinct hues is not achievable — simulating deuteranopia over the standard set collapses `blue`/`purple` to **dE 0.5**. They were solved numerically for maximum pairwise separation under deuteranopia and protanopia instead, and ship in two variants depending on whether you want maximum distance or names that match their colors.
+
+Tags also render outside assistant prose: the **AskUserQuestion** dialog (question text, option labels and descriptions, multi-select rows, and the answered summary) and the **session recap** line, which uses a muted variant derived from your palette at a 3.2:1 contrast target so the quietest line on screen does not become the loudest. Coloring happens at each render site and never on the data model, because a question's text is fed back to the model, an option's label is matched by equality, and a header is measured and truncated. [Design notes](docs/markdown-color-tags.md).
 
 ## How it works
 
