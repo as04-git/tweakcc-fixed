@@ -85,6 +85,29 @@ const WORKFLOW_SCRIPT_IDENTIFIER_MAP = {
 //   [6] l  = e?TW_:"briefly tell the user what you launched"
 //   [7] o  = "Workers have access to …" intro text
 const CURATED_IDENTIFIER_MAPS = {
+  'tool-description-edit': [
+    {
+      // CC 2.1.237 turned the Edit description's leading ternary from
+      // `${r?"":cES()}` into `${r?uES():cES()}` — the empty-string true branch
+      // became a function returning the outside-working-directory read rule.
+      // That inserts a NEW slot at index 1 and shifts every later label by one,
+      // so upstream's 4-slot map no longer matches the 5-slot identifiers array
+      // and adoption is skipped, leaving generated TOOL_DESCRIPTION_EDIT_VAR_N
+      // names. The overrides address the slots by their human names, so without
+      // this the apply reports `Unresolved placeholder
+      // ${SHOULD_OMIT_READ_BEFORE_EDIT_REQUIREMENT}` and skips the prompt
+      // entirely. Derived from the site at `Performs exact string replacements`:
+      // r, uES, cES, n, and the trailing guidelines note, in first-seen order.
+      identifiers: [0, 1, 2, 3, 4],
+      identifierMap: {
+        0: 'SHOULD_OMIT_READ_BEFORE_EDIT_REQUIREMENT',
+        1: 'OUTSIDE_WORKING_DIR_READ_REQUIREMENT_FN',
+        2: 'MUST_READ_FIRST_FN',
+        3: 'LINE_NUMBER_PREFIX_FORMAT',
+        4: 'ADDITIONAL_EDIT_GUIDELINES_NOTE',
+      },
+    },
+  ],
   'system-prompt-coordinator-mode': [
     {
       // CC 2.1.234: Anthropic added the `<system-reminder>` opening-text slot
