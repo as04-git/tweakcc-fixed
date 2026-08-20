@@ -48,7 +48,17 @@ describe('patch regex/capture consistency', () => {
       // mapped without real scope analysis, so skip it rather than false-positive.
       const regexDecls: Record<string, number[]> = {};
       for (const m of src.matchAll(
-        /(?:const|let)\s+(\w+)\s*=\s*(\/(?:\\.|\[[^\]]*\]|[^/\n])+\/[a-z]*)\s*;/g
+        // The three branches must stay MUTUALLY EXCLUSIVE. An earlier form ended
+        // `[^/\n]`, which also matches a backslash, so every `\(` in a regex
+        // literal could be consumed either as one `\\.` step or as two — 2^k
+        // paths through a k-escape literal. On a literal that cannot complete
+        // the match (autoModelSwap.ts declares a 432-char regex followed by
+        // `.exec(`, not `;`) the engine explores all of them and this test never
+        // finishes: `pnpm test` sat on one worker at 100% CPU indefinitely.
+        // Excluding `\\` from the last branch, and handling escapes inside the
+        // character-class branch, makes the scan linear (3ms) with identical
+        // results on every patch source.
+        /(?:const|let)\s+(\w+)\s*=\s*(\/(?:\\.|\[(?:\\.|[^\]\\])*\]|[^/\n\\])+\/[a-z]*)\s*;/g
       )) {
         (regexDecls[m[1]] ||= []).push(countCapturingGroups(m[2]));
       }

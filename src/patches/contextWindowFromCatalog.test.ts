@@ -32,7 +32,6 @@ describe('writeContextWindowFromCatalog', () => {
     expect(out2).toContain('Xy(Zw(e))');
     expect(out2).toContain('Qq(cwb)?.context?.window');
     // still syntactically valid JS
-    // eslint-disable-next-line @typescript-eslint/no-implied-eval
     expect(() => new Function('"use strict";' + out!)).not.toThrow();
   });
 
