@@ -7,8 +7,11 @@ import {
   NATIVE_BINARY_BACKUP_FILE,
 } from './config';
 import { extractClaudeJsFromNativeInstallation } from './nativeInstallationLoader';
+import { looksPatched } from './patchMarkers';
 import { ClaudeCodeInstallationInfo } from './types';
 import { debug } from './utils';
+
+export { looksPatched };
 
 export interface PristineBundle {
   content: string;
@@ -21,16 +24,6 @@ export interface PristineBundleError {
 }
 
 const NATIVE_ORIG_JS = path.join(CONFIG_DIR, 'native-claudejs-orig.js');
-
-/**
- * Every tweakcc splice leaves at least one of these markers. A binary carrying
- * them is patched, not pristine, and validating against it would compare the
- * overrides to themselves.
- */
-const PATCH_MARKERS = ['__tweakcc', 'tweakcc v'];
-
-export const looksPatched = (content: string): boolean =>
-  PATCH_MARKERS.some(marker => content.includes(marker));
 
 export const versionInBundle = (content: string): string | undefined =>
   content.match(/VERSION:"(\d+\.\d+\.\d+)"/)?.[1];

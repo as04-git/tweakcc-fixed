@@ -1270,6 +1270,10 @@ export const buildSearchRegexFromPieces = (
   // minified identifier that differs Mac↔Linux, so it must be generalized like
   // the slot rather than pinned to the literal Mac key.
   const MEMBER_SENTINEL = '\x00MEMBER\x00';
+  // Same idea as MEMBER_SENTINEL but for a key that carries a property path
+  // (`obj[g.terminal]`): only the leading identifier is generalized, and the
+  // literal property path that follows is escaped normally.
+  const MEMBER_PREFIX_SENTINEL = '\x00MEMBERPFX\x00';
 
   for (let i = 0; i < pieces.length; i++) {
     // Replace <<CCVERSION>> with actual version before escaping
@@ -1287,6 +1291,18 @@ export const buildSearchRegexFromPieces = (
     // literal Mac key fails on the Linux native build ("Could not find ...").
     if (i > 0) {
       piece = piece.replace(/^\[[A-Za-z_$][\w$]*\](?=\})/, MEMBER_SENTINEL);
+      // The same shape with a PROPERTY path on the key — `${OBJ[g.terminal]}`
+      // leaves "[g.terminal]}…" here. Only the leading identifier is minified
+      // (`G` on darwin and linux-arm64, `q` on linux-x64), while the property
+      // name is Anthropic's own and identical everywhere, so generalize the
+      // identifier and keep the path literal. Pinning the whole key made the two
+      // /terminal-setup prompts unmatchable on linux-x64 while passing on the
+      // Mac and on linux-arm64 — invisible to every local gate, which is exactly
+      // what the cross-platform gate exists to catch.
+      piece = piece.replace(
+        /^\[[A-Za-z_$][\w$]*((?:\.[\w$]+)+)\](?=\})/,
+        (_m, propPath) => `${MEMBER_PREFIX_SENTINEL}${propPath}]`
+      );
     }
 
     // Stash inline ${...} interpolations behind a sentinel before regex-escape.
@@ -1342,7 +1358,11 @@ export const buildSearchRegexFromPieces = (
       new RegExp(MEMBER_SENTINEL, 'g'),
       '\\[[\\w$]+\\]'
     );
-    pattern += withMemberHandling;
+    const withMemberPrefixHandling = withMemberHandling.replace(
+      new RegExp(MEMBER_PREFIX_SENTINEL, 'g'),
+      '\\[[\\w$]+'
+    );
+    pattern += withMemberPrefixHandling;
 
     // Add capture group for the variable if this isn't the last piece
     if (i < pieces.length - 1) {
@@ -1480,6 +1500,23 @@ export interface EncodedReplacement {
  * (#664). Non-ASCII escaping runs LAST, after the doubling, or an already
  * emitted `\uXXXX` becomes literal `\\uXXXX` text in the binary.
  */
+/**
+ * Whether `text` carries anything whose encoding depends on which string
+ * delimiter encloses it.
+ *
+ * A match is normally a whole string-literal value, so the character before it
+ * names the delimiter. When the match is instead a FRAGMENT of a longer literal
+ * that character is arbitrary, and `encodeReplacementForDelimiter` has no
+ * branch for it — the text is embedded with no backslash doubling, no quote
+ * escaping and no backtick escaping at all. Text free of every construct below
+ * is inert in a '…', "…" and `…` literal alike and can be embedded safely
+ * without knowing which one it is; anything else must not be guessed at, since
+ * a single raw backtick or `${` emitted into a template literal ends the
+ * literal early and leaves the rest of cli.js as floating syntax.
+ */
+export const needsDelimiterAwareEscaping = (text: string): boolean =>
+  /[\\`'"\r\n]/.test(text) || text.includes('${');
+
 export const encodeReplacementForDelimiter = (
   text: string,
   delimiter: string,

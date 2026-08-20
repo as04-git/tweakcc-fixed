@@ -1,11 +1,20 @@
 #!/usr/bin/env node
 // Report runtime interpolations a trim or suppression removed entirely.
 //
-// A prompt body carries two kinds of runtime token: `${IDENTIFIER}` slots the
-// patcher binds positionally into the binary, and `{{TEMPLATE}}` names CC fills
-// from the model catalogue. A trim may delete a sentence containing one — that
-// is allowed. What is almost never intended is deleting the LAST occurrence of
-// a token, because the value it carried then reaches the model nowhere.
+// A prompt body carries two kinds of runtime token, and they are NOT scoped the
+// same way. `${IDENTIFIER}` slots the patcher binds POSITIONALLY into this
+// prompt's site in the binary, so the last one has to survive in THIS file or
+// that site's binding is gone. `{{TEMPLATE}}` names CC resolves at render from
+// the model catalogue, with no positional binding at all (the prompts carrying
+// them have `identifiers: []`), so the question there is only whether the value
+// still reaches the model ANYWHERE in the override set. A trim may delete a
+// sentence containing either — that is allowed. What is almost never intended
+// is deleting the last occurrence within the token's own scope.
+//
+// Conflating the two produced a false finding on 2.1.237: the managed-agents
+// trim deleted a TypeScript sample fence whose only `{{OPUS_ID}}` was
+// decorative, while the same token stayed live in the CreateAgent schema of
+// data-managed-agents-endpoint-reference. Per-file scoping called that a loss.
 //
 // So the rule is deliberately not "the token sets must match". It is: a token
 // pristine has and the deployed body has ZERO of. Measured on the CC 2.1.226
@@ -72,11 +81,40 @@ export const stripFrontmatter = t => {
 // A same-id multi-site prompt binds a different slot set per site, so the
 // override has to satisfy the UNION — checking only the first entry is the
 // same first-entry-only mistake that has misclassified stubs before.
-export const lostTokens = (pristineBodies, deployed) => {
-  const have = tokensOf(deployed);
-  const want = new Set();
-  for (const b of pristineBodies) for (const t of tokensOf(b)) want.add(t);
-  return [...want].filter(t => !have.has(t));
+export const isTemplateToken = raw => raw.startsWith('{{');
+
+// Split a body's tokens by scope. Positional `${}` slots are keyed per-file;
+// `{{}}` catalogue templates are keyed set-wide.
+export const scopedTokensOf = s => {
+  const slots = new Set();
+  const templates = new Set();
+  for (const raw of (s || '').match(TOKEN) || []) {
+    const name = normalizeToken(raw);
+    if (!name) continue;
+    (isTemplateToken(raw) ? templates : slots).add(name);
+  }
+  return { slots, templates };
+};
+
+// `setTemplates` is every `{{}}` name still live anywhere in the override set.
+// Omit it and template tokens fall back to per-file scoping, which is the old
+// (over-strict) behaviour — callers that cannot see the whole set keep working.
+export const lostTokens = (pristineBodies, deployed, setTemplates = null) => {
+  const have = scopedTokensOf(deployed);
+  const wantSlots = new Set();
+  const wantTemplates = new Set();
+  for (const b of pristineBodies) {
+    const w = scopedTokensOf(b);
+    for (const t of w.slots) wantSlots.add(t);
+    for (const t of w.templates) wantTemplates.add(t);
+  }
+  const lost = [...wantSlots].filter(t => !have.slots.has(t));
+  for (const t of wantTemplates) {
+    if (have.templates.has(t)) continue;
+    if (setTemplates && setTemplates.has(t)) continue;
+    lost.push(t);
+  }
+  return lost;
 };
 
 const main = () => {
@@ -121,11 +159,22 @@ const main = () => {
         return !pristine.get(id).some(p => p.trim() === b);
       });
 
+  // Catalogue templates are set-scoped, so build the live set once: every `{{}}`
+  // name still present in ANY override in this set. Reading the whole dir is
+  // ~3k small files and takes well under a second; a per-file gate that cannot
+  // see this produces false losses whenever a token moves between siblings.
+  const setTemplates = new Set();
+  for (const f of fs.readdirSync(setDir)) {
+    if (!f.endsWith('.md')) continue;
+    for (const t of scopedTokensOf(fs.readFileSync(path.join(setDir, f), 'utf8')).templates)
+      setTemplates.add(t);
+  }
+
   const findings = [];
   for (const id of ids) {
     if (!pristine.has(id) || !fs.existsSync(path.join(setDir, `${id}.md`))) continue;
     const body = bodyOf(id);
-    const lost = lostTokens(pristine.get(id), body);
+    const lost = lostTokens(pristine.get(id), body, setTemplates);
     if (lost.length)
       findings.push({ id, suppressed: body.trim() === '', lost, remaining: [...tokensOf(body)] });
   }

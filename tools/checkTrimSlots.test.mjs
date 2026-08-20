@@ -10,6 +10,7 @@ import {
   reconstruct,
   stripFrontmatter,
   lostTokens,
+  scopedTokensOf,
 } from './checkTrimSlots.mjs';
 
 describe('checkTrimSlots: token identity', () => {
@@ -98,5 +99,38 @@ describe('checkTrimSlots: body handling', () => {
       'A',
       'B',
     ]);
+  });
+});
+
+
+describe('checkTrimSlots: token scope', () => {
+  it('separates positional slots from catalogue templates', () => {
+    const { slots, templates } = scopedTokensOf('bind ${ALPHA} and render {{BETA}}');
+    expect([...slots]).toEqual(['ALPHA']);
+    expect([...templates]).toEqual(['BETA']);
+  });
+
+  it('never excuses a positional slot because a sibling still has it', () => {
+    // `${}` binds into THIS prompt's site, so set-wide presence is irrelevant.
+    expect(lostTokens(['bind ${ALPHA}'], 'bind nothing', new Set(['ALPHA']))).toEqual(['ALPHA']);
+  });
+
+  it('excuses a catalogue template that survives elsewhere in the set', () => {
+    // The 2.1.237 shape: data-managed-agents-environments-and-resources dropped
+    // its only {{OPUS_ID}} with a TypeScript sample fence, while the CreateAgent
+    // schema in data-managed-agents-endpoint-reference still carries it.
+    expect(
+      lostTokens(["model: '{{OPUS_ID}}'"], 'fence deleted', new Set(['OPUS_ID']))
+    ).toEqual([]);
+  });
+
+  it('still reports a template that survives nowhere in the set', () => {
+    expect(lostTokens(['on {{MYTHOS_NAME}}'], 'sentence deleted', new Set())).toEqual([
+      'MYTHOS_NAME',
+    ]);
+  });
+
+  it('falls back to per-file scoping when the caller cannot see the set', () => {
+    expect(lostTokens(['on {{MYTHOS_NAME}}'], 'sentence deleted')).toEqual(['MYTHOS_NAME']);
   });
 });

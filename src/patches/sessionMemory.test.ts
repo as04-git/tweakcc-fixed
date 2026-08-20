@@ -47,7 +47,7 @@ describe('writeSessionMemory', () => {
     expect(out).toContain(
       '=Number(process.env.CC_SM_PER_SECTION_TOKENS??2000)'
     );
-    expect(out).toContain('=Number(process.env.CM_SM_TOTAL_FILE_LIMIT??12000)');
+    expect(out).toContain('=Number(process.env.CC_SM_TOTAL_FILE_LIMIT??12000)');
     // bare numeric constants for these slots are gone
     expect(out).not.toContain('perSection=2000');
     expect(out).not.toContain('total=12000');

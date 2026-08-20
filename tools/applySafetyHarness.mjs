@@ -71,6 +71,26 @@ const BIND_WINDOW_BACK = 1500;
 // or a `let v=` just before its `${v}`). A slot bound in its own window is a plain
 // local in emitted code — it parses and never ReferenceErrors, so it is never
 // dangerous, in pristine OR patched.
+// Second-chance lookback. Minified module consts are emitted as one long
+// comma-declarator chain inside a `var X=T(()=>{…})` IIFE, so a use and its
+// declaration can sit tens of KB apart in the SAME statement. An override that
+// legitimately expands a neighbouring const in that chain pushes the declaration
+// past BIND_WINDOW_BACK, and the slot then reads as newly dangerous although the
+// name is still declared in scope and the file still parses — 2.1.232 flagged
+// `${xJh}`/`${RJh}` in all four sets exactly this way. So when the narrow window
+// misses, look much further back for a DECLARATION of that specific name. A name
+// declared nowhere within reach — the real leak this gate exists to find — still
+// flags, because this only ever searches for that one identifier.
+const DECL_WINDOW_BACK = 200_000;
+const declaredFurtherBack = (s, idx, v) => {
+  const from = Math.max(0, idx - DECL_WINDOW_BACK);
+  const window = s.slice(from, idx);
+  const esc = v.replace(/[$]/g, '\\$&');
+  return new RegExp(
+    `(?:\\b(?:let|const|var|function)\\s+|(?<!\\$)[([,{;]\\s*)${esc}\\s*(?:=[^=>]|[)\\]},:]|=>)`
+  ).test(window);
+};
+
 const dangerousSlots = (s) => {
   const out = new Map();
   out.positions = new Map();
@@ -80,6 +100,7 @@ const dangerousSlots = (s) => {
     const idx = m.index;
     const window = s.slice(Math.max(0, idx - BIND_WINDOW_BACK), idx + 60);
     if (bindsInWindow(window, v)) continue; // bound local — safe
+    if (declaredFurtherBack(s, idx, v)) continue; // module const further up the same chain
     out.set(v, (out.get(v) || 0) + 1);
     out.positions.set(v, [...(out.positions.get(v) || []), idx]);
   }
@@ -206,7 +227,15 @@ try {
       fs.cpSync(fs.realpathSync(src), path.join(tc, name), { recursive: true });
     }
   }
-  for (const f of ['config.json']) {
+  // systemPromptOriginalHashes.json is the baseline index syncPrompt reads to tell
+  // "user edited this override" from "pristine moved under it". Omitting it does not
+  // merely change the conflict REPORT — it changes what gets spliced, so the harness
+  // grades a binary a real apply never produces. On 2.1.227 that was the whole of the
+  // long-standing fable-5 `introduced ${n}: 1`: with the baseline the same set is
+  // clean, without it the apply emits a 28KB-different bundle carrying an `${n}` in
+  // override text. A ground-truth harness has to reproduce the real code path, and
+  // the driver's own sandboxedApply already copies both files for this reason.
+  for (const f of ['config.json', 'systemPromptOriginalHashes.json']) {
     const src = path.join(realTweakcc, f);
     if (fs.existsSync(src)) fs.copyFileSync(src, path.join(tc, f));
   }
@@ -368,6 +397,12 @@ try {
   console.log(`pristine:          ${PRISTINE}`);
   console.log(`apply ran:         ${applyOk}${applyOk ? '' : `  (exit ${applyExit}${/unbalanced|Error/.test(log) ? ', ' + (log.match(/^.*(?:Error|unbalanced).*$/m) || [''])[0].slice(0, 120) : ''})`}`);
   console.log(`Could not find:    ${cnf}`);
+  // Naming them is the whole point when this runs as the cross-platform gate:
+  // a bare count tells you a one-platform prompt exists but not which one, and
+  // the bundle it failed against is a temp file that is gone by the time you
+  // think to look.
+  for (const line of log.split('\n').filter((l) => /Could not find/.test(l)))
+    console.log(`  ${line.trim()}`);
   console.log(`cannot apply safely (warns): ${cannotApply}`);
   console.log(`introduced minified \${var}: ${introduced.length}  ${introduced.slice(0, 12).join(' ')}`);
   console.log(`introduced raw non-ASCII: ${rawNonAscii.length}  ${rawNonAscii.slice(0, 12).join(' ')}`);

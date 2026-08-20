@@ -50,8 +50,11 @@ function buildMockPromptData(
   const derivedGetInterpolatedContent =
     overrides.getInterpolatedContent ??
     (!hasExplicitFields && content ? () => content : () => '');
-  const derivedPieces =
-    overrides.pieces ?? (!hasExplicitFields && content ? [content] : []);
+  // `pieces` are the VANILLA cli.js text. applySystemPrompts writes a prompt
+  // back untouched when the markdown still equals that baseline, so a fixture
+  // states a baseline only when it means "uncustomized"; defaulting to none
+  // keeps a fixture on the escaping path, which is where an edited prompt goes.
+  const derivedPieces = overrides.pieces ?? [];
 
   const promptContent = overrides.prompt?.content ?? content ?? '';
 
@@ -103,12 +106,12 @@ describe('systemPrompts.ts', () => {
       const mockPromptData = buildMockPromptData({
         prompt: {
           variables: ['MAX_TIMEOUT'],
-          content: 'Timeout: ${MAX_TIMEOUT()} ms',
+          content: 'Timeout: ${MAX_TIMEOUT()} ms!',
         },
         regex: 'Timeout: ([\\w$]+)\\(\\) ms',
         getInterpolatedContent: (match: RegExpMatchArray) => {
           const capturedVar = match[1];
-          return `Timeout: \${${capturedVar}()} ms`;
+          return `Timeout: \${${capturedVar}()} ms!`;
         },
         pieces: ['Timeout: ${', '()} ms'],
         identifiers: [1],
@@ -117,25 +120,28 @@ describe('systemPrompts.ts', () => {
 
       setupMocks(mockPromptData);
 
-      const cliContent = 'Timeout: J$$() ms';
+      // Wrapped in a real template literal: a `${...}` interpolation only ever
+      // lives in one, and a match with no delimiter on either side is a
+      // fragment of a longer literal, which the apply refuses to escape.
+      const cliContent = 'x:`Timeout: J$$() ms`';
 
       const result = await applySystemPrompts(cliContent, '1.0.0', false);
 
-      expect(result.newContent).toBe('Timeout: ${J$$()} ms');
-      expect(result.newContent).not.toBe('Timeout: ${J$()} ms');
+      expect(result.newContent).toBe('x:`Timeout: ${J$$()} ms!`');
+      expect(result.newContent).not.toBe('x:`Timeout: ${J$()} ms!`');
     });
 
     it('should handle multiple occurrences of $$ correctly', async () => {
       const mockPromptData = buildMockPromptData({
         prompt: {
           variables: ['VAR1', 'VAR2'],
-          content: 'Values: ${VAR1} and ${VAR2}',
+          content: 'Values: ${VAR1} and ${VAR2}!',
         },
         regex: 'Values: ([\\w$]+) and ([\\w$]+)',
         getInterpolatedContent: (match: RegExpMatchArray) => {
           const var1 = match[1];
           const var2 = match[2];
-          return `Values: \${${var1}} and \${${var2}}`;
+          return `Values: \${${var1}} and \${${var2}}!`;
         },
         pieces: ['Values: ${', '} and ${', '}'],
         identifiers: [1, 2],
@@ -144,11 +150,11 @@ describe('systemPrompts.ts', () => {
 
       setupMocks(mockPromptData);
 
-      const cliContent = 'Values: A$$ and B$$';
+      const cliContent = 'x:`Values: A$$ and B$$`';
 
       const result = await applySystemPrompts(cliContent, '1.0.0', false);
 
-      expect(result.newContent).toBe('Values: ${A$$} and ${B$$}');
+      expect(result.newContent).toBe('x:`Values: ${A$$} and ${B$$}!`');
       expect(result.newContent).not.toContain('${A$}');
       expect(result.newContent).not.toContain('${B$}');
     });
@@ -158,7 +164,7 @@ describe('systemPrompts.ts', () => {
         prompt: { content: 'Hello\nWorld' },
         regex: 'Hello(?:\n|\\\\n)World',
         getInterpolatedContent: () => 'Hello\nWorld',
-        pieces: ['Hello\nWorld'],
+        pieces: [],
       });
 
       setupMocks(mockPromptData);
@@ -175,7 +181,7 @@ describe('systemPrompts.ts', () => {
         prompt: { content: 'Hello\r\nWorld' },
         regex: 'Hello(?:\n|\\\\n)World',
         getInterpolatedContent: () => 'Hello\r\nWorld',
-        pieces: ['Hello\r\nWorld'],
+        pieces: [],
       });
 
       setupMocks(mockPromptData);
@@ -193,7 +199,7 @@ describe('systemPrompts.ts', () => {
         prompt: { content: 'Hello\r\nWorld' },
         regex: 'Hello(?:\n|\\\\n)World',
         getInterpolatedContent: () => 'Hello\r\nWorld',
-        pieces: ['Hello\r\nWorld'],
+        pieces: [],
       });
 
       setupMocks(mockPromptData);
@@ -211,7 +217,7 @@ describe('systemPrompts.ts', () => {
         prompt: { content: 'Hello\r\nWorld' },
         regex: 'Hello(?:\n|\\\\n)World',
         getInterpolatedContent: () => 'Hello\r\nWorld',
-        pieces: ['Hello\r\nWorld'],
+        pieces: [],
       });
 
       setupMocks(mockPromptData);
@@ -229,7 +235,7 @@ describe('systemPrompts.ts', () => {
         prompt: { content: 'Hello\nWorld' },
         regex: 'Hello(?:\n|\\\\n)World',
         getInterpolatedContent: () => 'Hello\nWorld',
-        pieces: ['Hello\nWorld'],
+        pieces: [],
       });
 
       setupMocks(mockPromptData);
@@ -260,7 +266,7 @@ describe('systemPrompts.ts', () => {
         content: 'Say \\"Hello\\"',
         regex: 'Say \\\\"Hello\\\\"',
         getInterpolatedContent: () => 'Say \\"Hello\\"',
-        pieces: ['Say \\"Hello\\"'],
+        pieces: [],
       });
 
       setupMocks(mockPromptData);
@@ -293,7 +299,7 @@ describe('systemPrompts.ts', () => {
         prompt: { content: 'text ${unclosed backtick' },
         regex: 'text \\$\\{unclosed backtick',
         getInterpolatedContent: () => 'text ${unclosed backtick',
-        pieces: ['text ${unclosed backtick'],
+        pieces: [],
       });
 
       setupMocks(mockPromptData);
@@ -326,7 +332,7 @@ describe('systemPrompts.ts', () => {
         prompt: { content: 'before ${VERSION} after' },
         regex: 'before \\$\\{VERSION\\} after',
         getInterpolatedContent: () => 'before ${VERSION} after',
-        pieces: ['before ${VERSION} after'],
+        pieces: [],
       });
 
       setupMocks(mockPromptData);
@@ -353,7 +359,7 @@ describe('systemPrompts.ts', () => {
         prompt: { content: 'before ${STALE_VAR_NAME} after' },
         regex: 'before \\$\\{STALE_VAR_NAME\\} after',
         getInterpolatedContent: () => 'before ${STALE_VAR_NAME} after',
-        pieces: ['before ${STALE_VAR_NAME} after'],
+        pieces: [],
       });
 
       setupMocks(mockPromptData);
@@ -379,7 +385,7 @@ describe('systemPrompts.ts', () => {
         prompt: { content: 'wait ${MAX_RETRY_COUNT} ms then stop' },
         regex: 'wait \\$\\{MAX_RETRY_COUNT\\} ms then go',
         getInterpolatedContent: () => 'wait ${MAX_RETRY_COUNT} ms then stop',
-        pieces: ['wait ${MAX_RETRY_COUNT} ms then go'],
+        pieces: [],
       });
 
       setupMocks(mockPromptData);
@@ -409,7 +415,7 @@ describe('systemPrompts.ts', () => {
         prompt: { content: 'use \\${CLAUDE_PLUGIN_ROOT} now' },
         regex: 'use \\\\\\$\\{CLAUDE_PLUGIN_ROOT\\} here',
         getInterpolatedContent: () => 'use \\${CLAUDE_PLUGIN_ROOT} now',
-        pieces: ['use \\${CLAUDE_PLUGIN_ROOT} here'],
+        pieces: [],
       });
 
       setupMocks(mockPromptData);
@@ -491,7 +497,7 @@ describe('systemPrompts.ts', () => {
         prompt: { content: 'run with ${VERSION} flag now' },
         regex: 'run with \\$\\{VERSION\\} flag',
         getInterpolatedContent: () => 'run with ${VERSION} flag now',
-        pieces: ['run with ${VERSION} flag'],
+        pieces: [],
       });
 
       setupMocks(mockPromptData);
@@ -514,7 +520,7 @@ describe('systemPrompts.ts', () => {
         prompt: { content: 'left — right edited' },
         regex: 'left \\\\u2014 right',
         getInterpolatedContent: () => 'left — right edited',
-        pieces: ['left — right'],
+        pieces: [],
       });
 
       setupMocks(mockPromptData);
@@ -535,7 +541,7 @@ describe('systemPrompts.ts', () => {
         prompt: { content: 'left — right' },
         regex: 'left \\\\u2014 right',
         getInterpolatedContent: () => 'left — right',
-        pieces: ['left — right'],
+        pieces: [],
       });
 
       setupMocks(mockPromptData);
@@ -576,7 +582,7 @@ describe('systemPrompts.ts', () => {
         content: 'Use \\`foo\\` for config',
         regex: 'Use \\\\`foo\\\\` for config',
         getInterpolatedContent: () => 'Use \\`foo\\` for config',
-        pieces: ['Use \\`foo\\` for config'],
+        pieces: [],
       });
 
       setupMocks(mockPromptData);
@@ -593,7 +599,7 @@ describe('systemPrompts.ts', () => {
         content: 'Value: `${x}`',
         regex: 'Value: `\\$\\{x\\}`',
         getInterpolatedContent: () => 'Value: `${x}`',
-        pieces: ['Value: `${x}`'],
+        pieces: [],
       });
 
       setupMocks(mockPromptData);
@@ -614,7 +620,7 @@ describe('systemPrompts.ts', () => {
         content: 'Use \\`foo\\` and `bar` for config',
         regex: 'Use \\\\`foo\\\\` and `bar` for config',
         getInterpolatedContent: () => 'Use \\`foo\\` and `bar` for config',
-        pieces: ['Use \\`foo\\` and `bar` for config'],
+        pieces: [],
       });
 
       setupMocks(mockPromptData);
@@ -663,7 +669,7 @@ describe('systemPrompts.ts', () => {
         content: 'Run `cmd` then ${cond?`a`:`b`}',
         regex: 'Run `cmd` then \\$\\{cond\\?`a`:`b`\\}',
         getInterpolatedContent: () => 'Run `cmd` then ${cond?`a`:`b`}',
-        pieces: ['Run `cmd` then ${cond?`a`:`b`}'],
+        pieces: [],
       });
 
       setupMocks(mockPromptData);
@@ -682,7 +688,7 @@ describe('systemPrompts.ts', () => {
         content: 'Use `x` and ${c?`a`:`b`}',
         regex: 'Use `x` and \\$\\{c\\?`a`:`b`\\}',
         getInterpolatedContent: () => 'Use `x` and ${c?`a`:`b`}',
-        pieces: ['Use `x` and ${c?`a`:`b`}'],
+        pieces: [],
       });
 
       setupMocks(mockPromptData);
@@ -713,7 +719,7 @@ describe('systemPrompts.ts', () => {
         content: "It\\'s working",
         regex: "It\\\\'s working",
         getInterpolatedContent: () => "It\\'s working",
-        pieces: ["It\\'s working"],
+        pieces: [],
       });
 
       setupMocks(mockPromptData);
@@ -745,7 +751,7 @@ describe('systemPrompts.ts', () => {
         prompt: { content: 'New longer content here' },
         regex: 'Original text',
         getInterpolatedContent: () => 'New longer content here',
-        pieces: ['Original text'],
+        pieces: [],
       });
 
       setupMocks(mockPromptData, new Error('Storage failure'));
@@ -765,14 +771,14 @@ describe('systemPrompts.ts', () => {
         prompt: { content: 'First replacement' },
         regex: 'First original',
         getInterpolatedContent: () => 'First replacement',
-        pieces: ['First original'],
+        pieces: [],
       });
       const secondPrompt = buildMockPromptData({
         promptId: 'second-prompt',
         prompt: { content: 'Second replacement' },
         regex: 'Second original',
         getInterpolatedContent: () => 'Second replacement',
-        pieces: ['Second original'],
+        pieces: [],
       });
 
       vi.mocked(promptSync.loadSystemPromptsWithRegex).mockResolvedValue([
@@ -877,12 +883,16 @@ describe('systemPrompts.ts', () => {
       expect(result.newContent).toBe(current);
     });
 
-    // Multi-site disambiguation. Exactly one standalone match is preferred.
-    // When that fails we take allMatches[0], which is NOT arbitrary: 124 prompt
-    // ids occupy multiple binary sites (327 catalogue entries), each entry
-    // splicing one site. After a splice the content changes, so the next
-    // entry's regex matches the remaining sites and [0] is the next unpatched
-    // one. Making ambiguity fail instead broke 124 prompts / 302 sites.
+    // Multi-site disambiguation. 124 prompt ids occupy multiple binary sites
+    // (327 catalogue entries), each entry splicing one site; after a splice the
+    // regex no longer matches it, so the group's entries consume sites in
+    // order. When the binary matches in MORE places than the catalogue has
+    // entries, the standalone filter (matching delimiters both sides) has to
+    // narrow them to exactly the entry count — otherwise no site is
+    // attributable and the prompt is skipped. Taking match[0] there splices
+    // override text into unrelated code: `/model`, `(no output)` and bodies
+    // that are pure `${...}` interpolation match hundreds of places, and the
+    // result is valid JS, so nothing downstream notices.
     describe('multi-site disambiguation', () => {
       const buildData = () =>
         buildMockPromptData({
@@ -894,12 +904,17 @@ describe('systemPrompts.ts', () => {
 
       const applyWithSpy = async (cliContent: string) => {
         const errSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+        const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
         const result = await applySystemPrompts(cliContent, '1.0.0', false);
         const errors = errSpy.mock.calls
           .flat()
           .filter((a): a is string => typeof a === 'string');
+        const logs = logSpy.mock.calls
+          .flat()
+          .filter((a): a is string => typeof a === 'string');
         errSpy.mockRestore();
-        return { result, errors };
+        logSpy.mockRestore();
+        return { result, errors, logs };
       };
 
       it('splices the single standalone match, not the first occurrence', async () => {
@@ -915,31 +930,28 @@ describe('systemPrompts.ts', () => {
         expect(errors).toEqual([]);
       });
 
-      it('falls back to the first site when none is standalone', async () => {
+      it('skips rather than splicing into an arbitrary site when none is standalone', async () => {
         setupMocks(buildData());
-        const { result, errors } = await applyWithSpy(
-          'x="pre never skip hooks post";y="never skip hooks now";'
-        );
+        const current =
+          'x="pre never skip hooks post";y="never skip hooks now";';
+        const { result, errors, logs } = await applyWithSpy(current);
 
-        expect(result.newContent).toBe(
-          'x="pre HOOKS OVERRIDE post";y="never skip hooks now";'
-        );
-        expect(result.results[0].applied).toBe(true);
+        expect(result.newContent).toBe(current);
+        expect(result.results[0].applied).toBe(false);
+        expect(result.results[0].details).toContain('ambiguous');
+        expect(logs.join('\n')).toContain('skipping');
         expect(errors).toEqual([]);
       });
 
-      // The multi-site mechanism: each catalogue entry consumes the next
-      // unpatched site, so several standalone matches must NOT fail.
-      it('consumes the first site when several are standalone', async () => {
+      it('skips when several sites are standalone but only one entry claims them', async () => {
         setupMocks(buildData());
-        const { result, errors } = await applyWithSpy(
-          'x="never skip hooks";y="never skip hooks";'
-        );
+        const current = 'x="never skip hooks";y="never skip hooks";';
+        const { result, errors, logs } = await applyWithSpy(current);
 
-        expect(result.newContent).toBe(
-          'x="HOOKS OVERRIDE";y="never skip hooks";'
-        );
-        expect(result.results[0].applied).toBe(true);
+        expect(result.newContent).toBe(current);
+        expect(result.results[0].applied).toBe(false);
+        expect(result.results[0].details).toContain('ambiguous');
+        expect(logs.join('\n')).toContain('skipping');
         expect(errors).toEqual([]);
       });
 
@@ -969,8 +981,8 @@ describe('systemPrompts.ts', () => {
         expect(errors).toEqual([]);
       });
 
-      // A multi-site prompt must not disturb its neighbours.
-      it('applies both a multi-site prompt and an unrelated one', async () => {
+      // A skipped ambiguous prompt must not disturb its neighbours.
+      it('applies an unrelated prompt even when an ambiguous one is skipped', async () => {
         const ambiguous = buildData();
         const other = buildMockPromptData({
           promptId: 'other-prompt',
@@ -989,9 +1001,9 @@ describe('systemPrompts.ts', () => {
           'x="never skip hooks";y="never skip hooks";z="unique target text";'
         );
 
-        expect(result.results[0].applied).toBe(true);
+        expect(result.results[0].applied).toBe(false);
         expect(result.results[1].applied).toBe(true);
-        expect(result.newContent).toContain('x="HOOKS OVERRIDE"');
+        expect(result.newContent).toContain('x="never skip hooks"');
         expect(result.newContent).toContain('z="OTHER OVERRIDE"');
       });
     });

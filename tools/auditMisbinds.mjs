@@ -106,6 +106,24 @@ for (const f of fs.readdirSync(overridesDir)) {
     console.log(`mis-bind audit: curated divergence from upstream — ${id}`);
     continue;
   }
+  // Slot NUMBERS are only comparable when both sides describe the same slot
+  // layout. Upstream publishes per-version, and on a bump where they have not
+  // published yet the reference is an OLDER release: CC 2.1.237 inserted a slot
+  // into tool-description-edit (`${r?"":cES()}` -> `${r?uES():cES()}`), shifting
+  // every later label by one, so comparing our 5-slot map against upstream's
+  // 4-slot one reports two mis-binds where both maps are correct for their own
+  // version. That is a false positive on a gate whose whole value is that a hit
+  // means something, so skip the prompt and say so, rather than adding a
+  // permanent per-id silencer that would also hide a real regression later.
+  const sameLayout =
+    JSON.stringify(O[id]?.identifiers ?? null) ===
+    JSON.stringify(P[id]?.identifiers ?? null);
+  if (!sameLayout) {
+    console.log(
+      `mis-bind audit: slot layout differs from upstream (${(O[id]?.identifiers || []).length} vs ${(P[id]?.identifiers || []).length} slots) — not comparable: ${id}`
+    );
+    continue;
+  }
   const our = invert(O[id]?.identifierMap);
   const pieb = invert(P[id]?.identifierMap);
   for (const name of used) {

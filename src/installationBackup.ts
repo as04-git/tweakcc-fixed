@@ -7,8 +7,45 @@ import {
   updateConfigFile,
 } from './config';
 import { clearAllAppliedHashes } from './systemPromptHashIndex';
-import { debug, replaceFileBreakingHardLinks, doesFileExist } from './utils';
+import { fileLooksPatched } from './patchMarkers';
+import {
+  debug,
+  replaceFileFromSourceBreakingHardLinks,
+  doesFileExist,
+} from './utils';
 import { ClaudeCodeInstallationInfo } from './types';
+
+/**
+ * Thrown instead of writing a backup that would not be pristine. The backup is
+ * the only route back to an unpatched Claude Code, so overwriting a good one
+ * with an already-patched binary is unrecoverable: `--restore` then restores a
+ * patched binary forever, the next `--apply` extracts anchors from it and
+ * misses, and only reinstalling Claude Code fixes it.
+ */
+export class NonPristineBackupError extends Error {
+  constructor(sourcePath: string) {
+    super(
+      `Refusing to back up ${sourcePath}: it carries tweakcc markers, so it is ` +
+        'already patched. Backing it up would overwrite the only pristine copy ' +
+        'with a patched one. Run `tweakcc --restore` first, or reinstall Claude ' +
+        'Code, then try again.'
+    );
+    this.name = 'NonPristineBackupError';
+  }
+}
+
+/**
+ * Guard for every backup write. `ccVersion` is NOT evidence of pristine-ness:
+ * it lives in config.json, and a missing or corrupt config.json resolves to the
+ * default `ccVersion: ''`, which reads as "the user updated Claude Code" and
+ * triggers a re-backup of whatever is installed — including a binary tweakcc
+ * itself patched moments earlier. Ask the bytes instead.
+ */
+const assertPristineSource = async (sourcePath: string): Promise<void> => {
+  if (await fileLooksPatched(sourcePath)) {
+    throw new NonPristineBackupError(sourcePath);
+  }
+};
 
 // Copy a file into place atomically: copy to a sibling temp, then rename onto
 // the destination. rename(2) is atomic within a filesystem, so a crash mid-copy
@@ -36,6 +73,7 @@ export const backupClijs = async (ccInstInfo: ClaudeCodeInstallationInfo) => {
     return;
   }
 
+  await assertPristineSource(ccInstInfo.cliPath);
   await ensureConfigDir();
   debug(`Backing up cli.js to ${CLIJS_BACKUP_FILE}`);
   await atomicCopyFile(ccInstInfo.cliPath, CLIJS_BACKUP_FILE);
@@ -55,6 +93,7 @@ export const backupNativeBinary = async (
     return;
   }
 
+  await assertPristineSource(ccInstInfo.nativeInstallationPath);
   await ensureConfigDir();
   debug(`Backing up native binary to ${NATIVE_BINARY_BACKUP_FILE}`);
   await atomicCopyFile(
@@ -89,13 +128,10 @@ export const restoreClijsFromBackup = async (
 
   debug(`Restoring cli.js from backup to ${ccInstInfo.cliPath}`);
 
-  // Read the backup content
-  const backupContent = await fs.readFile(CLIJS_BACKUP_FILE);
-
-  // Replace the file, breaking hard links and preserving permissions
-  await replaceFileBreakingHardLinks(
+  // Staged sibling + rename, breaking hard links and preserving permissions.
+  await replaceFileFromSourceBreakingHardLinks(
     ccInstInfo.cliPath,
-    backupContent,
+    CLIJS_BACKUP_FILE,
     'restore'
   );
 
@@ -133,15 +169,24 @@ export const restoreNativeBinaryFromBackup = async (
     `Restoring native binary from backup to ${ccInstInfo.nativeInstallationPath}`
   );
 
-  // Read the backup content
-  const backupContent = await fs.readFile(NATIVE_BINARY_BACKUP_FILE);
-
-  // Replace the file, breaking hard links and preserving permissions
-  await replaceFileBreakingHardLinks(
+  // Staged sibling + rename, breaking hard links and preserving permissions.
+  // Never buffered: the native binary is 300-750 MB.
+  await replaceFileFromSourceBreakingHardLinks(
     ccInstInfo.nativeInstallationPath,
-    backupContent,
+    NATIVE_BINARY_BACKUP_FILE,
     'restore'
   );
+
+  // The binary is back to vanilla, so no prompt override is applied any more.
+  // Without this the hash index keeps claiming every override is live against a
+  // pristine binary: no "unapplied changes" banner, and the user believes their
+  // prompts are in effect when they are not. The cli.js sibling has always done
+  // this; the native path silently did not.
+  await clearAllAppliedHashes();
+
+  await updateConfigFile(config => {
+    config.changesApplied = false;
+  });
 
   return true;
 };

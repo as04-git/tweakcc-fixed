@@ -5,13 +5,14 @@ import {
   loadSystemPromptsWithRegex,
   reconstructContentFromPieces,
   encodeReplacementForDelimiter,
+  needsDelimiterAwareEscaping,
   loadIdentifierMapUnion,
 } from '../systemPromptSync';
 import {
   detectUnicodeEscaping,
   extractBuildTime,
   leakedPromptPlaceholders,
-  pickMatchForSpliceAt,
+  selectSpliceSiteAt,
 } from '../systemPromptSites';
 import { setAppliedHashes, computeMD5Hash } from '../systemPromptHashIndex';
 import { MutableText } from '../mutableText';
@@ -122,6 +123,20 @@ export const applySystemPrompts = async (
     for (const v of Object.values(sp.identifierMap)) names.add(v);
   }
 
+  // Catalogue multiplicity per shape group, grouped by regex exactly as the
+  // preflight groups it: several entries can share one regex, one per binary
+  // site. `retained` counts the group's entries that resolved to a site and
+  // left its bytes alone (uncustomized, or skipped by a guard) — those sites
+  // still match, so the next entry has to index past them. `spliced` counts the
+  // sites that are gone from the match list. See selectSpliceSiteAt.
+  const groupMultiplicity = new Map<string, number>();
+  for (const sp of systemPrompts) {
+    if (patchFilter && !patchFilter.includes(sp.promptId)) continue;
+    groupMultiplicity.set(sp.regex, (groupMultiplicity.get(sp.regex) ?? 0) + 1);
+  }
+  const groupRetained = new Map<string, number>();
+  const groupSpliced = new Map<string, number>();
+
   // Track per-prompt results
   const results: PatchResult[] = [];
   const appliedHashUpdates: Record<string, string> = {};
@@ -154,7 +169,10 @@ export const applySystemPrompts = async (
     }
 
     debug(`Applying system prompt: ${prompt.name}`);
-    const pattern = new RegExp(regex, 'si'); // 's' flag for dotAll mode, 'i' because of casing inconsistencies in unicode escape sequences (e.g. `\u201C` in the regex vs `\u201C` in the file)
+    // 's' for dotAll. No 'i': escapeNonAsciiForRegex already matches both hex
+    // casings of a `\uXXXX` escape, and a case-insensitive prompt regex
+    // over-matches its own prose (see foldPromptMatchContent).
+    const pattern = new RegExp(regex, 's');
 
     // Some short prompts (e.g. tool-description-bash-git-never-skip-hooks) hold
     // text that Anthropic also inlines verbatim into a longer prompt
@@ -163,21 +181,102 @@ export const applySystemPrompts = async (
     // looks like a complete string-literal value (surrounded by matching
     // " ' or ` delimiters) when more than one occurrence exists.
     const allMatches = await matchCatalog.matchCurrent(regex, working);
-    // pickMatchForSplice keeps the sequential-consumption contract: when the
-    // standalone filter can't narrow to one, index 0 is the next UNPATCHED site
-    // of a multi-site prompt. Cardinality is verified up-front by the preflight.
-    const { match, disambiguated } = pickMatchForSpliceAt(allMatches, index =>
-      working.charAt(index)
+    const multiplicity = groupMultiplicity.get(regex) ?? 1;
+    const retained = groupRetained.get(regex) ?? 0;
+    const remaining = multiplicity - (groupSpliced.get(regex) ?? 0);
+    const { match, ambiguous, disambiguated } = selectSpliceSiteAt(
+      allMatches,
+      remaining,
+      retained,
+      index => working.charAt(index)
     );
     if (disambiguated) {
       debug(
-        `Disambiguated ${allMatches.length} matches \u2192 1 standalone for "${prompt.name}"`
+        `Disambiguated ${allMatches.length} matches \u2192 ${remaining} standalone for "${prompt.name}"`
       );
     }
 
+    if (ambiguous) {
+      console.log(
+        chalk.yellow(
+          `"${prompt.name}" matches ${allMatches.length} places in cli.js for ${remaining} ` +
+            'catalogue entr' +
+            (remaining === 1 ? 'y' : 'ies') +
+            ' and none of them is identifiable \u2014 skipping rather than ' +
+            'splicing into whichever came first'
+        )
+      );
+      results.push({
+        id: promptId,
+        name: prompt.name,
+        group: PatchGroup.SYSTEM_PROMPTS,
+        applied: false,
+        details: `${allMatches.length} ambiguous candidate sites - no site attributable to this prompt`,
+      });
+      continue;
+    }
+
     if (match && match.index !== undefined) {
-      // Generate the interpolated content using the actual variables from the match
-      const interpolatedContent = getInterpolatedContent(match);
+      // reconstructContentFromPieces produced the .md body in the first place,
+      // so an untouched file still equals it and there is nothing to apply.
+      // Re-encoding it anyway is not safe: the .md is a hybrid of decoded
+      // quotes and raw JavaScript escapes, so the escaping passes below are not
+      // its inverse \u2014 they double a backslash that was already literal prompt
+      // text and emit `\uXXXX` where the bundle had `\xHH` or an uppercase
+      // escape, rewriting prompts nobody customized on every apply (#922).
+      // Leaving the site untouched is both correct and the only form guaranteed
+      // to survive the round trip. Compared trimmed because the markdown round
+      // trip is only trim-stable: gray-matter normalises the trailing newline,
+      // and applyOriginalWhitespace already treats the edges as serialization.
+      const originalBaselineContent = reconstructContentFromPieces(
+        pieces,
+        identifiers,
+        identifierMap
+      ).trim();
+      if (prompt.content.trim() === originalBaselineContent) {
+        debug(
+          `"${prompt.name}": still vanilla \u2014 leaving cli.js untouched`
+        );
+        groupRetained.set(regex, retained + 1);
+        appliedHashUpdates[promptId] = computeMD5Hash(prompt.content);
+        results.push({
+          id: promptId,
+          name: prompt.name,
+          group: PatchGroup.SYSTEM_PROMPTS,
+          applied: false,
+          details: 'unchanged',
+        });
+        hashResultIndexes.push(results.length - 1);
+        continue;
+      }
+      // Generate the interpolated content using the actual variables from the
+      // match. `substituteInInterpolations` throws on a malformed `${` — an
+      // unclosed brace, an apostrophe inside one, a comment — all of which are
+      // plausible authored text ("cost is ${100 for a run"). Uncaught, that
+      // propagated out of the whole apply as a bare stack trace naming no
+      // prompt, on native AFTER the extract step. Catch it here, where the id
+      // is known, and skip only the offending override.
+      let interpolatedContent: string;
+      try {
+        interpolatedContent = getInterpolatedContent(match);
+      } catch (error) {
+        console.log(
+          chalk.red(
+            `Malformed \${...} interpolation in "${prompt.name}" (${promptId}.md): ` +
+              `${error instanceof Error ? error.message : String(error)} - skipping`
+          )
+        );
+        groupRetained.set(regex, retained + 1);
+        results.push({
+          id: promptId,
+          name: prompt.name,
+          group: PatchGroup.SYSTEM_PROMPTS,
+          applied: false,
+          failed: true,
+          details: 'malformed ${...} interpolation in the markdown',
+        });
+        continue;
+      }
 
       // Check the delimiter character before the match to determine string type
       const matchIndex = match.index;
@@ -231,6 +330,7 @@ export const applySystemPrompts = async (
           debug(
             `"${prompt.name}": placeholders resolve via a same-id sibling shape — leaving this site pristine`
           );
+          groupRetained.set(regex, retained + 1);
           results.push({
             id: promptId,
             name: prompt.name,
@@ -253,6 +353,7 @@ export const applySystemPrompts = async (
               `Unresolved placeholder \${${leaked[0]}} in "${prompt.name}" (markdown vocabulary out of sync with CC ${version} prompt data) - skipping`
             )
           );
+          groupRetained.set(regex, retained + 1);
           results.push({
             id: promptId,
             name: prompt.name,
@@ -264,13 +365,42 @@ export const applySystemPrompts = async (
         }
       }
 
+      // Guard: the delimiter is read from the single character before the
+      // match, which only names the enclosing literal when the match IS the
+      // whole literal value. At a site that is a fragment of a longer literal
+      // that character is arbitrary and encodeReplacementForDelimiter has no
+      // branch for it, so the body would be embedded with no escaping at all —
+      // one raw backtick or `${` there terminates a template literal early and
+      // leaves the rest of cli.js as floating syntax ("Expected CommonJS module
+      // to have a function wrapper" at launch). Text that needs no
+      // delimiter-specific escaping is inert in any of the three literal kinds
+      // and still applies.
+      if (
+        delimiter !== '"' &&
+        delimiter !== "'" &&
+        delimiter !== '`' &&
+        needsDelimiterAwareEscaping(interpolatedContent)
+      ) {
+        console.log(
+          chalk.yellow(
+            `"${prompt.name}" resolves inside a larger string literal (no delimiter at the ` +
+              'match boundary) and its content needs delimiter-specific escaping - skipping'
+          )
+        );
+        groupRetained.set(regex, retained + 1);
+        results.push({
+          id: promptId,
+          name: prompt.name,
+          group: PatchGroup.SYSTEM_PROMPTS,
+          applied: false,
+          details:
+            'unresolvable string delimiter - cannot escape content safely',
+        });
+        continue;
+      }
+
       // Calculate character counts for this prompt (both with human-readable placeholders)
       // Note: trim() to match how markdown files are parsed and how whitespace is applied
-      const originalBaselineContent = reconstructContentFromPieces(
-        pieces,
-        identifiers,
-        identifierMap
-      ).trim();
       const originalLength = originalBaselineContent.length;
       const newLength = prompt.content.trim().length;
 
@@ -288,6 +418,7 @@ export const applySystemPrompts = async (
             `Incomplete backtick escaping for "${prompt.name}" (unclosed interpolation) - skipping`
           )
         );
+        groupRetained.set(regex, retained + 1);
         results.push({
           id: promptId,
           name: prompt.name,
@@ -309,6 +440,7 @@ export const applySystemPrompts = async (
       // so the disambiguation above isn't undone by replace() always matching
       // the first hit.
       if (replacementContent !== match[0]) {
+        groupSpliced.set(regex, (groupSpliced.get(regex) ?? 0) + 1);
         working.splice(
           matchIndex,
           matchIndex + matchLength,
@@ -320,6 +452,10 @@ export const applySystemPrompts = async (
           end: matchIndex + matchLength,
           replacementLength: replacementContent.length,
         });
+      } else {
+        // Same bytes: the site keeps matching, so the group's next entry must
+        // index past it rather than resolve to it again.
+        groupRetained.set(regex, retained + 1);
       }
 
       // Store the hash of the applied prompt content

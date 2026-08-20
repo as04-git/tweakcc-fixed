@@ -385,6 +385,65 @@ export const buildChalkChain = (
 };
 
 /**
+ * The mode a replacement should land with: the destination's current mode, or
+ * 0o755 when it does not exist yet or cannot be stat'd.
+ */
+async function modeToPreserve(
+  filePath: string,
+  operation: string
+): Promise<number> {
+  try {
+    const stats = await fs.stat(filePath);
+    debug(
+      `[${operation}] Original file mode for ${filePath}: ${(stats.mode & parseInt('777', 8)).toString(8)}`
+    );
+    return stats.mode;
+  } catch (error) {
+    debug(
+      `[${operation}] Could not stat ${filePath} (error: ${error}), using default mode 755`
+    );
+    return 0o755;
+  }
+}
+
+/**
+ * Stage `write` into a sibling temp file, give it `mode`, then rename it onto
+ * `filePath`.
+ *
+ * rename(2) is atomic within a filesystem and points the directory entry at a
+ * NEW inode, which is what actually breaks a hard link (e.g. Bun's). Unlinking
+ * the destination first, as this used to, broke the link just as well but
+ * opened a window — the length of a 300-750 MB write — in which the install had
+ * no working binary at all: an ENOSPC, EIO, OOM or Ctrl-C in that window left a
+ * truncated, non-executable stub and only a reinstall recovered. On macOS the
+ * rename is also required for its own sake; replacing the bytes of the existing
+ * inode in place revives a "Code Signature Invalid" SIGKILL.
+ */
+async function stageAndRename(
+  filePath: string,
+  mode: number,
+  operation: string,
+  write: (tmpPath: string) => Promise<void>
+): Promise<void> {
+  const tmpPath = `${filePath}.tweakcc-tmp-${process.pid}`;
+  try {
+    await write(tmpPath);
+    await fs.chmod(tmpPath, mode);
+    await fs.rename(tmpPath, filePath);
+  } catch (error) {
+    try {
+      await fs.unlink(tmpPath);
+    } catch {
+      // best-effort temp cleanup; the original is still intact either way
+    }
+    throw error;
+  }
+  debug(
+    `[${operation}] Replaced ${filePath} via atomic rename, mode ${(mode & parseInt('777', 8)).toString(8)}`
+  );
+}
+
+/**
  * Replaces a file's content while breaking hard links and preserving permissions.
  * This is essential when modifying files that may be hard-linked (e.g., by Bun).
  *
@@ -397,37 +456,26 @@ export async function replaceFileBreakingHardLinks(
   newContent: string | Buffer,
   operation: string = 'replace'
 ): Promise<void> {
-  // Get the original file's permissions before unlinking
-  let originalMode = 0o755; // Default fallback
-  try {
-    const stats = await fs.stat(filePath);
-    originalMode = stats.mode;
-    debug(
-      `[${operation}] Original file mode for ${filePath}: ${(originalMode & parseInt('777', 8)).toString(8)}`
-    );
-  } catch (error) {
-    // File might not exist, use default
-    debug(
-      `[${operation}] Could not stat ${filePath} (error: ${error}), using default mode 755`
-    );
-  }
+  const mode = await modeToPreserve(filePath, operation);
+  await stageAndRename(filePath, mode, operation, tmpPath =>
+    fs.writeFile(tmpPath, newContent)
+  );
+}
 
-  // Unlink the file first to break any hard links
-  try {
-    await fs.unlink(filePath);
-    debug(`[${operation}] Unlinked ${filePath} to break hard links`);
-  } catch (error) {
-    // File might not exist, which is fine
-    debug(`[${operation}] Could not unlink ${filePath}: ${error}`);
-  }
-
-  // Write the new content
-  await fs.writeFile(filePath, newContent);
-
-  // Restore the original permissions
-  await fs.chmod(filePath, originalMode);
-  debug(
-    `[${operation}] Restored permissions to ${(originalMode & parseInt('777', 8)).toString(8)}`
+/**
+ * Same guarantees as `replaceFileBreakingHardLinks`, but copies from a source
+ * file instead of taking the bytes in memory. Restoring a native install means
+ * moving up to 750 MB, and buffering that only to hand it straight to a write
+ * costs the peak RSS for no benefit.
+ */
+export async function replaceFileFromSourceBreakingHardLinks(
+  filePath: string,
+  sourcePath: string,
+  operation: string = 'replace'
+): Promise<void> {
+  const mode = await modeToPreserve(filePath, operation);
+  await stageAndRename(filePath, mode, operation, tmpPath =>
+    fs.copyFile(sourcePath, tmpPath)
   );
 }
 

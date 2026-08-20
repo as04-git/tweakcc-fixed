@@ -86,6 +86,20 @@ export const writeRememberSkill = (oldFile: string): string | null => {
   const bundledResult = writeBundledRememberSkill(oldFile, skillRegistrationFn);
   if (bundledResult) return bundledResult;
 
+  // The legacy injection point below is anchored on the skill's own body, which
+  // opens `# Remember Skill`. That literal has ZERO occurrences in 2.1.226 and
+  // 2.1.227 — Anthropic dropped the bundled Remember skill, so there is no
+  // shape left to re-anchor on. Hunting for a new regex is the wrong move
+  // (AGENTS.md "failed to find", case 2 — feature gone): no-op instead of
+  // failing the whole apply. Checked only after the bundled path so a build
+  // that still registers the skill takes that route.
+  if (!oldFile.includes('# Remember Skill')) {
+    console.log(
+      'patch: rememberSkill: the Remember skill is absent from this CC build — no-op'
+    );
+    return oldFile;
+  }
+
   // Find the injection point pattern
   const pattern =
     /(function ([$\w]+)\(.{0,500}\}function [$\w]+\(\)\{)return(\}.{0,10}[, ]([$\w]+)=`# Remember Skill)/;

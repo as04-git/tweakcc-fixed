@@ -60,21 +60,27 @@ const analyzeArrayFromOpenBracket = (
 /**
  * Find the end position of the slash command array using stack machine.
  *
- * Supports both pre-2.1.138 form (plain `=>[ID,ID,...]` with 30+ bare
- * identifiers) and 2.1.138+ form where the array uses spread operators for
+ * Supports the pre-2.1.138 form (plain `=>[ID,ID,...]` with 30+ bare
+ * identifiers), the 2.1.138+ form where the array uses spread operators for
  * conditionally-included commands, e.g.:
  *   =L8(()=>[AUK,pL4,DX4,y64,...gT4?[gT4]:[],Qj4,lI6,vL4,...,W94(),...])
+ * and the 2.1.227+ form, where the table moved out of an arrow into a named
+ * builder memoized on a cache field:
+ *   function Pti(){let e=gf();return e.builtinCommandTable??=uQb(),…}
+ *   function uQb(){return[sGu,Vfa,SFp,…]}
  *
  * The candidate must also sit in slash-command-specific code. The bundle keeps
  * slash-command definitions near command metadata such as name/userFacingName,
- * so this rejects unrelated large arrow-return arrays.
+ * so this rejects unrelated large arrays — on 2.1.227 that guard is what
+ * separates the 130-item command table from three other 30+ item `return[`
+ * arrays elsewhere in the bundle.
  */
 export const findSlashCommandListEndPosition = (
   fileContents: string
 ): number | null => {
-  // Walk every `=>[` candidate. The slash command array is the (only) array
-  // following an arrow-return that contains >= 30 top-level items.
-  const arrowPattern = /=>\s*\[/g;
+  // Walk every arrow-return or `return [` candidate. The slash command array is
+  // the (only) such array with >= 30 top-level items in command-metadata code.
+  const arrowPattern = /(?:=>|\breturn)\s*\[/g;
   let m: RegExpExecArray | null;
   let best: { closing: number; items: number } | null = null;
   while ((m = arrowPattern.exec(fileContents)) !== null) {

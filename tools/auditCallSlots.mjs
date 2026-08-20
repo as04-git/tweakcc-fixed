@@ -20,31 +20,74 @@
 // an author adds a spurious call. A real interactive turn remains the belt+braces
 // for the rarer call-the-bare-and-skip-the-real-fn swap.)
 //
-// Usage:
-//   node tools/auditCallSlots.mjs [ourJson] [overridesDir]
-// Exits non-zero if any override calls more distinct vars than its prompt has
-// callable slots.
+// Two checks run: the per-prompt call COUNT above, and a per-label SHAPE check
+// (see below) that resolves what each slot actually is and catches the opposite
+// direction too — an override reading a call slot as a bare value.
+//
+// Usage: node tools/auditCallSlots.mjs [prompts.json] [set-dir ...]
+// Exits non-zero on any shape disagreement, and 2 if it could not run at all.
 import fs from 'node:fs';
 
-const VER = process.env.CC_VER || '2.1.186';
-const ourJson = process.argv[2] || `data/prompts/prompts-${VER}.json`;
-const overridesDir =
-  process.argv[3] ||
-  `${process.env.HOME}/.tweakcc/lobotomized-claude-code/system-prompts-opus-4-8`;
+//
+// Every maintained set is scanned, not one. This bug class is exactly the
+// parallel-set-drift case: `--apply` rebases only the ACTIVE set, so a stale
+// `${VAR()}` on a slot that became a bare value survives in the OTHER sets for
+// dozens of releases while the active set stays green. Defaulting to a single
+// hardcoded set name made the gate blind to the failures it exists to find.
+const newestJson = () => {
+  try {
+    return fs
+      .readdirSync('data/prompts')
+      .filter(f => /^prompts-\d+\.\d+\.\d+\.json$/.test(f))
+      .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }))
+      .pop();
+  } catch {
+    return null;
+  }
+};
+const VER = process.env.CC_VER || null;
+const ourJson =
+  process.argv[2] ||
+  (VER ? `data/prompts/prompts-${VER}.json` : `data/prompts/${newestJson()}`);
+const LCC = `${process.env.HOME}/.tweakcc/lobotomized-claude-code`;
+const cliDirs = process.argv.slice(3).map(a => a.replace(/^--set=/, ''));
+const overrideDirs = cliDirs.length
+  ? cliDirs
+  : (() => {
+      try {
+        return fs
+          .readdirSync(LCC)
+          .filter(d => d.startsWith('system-prompts-'))
+          .filter(d => fs.statSync(`${LCC}/${d}`).isDirectory())
+          .map(d => `${LCC}/${d}`);
+      } catch {
+        return [];
+      }
+    })();
 
 let OURS;
 try {
   OURS = JSON.parse(fs.readFileSync(ourJson, 'utf8'));
 } catch (e) {
+  // A gate that could not run is a gate that did not run: exit non-zero so it
+  // can never be read as "found nothing".
   console.error(`call-slot audit: SKIPPED — prompts JSON '${ourJson}' missing/unreadable (${e.message}).`);
-  process.exit(0);
+  process.exit(2);
 }
-let files;
-try {
-  files = fs.readdirSync(overridesDir).filter(f => f.endsWith('.md'));
-} catch (e) {
-  console.error(`call-slot audit: SKIPPED — overrides dir '${overridesDir}' missing (${e.message}).`);
-  process.exit(0);
+if (overrideDirs.length === 0) {
+  console.error(`call-slot audit: SKIPPED — no override sets found under ${LCC}.`);
+  process.exit(2);
+}
+const files = [];
+for (const dir of overrideDirs) {
+  let entries;
+  try {
+    entries = fs.readdirSync(dir).filter(f => f.endsWith('.md'));
+  } catch (e) {
+    console.error(`call-slot audit: SKIPPED — overrides dir '${dir}' missing (${e.message}).`);
+    process.exit(2);
+  }
+  for (const f of entries) files.push({ dir, f });
 }
 
 // id -> max number of direct-call interpolations across that id's JSON entries
@@ -60,13 +103,38 @@ for (const p of OURS.prompts) {
   callsById[p.id] = Math.max(callsById[p.id] ?? 0, n);
 }
 
+// The count check above is one-directional: it catches ${VAR()} on a value slot
+// (a TypeError) but not ${VAR} on a CALL slot, which interpolates the FUNCTION
+// OBJECT into the prompt — wrong content, no crash, and invisible to apply,
+// four zeros and the smoke. 2.1.233 turned webfetch's
+// ${eZ_} into ${eZ_()} and three sets kept the bare form.
+//
+// So also resolve each label's slot SHAPE. Pieces already carry the `${` and `}`,
+// so identifiers[i] labels the slot between pieces[i] and pieces[i+1], and the
+// first char of pieces[i+1] gives the shape: `(` a direct call, `.` a member,
+// anything else a bare value. A label reused across slots collects every shape it
+// legitimately takes, and only a shape outside that set is a finding.
+const shapeOf = next => (next.startsWith('(') ? 'call' : next.startsWith('.') ? 'member' : 'value');
+const shapesById = {};
+for (const p of OURS.prompts) {
+  if (!p.id || !Array.isArray(p.pieces) || !Array.isArray(p.identifiers)) continue;
+  const map = p.identifierMap || {};
+  const byLabel = (shapesById[p.id] ??= {});
+  for (let i = 0; i < p.identifiers.length; i += 1) {
+    const label = map[String(p.identifiers[i])];
+    const next = p.pieces[i + 1];
+    if (!label || typeof next !== 'string') continue;
+    (byLabel[label] ??= new Set()).add(shapeOf(next));
+  }
+}
+
 const findings = [];
-for (const f of files) {
+for (const { dir, f } of files) {
   const id = f.slice(0, -3);
   // Only named-prompt overrides map to the JSON. inline-* / system-reminder-* use
   // other surfaces (positional remap / registry) and aren't in prompts JSON.
   if (!(id in callsById)) continue;
-  const raw = fs.readFileSync(`${overridesDir}/${f}`, 'utf8');
+  const raw = fs.readFileSync(`${dir}/${f}`, 'utf8');
   const body = (raw.match(/^<!--[\s\S]*?-->\n?([\s\S]*)$/) || [, raw])[1];
   // Distinct vars the override CALLS: ${VAR( ... — VAR immediately followed by `(`
   // (a direct call on VAR). Member-calls ${VAR.method( are not a direct call on
@@ -74,21 +142,41 @@ for (const f of files) {
   const calledVars = new Set(
     [...body.matchAll(/(?<!\\)\$\{([A-Z][A-Z0-9_]+)\(/g)].map(m => m[1])
   );
+
+  // Shape check, both directions, per label.
+  const shapes = shapesById[id];
+  if (shapes) {
+    for (const m of body.matchAll(/(?<!\\)\$\{([A-Z][A-Z0-9_]+)([(.]?)/g)) {
+      const [, label, punct] = m;
+      const known = shapes[label];
+      if (!known) continue;
+      const used = punct === '(' ? 'call' : punct === '.' ? 'member' : 'value';
+      if (known.has(used)) continue;
+      findings.push(
+        `${dir.split('/').pop()}/${id}: override interpolates \${${label}${punct}} as a ${used}, but pristine only ever uses that slot as ${[...known].join('/')} — a call slot read as a value emits the function itself into the prompt`
+      );
+    }
+  }
+
   if (!calledVars.size) continue;
   const available = callsById[id];
   if (calledVars.size > available) {
     findings.push(
-      `${id}: override calls ${calledVars.size} distinct var(s) [${[...calledVars].join(', ')}] but pristine has only ${available} direct-call slot(s) — a ${'${VAR()}'} on a bare value slot throws at runtime`
+      `${dir.split('/').pop()}/${id}: override calls ${calledVars.size} distinct var(s) [${[...calledVars].join(', ')}] but pristine has only ${available} direct-call slot(s) — a ${'${VAR()}'} on a bare value slot throws at runtime`
     );
   }
 }
 
 if (findings.length) {
-  console.error(`CALL-SLOT BUGS: ${findings.length} (override calls a non-callable slot)`);
+  console.error(
+    `CALL-SLOT BUGS: ${findings.length} (an override's interpolation shape disagrees with the pristine slot)`
+  );
   for (const m of findings) console.error('  ' + m);
   console.error(
-    '\nFix: drop the spurious () so the override interpolates the value (e.g. ${VAR}), matching the pristine. The pristine renders a call as ${(...)} and a value as ${}. See reference_print_smoke_misses_interactive_prompt_bugs.'
+    '\nFix: match the pristine shape exactly. Pristine renders a call as ${(...)}, a member as ${.x}, a value as ${}. ${VAR()} on a value slot throws at runtime; ${VAR} on a call slot silently interpolates the function itself. See reference_print_smoke_misses_interactive_prompt_bugs.'
   );
   process.exit(1);
 }
-console.log('call-slot audit: 0 (no override calls a non-callable slot)');
+console.log(
+  `call-slot audit: 0 (every override interpolation matches its pristine slot shape; ${files.length} file(s) across ${overrideDirs.length} set(s))`
+);
