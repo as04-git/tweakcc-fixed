@@ -253,6 +253,11 @@
     "version": "2.1.226",
     "why": "The first sentence repeats the next sentence's evaluator role; naming Claude Code adds no decision information. The retained instruction and JSON shapes carry the unique task and hard output contract. The stop-condition sibling is not coverage because it is a different branch with an additional impossible state."
   },
+  "agent-prompt-managed-agents-onboarding-flow": {
+    "verdict": "trim",
+    "version": "2.1.237",
+    "why": "Managed Agents reference doc. Trimmed tutorial prose, worked examples and SDK walkthroughs; kept every API mechanic. The family was trimmed in one pass, so the stage-1 coverage citations were stale by construction and two adversarial rounds refuted 9-10 of 10 on citation staleness rather than absent text. Settled with tools/checkFactCoverage.mjs instead: 26 API facts across 7 files were reachable nowhere in the set and were restored verbatim (this file among them). checkFactCoverage and checkTrimSlots both report 0 on all four sets."
+  },
   "agent-prompt-memory-existing-files": {
     "injectionPath": "Conditional fragment in the memory-extraction prompt when at least one existing memory file is available.",
     "verdict": "trim",
@@ -1831,11 +1836,56 @@
     "version": "2.1.226",
     "why": "Unique runtime contract: names the configured task-file path, establishes that its content governs this and subsequent ticks, explains why later reminders refer back, injects the file content, and appends the dynamic ending clause. These are loop orchestration mechanics, not general task-completion scaffolding."
   },
+  "data-managed-agents-client-patterns": {
+    "verdict": "trim",
+    "version": "2.1.237",
+    "why": "Managed Agents reference doc. Trimmed tutorial prose, worked examples and SDK walkthroughs; kept every API mechanic. The family was trimmed in one pass, so the stage-1 coverage citations were stale by construction and two adversarial rounds refuted 9-10 of 10 on citation staleness rather than absent text. Settled with tools/checkFactCoverage.mjs instead: 26 API facts across 7 files were reachable nowhere in the set and were restored verbatim. checkFactCoverage and checkTrimSlots both report 0 on all four sets."
+  },
+  "data-managed-agents-core-concepts": {
+    "verdict": "trim",
+    "version": "2.1.237",
+    "why": "Managed Agents reference doc. Trimmed tutorial prose, worked examples and SDK walkthroughs; kept every API mechanic. The family was trimmed in one pass, so the stage-1 coverage citations were stale by construction and two adversarial rounds refuted 9-10 of 10 on citation staleness rather than absent text. Settled with tools/checkFactCoverage.mjs instead: 26 API facts across 7 files were reachable nowhere in the set and were restored verbatim (this file among them). checkFactCoverage and checkTrimSlots both report 0 on all four sets."
+  },
+  "data-managed-agents-endpoint-reference": {
+    "verdict": "trim",
+    "version": "2.1.237",
+    "why": "Managed Agents reference doc. Trimmed tutorial prose, worked examples and SDK walkthroughs; kept every API mechanic. The family was trimmed in one pass, so the stage-1 coverage citations were stale by construction and two adversarial rounds refuted 9-10 of 10 on citation staleness rather than absent text. Settled with tools/checkFactCoverage.mjs instead: 26 API facts across 7 files were reachable nowhere in the set and were restored verbatim. checkFactCoverage and checkTrimSlots both report 0 on all four sets."
+  },
+  "data-managed-agents-environments-and-resources": {
+    "verdict": "trim",
+    "version": "2.1.237",
+    "why": "Managed Agents reference doc. Trimmed tutorial prose, worked examples and SDK walkthroughs; kept every API mechanic. The family was trimmed in one pass, so the stage-1 coverage citations were stale by construction and two adversarial rounds refuted 9-10 of 10 on citation staleness rather than absent text. Settled with tools/checkFactCoverage.mjs instead: 26 API facts across 7 files were reachable nowhere in the set and were restored verbatim (this file among them). checkFactCoverage and checkTrimSlots both report 0 on all four sets."
+  },
+  "data-managed-agents-events-and-steering": {
+    "verdict": "trim",
+    "version": "2.1.237",
+    "why": "Managed Agents reference doc. Trimmed tutorial prose, worked examples and SDK walkthroughs; kept every API mechanic. The family was trimmed in one pass, so the stage-1 coverage citations were stale by construction and two adversarial rounds refuted 9-10 of 10 on citation staleness rather than absent text. Settled with tools/checkFactCoverage.mjs instead: 26 API facts across 7 files were reachable nowhere in the set and were restored verbatim. checkFactCoverage and checkTrimSlots both report 0 on all four sets."
+  },
+  "data-managed-agents-memory-stores-reference": {
+    "verdict": "trim",
+    "version": "2.1.237",
+    "why": "Managed Agents reference doc. Trimmed tutorial prose, worked examples and SDK walkthroughs; kept every API mechanic. The family was trimmed in one pass, so the stage-1 coverage citations were stale by construction and two adversarial rounds refuted 9-10 of 10 on citation staleness rather than absent text. Settled with tools/checkFactCoverage.mjs instead: 26 API facts across 7 files were reachable nowhere in the set and were restored verbatim (this file among them). checkFactCoverage and checkTrimSlots both report 0 on all four sets."
+  },
+  "data-managed-agents-overview": {
+    "verdict": "trim",
+    "version": "2.1.237",
+    "why": "Managed Agents reference doc. Trimmed tutorial prose, worked examples and SDK walkthroughs; kept every API mechanic. The family was trimmed in one pass, so the stage-1 coverage citations were stale by construction and two adversarial rounds refuted 9-10 of 10 on citation staleness rather than absent text. Settled with tools/checkFactCoverage.mjs instead: 26 API facts across 7 files were reachable nowhere in the set and were restored verbatim (this file among them). checkFactCoverage and checkTrimSlots both report 0 on all four sets."
+  },
   "data-managed-agents-scheduled-deployments": {
     "injectionPath": "Conditional `/claude-api` Managed Agents reference resource, read when implementing scheduled deployments.",
     "verdict": "pristine-keep",
     "version": "2.1.226",
     "why": "The deployment schema, beta header, cron/timezone/DST semantics, jitter bounds, organization cap, per-run budget behavior, run records, error enums, webhook distinctions, lifecycle behavior, failure handling, and manual-run endpoint are unique. All other `data-managed-agents-*` siblings are `state: suppressed` and cover nothing. The Python create example duplicates the surviving raw-HTTP create example's request semantics; the TypeScript run-list example duplicates the surviving Python list/filter example; the final test-before-scheduling exhortation is default verification scaffolding, while its paused-run fact is already stated in the surviving lifecycle table. [stage-3 refutation applied: The rationale treats raw HTTP as coverage for an exact Python SDK call and Python as coverage for an exact TypeScript SDK call. The deleted method names, casing, parameter shapes, and iteration form are unique and load-bearing. \u2014 the cut was reverted to pristine in opus-5, opus-4-8, fable-5, opus-4-7]"
+  },
+  "data-managed-agents-self-hosted-sandboxes": {
+    "verdict": "trim",
+    "version": "2.1.237",
+    "why": "Managed Agents reference doc. Trimmed tutorial prose, worked examples and SDK walkthroughs; kept every API mechanic. The family was trimmed in one pass, so the stage-1 coverage citations were stale by construction and two adversarial rounds refuted 9-10 of 10 on citation staleness rather than absent text. Settled with tools/checkFactCoverage.mjs instead: 26 API facts across 7 files were reachable nowhere in the set and were restored verbatim (this file among them). checkFactCoverage and checkTrimSlots both report 0 on all four sets."
+  },
+  "data-managed-agents-tools-and-skills": {
+    "verdict": "trim",
+    "version": "2.1.237",
+    "why": "Managed Agents reference doc. Trimmed tutorial prose, worked examples and SDK walkthroughs; kept every API mechanic. The family was trimmed in one pass, so the stage-1 coverage citations were stale by construction and two adversarial rounds refuted 9-10 of 10 on citation staleness rather than absent text. Settled with tools/checkFactCoverage.mjs instead: 26 API facts across 7 files were reachable nowhere in the set and were restored verbatim (this file among them). checkFactCoverage and checkTrimSlots both report 0 on all four sets."
   },
   "data-mcp-server-session-credential-rejected": {
     "injectionPath": "Two model-facing `MCP servers failed to connect` system-reminder sites after a server rejects its session credential.",
@@ -10192,6 +10242,16 @@
     "version": "2.1.237",
     "why": "Unique extension-specific recovery. Frozen (.md, <pre>, .html, retry)."
   },
+  "tool-result-artifact-unwatch-not-watching": {
+    "verdict": "pristine-keep",
+    "version": "2.1.237",
+    "why": "Runtime tool_result status line, one sentence around a url interpolation. No behavior to trim; the wording is what the model reports back to the user about a watch that was not active."
+  },
+  "tool-result-artifact-unwatch-stopped": {
+    "verdict": "pristine-keep",
+    "version": "2.1.237",
+    "why": "Runtime tool_result status line. The closing \"Do not watch it again unless the user asks\" is load-bearing: without it the model can re-arm a watch the user just stopped. Kept verbatim."
+  },
   "tool-result-artifact-updated-from-type": {
     "verdict": "trim",
     "version": "2.1.237",
@@ -10306,6 +10366,16 @@
     "verdict": "pristine-keep",
     "version": "2.1.237",
     "why": "Unique filter_url empty result for action status. Load-bearing empty-state; nothing else names this miss."
+  },
+  "tool-result-artifact-watches-list-header": {
+    "verdict": "pristine-keep",
+    "version": "2.1.237",
+    "why": "Pure interpolation machinery \u2014 a count, a pluralizer, a session-local qualifier, and a stopped-auto-replies tail, all inside conditionals. Body is byte-identical to pristine including the trailing newline the list items depend on."
+  },
+  "tool-result-artifact-watches-list-item": {
+    "verdict": "pristine-keep",
+    "version": "2.1.237",
+    "why": "Pure interpolation machinery. Every literal is a distinct watch state the model must report exactly (\"connecting (handshake not finished; nothing reaches it yet)\", \"auto-replies stopped (the user can ask to resume them)\", \"disarmed for this session\"); paraphrasing any of them misstates connection state."
   },
   "tool-result-artifact-watches-list-local-empty": {
     "verdict": "pristine-keep",
