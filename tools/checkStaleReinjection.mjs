@@ -17,6 +17,8 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import crypto from 'node:crypto';
+// Windows are scoped to markdown blocks; see tools/lib/markdownBlocks.mjs for why.
+import { blocksOf } from './lib/markdownBlocks.mjs';
 
 const REPO = path.resolve(new URL('..', import.meta.url).pathname);
 const version = process.argv[2] || '';
@@ -93,12 +95,15 @@ const tokens = t =>
 // A window is worth reporting only if it reads as instruction rather than code.
 const CODEY = new Set(['const','let','var','function','return','await','typeof','null','true','false','map','push','json','stringify']);
 const windows = t => {
-  const tk = tokens(t), out = [];
-  for (let i = 0; i + W <= tk.length; i++) {
-    const w = tk.slice(i, i + W);
-    if (w.filter(x => CODEY.has(x)).length > 1) continue;
-    if (w.filter(x => x.length > 2).length < 7) continue;
-    out.push(w.join(' '));
+  const out = [];
+  for (const block of blocksOf(t)) {
+    const tk = tokens(block);
+    for (let i = 0; i + W <= tk.length; i++) {
+      const w = tk.slice(i, i + W);
+      if (w.filter(x => CODEY.has(x)).length > 1) continue;
+      if (w.filter(x => x.length > 2).length < 7) continue;
+      out.push(w.join(' '));
+    }
   }
   return out;
 };
