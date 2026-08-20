@@ -4,7 +4,16 @@ import path from 'node:path';
 import os from 'node:os';
 import ts from 'typescript';
 import { writeMarkdownColorTags } from './markdownColorTags';
-import { DEFAULT_COLOR_TAG_PALETTES } from '../colorTagPalettes';
+import {
+  DEFAULT_COLOR_TAG_PALETTES,
+  deriveMutedPalettes,
+} from '../colorTagPalettes';
+
+/** The SGR prefix the fixture's colour applicator emits for a #rrggbb value. */
+const hexToAnsi = (hex: string): string => {
+  const n = parseInt(hex.slice(1), 16);
+  return `\x1b[38;2;${(n >> 16) & 255};${(n >> 8) & 255};${n & 255}m`;
+};
 
 /**
  * A faithful miniature of Claude Code's markdown token renderer: same shape
@@ -142,6 +151,20 @@ describe('markdownColorTags', () => {
       // helper injected once, in the renderer's own scope
       expect(out!.split('function _twkC(').length - 1).toBe(1);
 
+      // The dialog and recap surfaces are what the fixtures cannot prove: a
+      // miniature says the rewrite is well-formed, only the real bundle says
+      // the anchors still match the shipped minified shapes. Every site is
+      // expected here, so a bundle that moves one fails the test rather than
+      // quietly logging and shipping a half-coloured dialog.
+      expect(out!.split('function _twkCT(').length - 1).toBe(1);
+      expect(out).toContain('label:_twkCT(');
+      expect(out).toContain('description:_twkCT(');
+      expect(out!.split('{title:_twkCT(').length - 1).toBe(2);
+      expect(out).toContain('.displayQuestion.text||"Question")');
+      expect(out).toContain('.displayLabel)]');
+      // the recap is the only site that asks for the muted palette
+      expect(/_twkCT\([$\w]+,1\)/.test(out!)).toBe(true);
+
       // and the patched bundle is still syntactically valid JavaScript.
       // Checked with TypeScript's parser rather than vm.Script: recent CC
       // bundles use `using` declarations, which the Node 22 runtime vitest
@@ -251,5 +274,145 @@ describe('markdownColorTags', () => {
     expect(render({ type: 'html', text: '<c blue>' }, 'dark', {})).toBe(
       '\x1b[38;2;122;162;247m'
     );
+  });
+});
+
+/**
+ * Miniatures of the five render sites outside the markdown renderer, in the
+ * shapes CC 2.1.237 emits them, plus the config reader the string helper
+ * resolves the theme through.
+ *
+ * These are deliberately in ONE fixture with the renderer: the helpers are
+ * injected next to the renderer and the sites call them from elsewhere in the
+ * file, so a fixture that split them would not exercise the property that
+ * matters — that a single top-level scope puts both in reach.
+ */
+const UI_FIXTURE =
+  FIXTURE +
+  `
+function Ra(){return{theme:"dark"}}
+function mk(s){return s}
+function qjA(ONg){return{type:"text",value:ONg.value,label:ONg.displayLabel,description:mk(ONg.displayDescription)}}
+function title1(e){return {title:e.displayQuestion.text,color:"text"};}
+function title2(KM){return {title:KM.displayQuestion.text,color:"text"};}
+function summary(LFc){return {children:LFc?.displayQuestion.text||"Question"};}
+function multi(se){return {children:[" ",se.displayLabel]};}
+function recap($vh){return {children:["recap:"," "],inner:{dimColor:!0,italic:!0,children:$vh}};}
+`;
+
+const patchUi = () =>
+  writeMarkdownColorTags(UI_FIXTURE, DEFAULT_COLOR_TAG_PALETTES)!;
+
+/** Evaluates the patched UI fixture and returns one of its functions. */
+const loadUi = (name: string) =>
+  new Function(`${patchUi()}; return ${name};`)() as (
+    ...args: unknown[]
+  ) => Record<string, unknown>;
+
+describe('markdownColorTags: dialog and recap surfaces', () => {
+  const RED = DEFAULT_COLOR_TAG_PALETTES.dark.red;
+
+  it('rewrites every UI render site', () => {
+    const out = patchUi();
+    expect(out).toContain('function _twkCT(');
+    expect(out).toContain('label:_twkCT(ONg.displayLabel)');
+    expect(out).toContain('description:_twkCT(mk(ONg.displayDescription))');
+    expect(out).toContain('{title:_twkCT(e.displayQuestion.text),color:"text"}');
+    expect(out).toContain(
+      '{title:_twkCT(KM.displayQuestion.text),color:"text"}'
+    );
+    expect(out).toContain(
+      'children:_twkCT(LFc?.displayQuestion.text||"Question")'
+    );
+    expect(out).toContain('children:[" ",_twkCT(se.displayLabel)]');
+    expect(out).toContain('children:_twkCT($vh,1)');
+  });
+
+  it('leaves the machine-facing option value uncoloured', () => {
+    // `value` is what the select returns and what the answer is matched on;
+    // colouring it would put escape sequences into the model's own context.
+    const out = patchUi();
+    expect(out).toContain('return{type:"text",value:ONg.value,');
+    const row = loadUi('qjA')({
+      value: '<c red>Ship it</c>',
+      displayLabel: '<c red>Ship it</c>',
+      displayDescription: 'plain',
+    });
+    expect(row.value).toBe('<c red>Ship it</c>');
+    expect(String(row.label)).not.toContain('<c red>');
+  });
+
+  it('colours an option label and description', () => {
+    const row = loadUi('qjA')({
+      value: 'a',
+      displayLabel: '<c red>danger</c> zone',
+      displayDescription: 'the <c red>only</c> risky one',
+    });
+    expect(row.label).toContain(hexToAnsi(RED));
+    expect(row.label).toContain('\x1b[39m');
+    expect(row.label).toContain('danger');
+    expect(row.description).toContain(hexToAnsi(RED));
+  });
+
+  it('colours the question text in both dialog paths', () => {
+    for (const fn of ['title1', 'title2']) {
+      const node = loadUi(fn)({
+        displayQuestion: { text: 'Pick <c red>one</c>' },
+      });
+      expect(node.title).toContain(hexToAnsi(RED));
+      expect(node.title).toContain('\x1b[39m');
+    }
+  });
+
+  it('colours the answered summary and the multi-select rows', () => {
+    const s = loadUi('summary')({
+      displayQuestion: { text: '<c red>Q</c>' },
+    });
+    expect(String(s.children)).toContain(hexToAnsi(RED));
+    const m = loadUi('multi')({ displayLabel: '<c red>L</c>' });
+    expect(String((m.children as unknown[])[1])).toContain(hexToAnsi(RED));
+  });
+
+  it('renders the recap through the muted palette, not the full one', () => {
+    const muted = deriveMutedPalettes(DEFAULT_COLOR_TAG_PALETTES).dark.red;
+    expect(muted).not.toBe(RED);
+    const node = loadUi('recap')('<c red>done</c>') as {
+      inner: { children: string };
+    };
+    expect(node.inner.children).toContain(hexToAnsi(muted));
+    expect(node.inner.children).not.toContain(hexToAnsi(RED));
+  });
+
+  it('closes a span the string leaves open, so colour cannot bleed', () => {
+    const node = loadUi('title1')({
+      displayQuestion: { text: 'unterminated <c red>tail' },
+    });
+    expect(String(node.title).endsWith('\x1b[39m')).toBe(true);
+  });
+
+  it('leaves a string without tags exactly as it was', () => {
+    const node = loadUi('title1')({
+      displayQuestion: { text: 'nothing to do here' },
+    });
+    expect(node.title).toBe('nothing to do here');
+  });
+
+  it('renders an unknown colour name literally', () => {
+    const node = loadUi('title1')({
+      displayQuestion: { text: '<c chartreuse>x</c>' },
+    });
+    expect(node.title).toContain('<c chartreuse>');
+  });
+
+  it('skips a site whose shape drifted, without failing the patch', () => {
+    const drifted = UI_FIXTURE.replace(
+      'children:[" ",se.displayLabel]',
+      'children:[" ",se.somethingElse]'
+    );
+    const out = writeMarkdownColorTags(drifted, DEFAULT_COLOR_TAG_PALETTES);
+    expect(out).not.toBeNull();
+    // the renderer edit and the other sites still land
+    expect(out).toContain('case"html":return _twkC(e.text,t,l)??e.text');
+    expect(out).toContain('label:_twkCT(ONg.displayLabel)');
   });
 });

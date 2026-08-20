@@ -153,6 +153,81 @@ Color never carries meaning on its own. It is stripped for screen readers and in
 piped output, so anything it conveys must survive in the words alone.
 ```
 
+## Beyond assistant prose: dialogs and the recap
+
+The hook above only reaches text that goes through the markdown renderer. A
+question dialog and the session recap line are Ink components that print
+strings directly, so a `<c red>` written into an option label used to render as
+literal characters. Five render sites now route through a second injected
+helper, `_twkCT`, which rewrites every tag in a whole string rather than
+answering one tag at a time.
+
+| surface | what gets colored |
+| --- | --- |
+| AskUserQuestion | the question text, in the live dialog and its memoized twin |
+| AskUserQuestion | option labels and descriptions |
+| AskUserQuestion | the multi-select rows |
+| AskUserQuestion | the answered-questions summary above the dialog |
+| session recap | the recap line, muted |
+
+### Why it colors at render and never in the data model
+
+AskUserQuestion builds a display model — `displayQuestion`, `displayLabel`,
+`displayDescription`, `displayHeader` — and it is tempting to color it there,
+since one edit would cover every site at once. That would be wrong three times
+over, and each reason is a different kind of damage:
+
+- `displayQuestion.text` is what the tool feeds **back to the model** as the
+  question it asked. Coloring it puts escape sequences into Claude's own
+  context.
+- `displayLabel` is compared **by equality** to recover the selected option's
+  preview. Coloring it makes that lookup miss silently.
+- `displayHeader` is **measured and truncated** to lay out the tab bar. Cutting
+  a string by character count in the middle of an escape sequence corrupts it.
+
+So every call site is a JSX child or a select-item label, and the machine-facing
+`value` beside each colored `label` is left exactly as it was.
+
+The header chips are the one surface deliberately left alone: they are twelve
+characters at most and they are the strings that get measured and truncated.
+
+### The muted palette is derived, not a second table
+
+The recap is secondary chrome — Claude Code already renders it dim and italic —
+so a full-strength color there would make the quietest line on screen the
+loudest. It gets a muted variant instead.
+
+The variant is computed at apply time from whichever palettes are in effect,
+rather than written down: each color is blended toward its reference background
+by bisection until it lands on **3.2:1** contrast. That target sits above the
+3:1 WCAG floor for large text and UI components, and far enough under 4.5:1 that
+the line visibly recedes next to body prose. Deriving it means a palette you
+override under `settings.misc.colorTagPalettes` gets a matching muted set for
+free.
+
+Dim alone would not have done it. SGR 2 (faint) is widely ignored once a
+truecolor foreground is set, so the effect would have been present in some
+terminals and absent in others.
+
+For the ANSI palette there is no arithmetic to do on a palette index, so that
+one mapping is written out: each bright color drops to its normal-intensity
+sibling, which is what muting means in a 16-color terminal.
+
+One honest limitation. The daltonized palettes carry their separation mostly in
+**luminance**, and compressing luminance toward the background necessarily
+compresses that separation. The muted set is tuned for reading, not for
+telling colors apart under dichromacy — which is why it is confined to a single
+line that carries no meaning in its colors.
+
+### Failure is per-site
+
+Each site declares how many matches it expects, and a site whose shape has
+drifted logs and is skipped rather than failing the patch. Color tags in
+assistant prose are the feature; color tags in a dialog are the extension, so a
+Claude Code bump should cost the extension and not the patch. The real-bundle
+test asserts all five sites, so drift shows up as a failing test rather than as
+a half-colored dialog.
+
 ## Streaming: why the splitter is patched too
 
 Streaming output is cut into chunks that each render as their own Ink element.

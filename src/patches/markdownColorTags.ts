@@ -2,7 +2,10 @@
 
 import { showDiff } from './index';
 import type { ColorTagPalettes } from '../types';
-import { DEFAULT_COLOR_TAG_PALETTES } from '../colorTagPalettes';
+import {
+  DEFAULT_COLOR_TAG_PALETTES,
+  deriveMutedPalettes,
+} from '../colorTagPalettes';
 
 /**
  * Teaches Claude Code's markdown renderer to honor a tiny colour-tag syntax so
@@ -63,6 +66,7 @@ import { DEFAULT_COLOR_TAG_PALETTES } from '../colorTagPalettes';
 
 const HELPER = '_twkC';
 const SPLIT_GUARD = '_twkS';
+const STRING_HELPER = '_twkCT';
 
 /**
  * Streaming output is cut into chunks that each render as their own Ink
@@ -208,14 +212,16 @@ const findRenderer = (file: string): RendererIdents | null => {
  */
 const buildHelper = (
   idents: RendererIdents,
-  palettes: ColorTagPalettes
+  palettes: ColorTagPalettes,
+  mutedPalettes: ColorTagPalettes
 ): string => {
   const { colorFn, chalkVar } = idents;
   const table = JSON.stringify(palettes);
+  const mutedTable = JSON.stringify(mutedPalettes);
 
   return (
-    `function ${HELPER}(raw,theme,sr){` +
-    `var P=${table};` +
+    `function ${HELPER}(raw,theme,sr,muted){` +
+    `var P=muted?${mutedTable}:${table};` +
     // `</c>` — scoped foreground reset only, so bold/italic/dim survive.
     `if(/^<\\/c\\s*>$/i.test(raw))return sr?"":(${chalkVar}.level>0?"\\x1b[39m":"");` +
     `var m=/^<c\\s+(?:v\\s*=\\s*)?["']?([^"'<>\\s]+)["']?\\s*\\/?>$/i.exec(raw);` +
@@ -236,6 +242,167 @@ const buildHelper = (
     `return parts.length===2?parts[0]:"";}catch(e){return "";}` +
     `}`
   );
+};
+
+/**
+ * Finds the identifier of CC's synchronous global-config reader, by way of the
+ * one place in the bundle that reads a theme name off it.
+ *
+ * The markdown renderer receives the theme name as a parameter, so the token
+ * helper never had to look it up. The surfaces below are Ink components and
+ * plain mapper functions with no such parameter, and the theme lives behind a
+ * React context whose hook cannot be called from a mapper. The config reader is
+ * the one accessor that works from anywhere.
+ */
+const findConfigGetter = (file: string): string | null => {
+  const m = /([$\w]+)\(\)\.theme\|\|"light"/.exec(file);
+  return m ? m[1] : null;
+};
+
+/**
+ * Builds the string-level interpreter used outside the markdown renderer.
+ *
+ * The token helper answers "what SGR sequence does this ONE tag mean", because
+ * `marked` hands the renderer each inline-HTML tag as its own token. Nothing
+ * tokenises the strings that reach a dialog or the recap line, so those need
+ * the other shape: take a whole string, rewrite every tag in it, leave
+ * everything else alone.
+ *
+ * Three properties it has to hold, all of them learnt from where these strings
+ * go next:
+ *
+ * - **It runs at render, never on the data model.** The AskUserQuestion display
+ *   model is not display-only: `displayQuestion.text` is what the tool feeds
+ *   back to the model as the question it asked, `displayLabel` is matched by
+ *   equality to recover the selected option's preview, and `displayHeader` is
+ *   measured and truncated to lay out the tab bar. Colouring any of those at
+ *   the point they are built would put escape sequences into the model's own
+ *   context and break an equality test and a width calculation. Every call
+ *   site below is therefore a JSX child or a select-item label.
+ * - **It closes what it opens.** A span left open at the end of a string would
+ *   bleed its colour into whatever Ink prints next, so an unbalanced string
+ *   gets a scoped foreground reset appended.
+ * - **It never throws.** Any failure returns the input untouched, which renders
+ *   the tags literally — the same failure mode as an unapplied patch.
+ */
+const buildStringHelper = (configGetter: string | null): string =>
+  `function ${STRING_HELPER}(raw,muted){` +
+  `try{` +
+  `if(typeof raw!=="string"||raw.indexOf("<c")===-1)return raw;` +
+  `var th="dark";` +
+  (configGetter ? `try{th=${configGetter}().theme||"dark"}catch(e){}` : '') +
+  `var sr=!!(process.env.CLAUDE_AX_SCREEN_READER||process.env.INK_SCREEN_READER||process.env.CLAUDE_CODE_ACCESSIBILITY);` +
+  `var open=0;` +
+  `var out=raw.replace(/<c\\s+(?:v\\s*=\\s*)?["']?[^"'<>\\s]+["']?\\s*\\/?>|<\\/c\\s*>/gi,function(tag){` +
+  `var r=${HELPER}(tag,th,sr,muted);` +
+  // null = not one of ours (or an unknown colour name): leave it visible.
+  `if(r===null)return tag;` +
+  `if(tag.charAt(1)==="/")open=open>0?open-1:0;else open++;` +
+  `return r;});` +
+  `if(open>0&&!sr&&out.indexOf("\\x1b")!==-1)out+="\\x1b[39m";` +
+  `return out;` +
+  `}catch(e){return raw}` +
+  `}`;
+
+/** One rewrite of a UI render site: what to find, and what to put back. */
+interface UiSite {
+  /** Human-readable name, used only in the "not applied" log line. */
+  label: string;
+  pattern: RegExp;
+  replace: string;
+  /** How many matches this site is expected to have. */
+  expect: number;
+}
+
+/**
+ * The render sites outside the markdown renderer.
+ *
+ * Each is anchored on the SHAPE of the expression rather than on any minified
+ * name, and each carries its own expected match count so a bundle that grows or
+ * loses one of them says so instead of silently half-applying.
+ *
+ * The AskUserQuestion header chips are deliberately absent. They are short
+ * (12 characters at most), and the tab bar both measures them with a width
+ * function and truncates them to fit — a colour span inside a string that is
+ * about to be cut by character count is a corrupted escape sequence, and the
+ * payoff on a 12-character chip is close to nothing.
+ */
+const UI_SITES: UiSite[] = [
+  {
+    // The option -> select-item mapper. `value` is the machine identity and
+    // stays raw; label and description are what the row prints.
+    label: 'AskUserQuestion option rows',
+    pattern:
+      /return\{type:"text",value:([$\w]+)\.value,label:\1\.displayLabel,description:([$\w]+)\(\1\.displayDescription\)\}/,
+    replace:
+      `return{type:"text",value:$1.value,label:${STRING_HELPER}($1.displayLabel),` +
+      `description:${STRING_HELPER}($2($1.displayDescription))}`,
+    expect: 1,
+  },
+  {
+    // The question itself, in both the live dialog and its memoised twin. The
+    // memo key stays on the raw text, so this does not defeat the cache.
+    label: 'AskUserQuestion question text',
+    pattern: /\{title:([$\w.?]+)\.displayQuestion\.text,color:"text"\}/g,
+    replace: `{title:${STRING_HELPER}($1.displayQuestion.text),color:"text"}`,
+    expect: 2,
+  },
+  {
+    // The answered-questions summary rendered above the dialog.
+    label: 'AskUserQuestion answered summary',
+    pattern: /children:([$\w?.]+)\.displayQuestion\.text\|\|"Question"/,
+    replace: `children:${STRING_HELPER}($1.displayQuestion.text||"Question")`,
+    expect: 1,
+  },
+  {
+    // The multi-select rows, which print displayLabel directly rather than
+    // going through the mapper above.
+    label: 'AskUserQuestion multi-select rows',
+    pattern: /children:\[" ",([$\w]+)\.displayLabel\]/,
+    replace: `children:[" ",${STRING_HELPER}($1.displayLabel)]`,
+    expect: 1,
+  },
+  {
+    // The session recap line. Muted, because the recap is secondary chrome that
+    // Claude Code already renders dim and italic; a full-strength colour there
+    // would make the quietest line on screen the loudest. The label ("recap: ")
+    // is matched only to pin the anchor to this component.
+    label: 'session recap line',
+    pattern:
+      /(children:\["recap:"," "\][\s\S]{0,400}?\{dimColor:!0,italic:!0,children:)([$\w]+)(\})/,
+    replace: `$1${STRING_HELPER}($2,1)$3`,
+    expect: 1,
+  },
+];
+
+/**
+ * Applies the UI render-site rewrites.
+ *
+ * Independent of the renderer edit, exactly like the stream-split guard: a site
+ * whose shape has drifted logs and is skipped, because colour tags in assistant
+ * prose are the feature and colour tags in a dialog are the extension. A bundle
+ * change should cost the extension, not the patch.
+ */
+const applyUiSites = (file: string): string => {
+  let out = file;
+  for (const site of UI_SITES) {
+    const found = out.match(site.pattern);
+    const count = site.pattern.global
+      ? [...out.matchAll(site.pattern)].length
+      : found
+        ? 1
+        : 0;
+    if (count !== site.expect) {
+      console.log(
+        `patch: markdownColorTags: ${site.label} not colour-tagged ` +
+          `(expected ${site.expect} site(s), found ${count}) — colour tags still ` +
+          `work in assistant prose`
+      );
+      continue;
+    }
+    out = out.replace(site.pattern, site.replace);
+  }
+  return out;
 };
 
 export const writeMarkdownColorTags = (
@@ -262,10 +429,18 @@ export const writeMarkdownColorTags = (
   const sr = idents.screenReaderVar ?? '!1';
   const replacement = `case"html":return ${HELPER}(e.text,${idents.themeParam},${sr})??e.text`;
 
-  const helper = buildHelper(idents, palettes);
+  const configGetter = findConfigGetter(oldFile);
+  const helper =
+    buildHelper(idents, palettes, deriveMutedPalettes(palettes)) +
+    buildStringHelper(configGetter);
 
-  // Insert the helper immediately before the renderer so it shares its scope
+  // Insert the helpers immediately before the renderer so they share its scope
   // (that is what puts CC's colour applicator and chalk instance in reach).
+  //
+  // The UI sites below sit up to 3 MB away in the bundle and still resolve
+  // both names: the bundle is a single top-level scope — its string-width
+  // helper, for one, is declared once and called from regions 16 MB apart — so
+  // a function declaration here hoists across the whole file.
   let newFile =
     oldFile.slice(0, anchorIndex) +
     replacement +
@@ -274,9 +449,10 @@ export const writeMarkdownColorTags = (
   newFile =
     newFile.slice(0, idents.start) + helper + newFile.slice(idents.start);
 
-  // Independent of the renderer edit: if this can't anchor, colour tags still
-  // work correctly, so it must not fail the patch.
+  // Independent of the renderer edit: if these can't anchor, colour tags still
+  // work correctly in assistant prose, so they must not fail the patch.
   newFile = applySplitGuard(newFile);
+  newFile = applyUiSites(newFile);
 
   showDiff(
     oldFile,
