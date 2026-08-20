@@ -46,6 +46,37 @@ export const writeThinkingVisibility = (oldFile: string): string | null => {
     return oldFile;
   }
 
+  // Method 1 (CC >= 2.1.237). Anthropic inserted a whole alternate-renderer
+  // branch between `case"thinking":{` and the early return:
+  //
+  //   case"thinking":{
+  //     if(KYi!==null&&YYi!==null&&KYi(NL)){ ... return e6 }   <-- new
+  //     if(!Tzt&&!yhe){return null}
+  //     ... jsx(prn,{addMargin:U8,param:NL,isTranscriptMode:Tzt,verbose:yhe})
+  //
+  // so every `case"thinking":`-prefixed pattern below stops matching even though
+  // the code it targets is byte-for-byte the same. (`KYi`/`YYi` are declared
+  // `null` and assigned nowhere in the bundle — 3 occurrences each, the
+  // declaration plus the two reads in that guard — so the new branch is a dead
+  // injection seam and the second branch is still the live one.)
+  //
+  // The fix is to stop anchoring on the enclosing `case` at all. The early
+  // return and the JSX props are self-consistent: the two negated variables ARE
+  // `isTranscriptMode` and `verbose`, in that order, so backreferencing them
+  // makes the anchor unique on its own (verified: exactly 1 match in 2.1.237)
+  // and immune to anything Anthropic inserts ahead of it.
+  const selfConsistent =
+    /if\(!([$\w]+)&&!([$\w]+)\)\{?return null\}?;?(.{0,400}?isTranscriptMode:)\1,verbose:\2/;
+  const scMatch = oldFile.match(selfConsistent);
+  if (scMatch && scMatch.index !== undefined) {
+    const replacement = scMatch[3] + 'true,verbose:' + scMatch[2];
+    const start = scMatch.index;
+    const end = start + scMatch[0].length;
+    const newFile = oldFile.slice(0, start) + replacement + oldFile.slice(end);
+    showDiff(oldFile, newFile, replacement, start, end);
+    return newFile;
+  }
+
   // Unified pattern that matches all three formats:
   // - Group 1: `case"thinking":` (+/- `{`)
   // - Group 2: the early return we want to remove. CC <= 2.1.18:

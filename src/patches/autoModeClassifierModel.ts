@@ -38,6 +38,39 @@ export const writeAutoModeClassifierModel = (
 
   const modelId = MODEL_IDS[choice];
 
+  // Method 1 (CC >= 2.1.234, and forward). Every pattern below spells out the
+  // resolver's ENTIRE body, so any internal refactor breaks all of them at once
+  // even when the thing being patched is unchanged. CC 2.1.237 did exactly that:
+  // it extracted the config read into a helper, so
+  //
+  //   let t=et("tengu_auto_mode_config",{}),r=eBf(t?.modelByMainModel,…)   (2.1.235)
+  //   let t=KD(),        r=lVf(t?.modelByMainModel,…)                      (2.1.237)
+  //
+  // and the literal the patterns keyed on is no longer inside the function at
+  // all — eight exact-shape regexes, all null, on a two-token change.
+  //
+  // `modelByMainModel` is the durable anchor: it occurs exactly twice in the
+  // bundle and both occurrences are inside this resolver. Bound the match with
+  // `(?!function )` so it cannot span into a neighbour, and terminate on the
+  // tagged-object fallback return that is always the function's last statement.
+  // Verified to match exactly once on 2.1.234, 2.1.235 and 2.1.237, with exact
+  // function boundaries in each.
+  const byMainModel =
+    /function ([$\w]+)\(\)\{(?:(?!function )[\s\S])*?modelByMainModel(?:(?!function )[\s\S])*?return\{value:[^{}]*,src:"default"\}\}/;
+  const byMainModelMatch = oldFile.match(byMainModel);
+  if (byMainModelMatch && byMainModelMatch.index !== undefined) {
+    const fnName = byMainModelMatch[1];
+    const replacement = `function ${fnName}(){return{value:"${modelId}",src:"default"}}`;
+    const start = byMainModelMatch.index;
+    const end = start + byMainModelMatch[0].length;
+    const newFile = oldFile.slice(0, start) + replacement + oldFile.slice(end);
+    debug(
+      `patch: autoModeClassifierModel: matched modelByMainModel resolver ${fnName} -> ${modelId}`
+    );
+    showDiff(oldFile, newFile, replacement, start, end);
+    return newFile;
+  }
+
   // function NAME(){let VAR=READER("tengu_auto_mode_config",{});if(VAR?.model)return VAR.model;return DEFAULT_FN()}
   const pattern =
     /function\s+([$\w]+)\s*\(\s*\)\s*\{\s*let\s+([$\w]+)\s*=\s*([$\w]+)\s*\(\s*"tengu_auto_mode_config"\s*,\s*\{\s*\}\s*\)\s*;\s*if\s*\(\s*\2\s*\?\.\s*model\s*\)\s*return\s+\2\s*\.\s*model\s*;\s*return\s+([$\w]+)\s*\(\s*\)\s*\}/;

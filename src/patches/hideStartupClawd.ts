@@ -17,8 +17,52 @@ import { showDiff } from './index';
  * 3. Find the wrapper function that createElement's the inner component
  * 4. Return the wrapper function body start index
  */
+/**
+ * Method 1 (CC >= 2.1.237): Clawd became a POSED mascot.
+ *
+ * The art is no longer one literal run. It is a pose table keyed by pose name,
+ * with each row split into left/edge/right segments:
+ *
+ *   U6h = {
+ *     default:     {r1L:" \u2590", r1E:"\u259B\u2588\u2588\u2588\u259B\u2588", r1R:"", r2L:"\u259D\u259C", r2R:"\u2588\u2580"},
+ *     "look-left": {...}, "look-right": {...}, "arms-up": {...}
+ *   }
+ *
+ * so the old art literal is simply not in the bundle any more (the 5th glyph
+ * went from `\u259C` to `\u259B`, and the raw `▛███▜` form is gone entirely).
+ * Tracing back from the art to a function no longer works either, because the
+ * table is a module-level `var` far from its renderer.
+ *
+ * Anchor on the table — the one shape only this feature has — and derive the
+ * wrapper as the function that INDEXES it by pose. That is the same wrapper the
+ * old code targeted: it returns `jsx(Enc,{pose})` on Apple_Terminal and the
+ * segmented art otherwise. The search window stops at the next `function ` so a
+ * preceding function cannot swallow the match (unbounded, `fnc` also matched).
+ */
+const findPosedClawdWrapper = (oldFile: string): number | null => {
+  const table = oldFile.match(/\b([$\w]+)=\{default:\{r1L:/);
+  if (!table) return null;
+  const name = table[1];
+  const decl = /function ([$\w]+)\(([$\w]*)\)\{/g;
+  let m: RegExpExecArray | null;
+  while ((m = decl.exec(oldFile)) !== null) {
+    const bodyStart = m.index + m[0].length;
+    let body = oldFile.slice(bodyStart, bodyStart + 2000);
+    const next = body.indexOf('function ');
+    if (next !== -1) body = body.slice(0, next);
+    if (body.includes(`${name}[`) && body.includes('pose:')) return bodyStart;
+  }
+  return null;
+};
+
 const findStartupClawdComponents = (oldFile: string): number[] => {
   const indices: number[] = [];
+
+  const posed = findPosedClawdWrapper(oldFile);
+  if (posed !== null) {
+    indices.push(posed);
+    return indices;
+  }
 
   const clawdPattern = /▛███▜|\\u259B\\u2588\\u2588\\u2588\\u259C/gi;
 
