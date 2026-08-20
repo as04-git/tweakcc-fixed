@@ -8890,6 +8890,11 @@
     "version": "2.1.227",
     "why": "The missing-credential cause and the exact condition under which retrying becomes useful are unique runtime facts. No deployed sibling supplies them, and retaining the retry gate directly counters unproductive repeated attempts."
   },
+  "tool-result-artifact-durable-wake-rail-skipped-tail": {
+    "verdict": "pristine-keep",
+    "version": "2.1.237",
+    "why": "The whole prompt is one nested ternary mapping durable_skip_reason enum values to their exact messages, so every branch is frozen mechanics with nothing to cut. What looked like a trim was a stale 2.1.234 stub: it lacked the stop_latched branch that 2.1.235 pristine already had. CC 2.1.237 dropped flag_off, added stop_latched and added a function fallback; the realignment writes current pristine, which is the correct outcome."
+  },
   "tool-result-artifact-durable-wake-registered-note": {
     "verdict": "pristine-keep",
     "version": "2.1.227",
