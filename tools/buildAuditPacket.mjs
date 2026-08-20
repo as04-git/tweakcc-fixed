@@ -41,6 +41,20 @@ const allSets = [
 ].filter(s => fs.existsSync(path.join(LCC, s)));
 
 const prompts = JSON.parse(fs.readFileSync(jsonPath, 'utf8')).prompts;
+// The realign workflow's prompt tells the agent to read "the complete old
+// pristine -> new pristine change", and the packet never carried the old body:
+// the agent had to go find one id inside a 3 MB previous-version JSON, or judge
+// the realignment without the diff at all. TWEAKCC_PREV_JSON supplies it.
+// Optional, so every existing caller is unaffected.
+const prevJsonPath = process.env.TWEAKCC_PREV_JSON || '';
+const prevBodies = new Map();
+if (prevJsonPath && fs.existsSync(prevJsonPath)) {
+  for (const p of JSON.parse(fs.readFileSync(prevJsonPath, 'utf8')).prompts) {
+    if (!p.id) continue;
+    if (!prevBodies.has(p.id)) prevBodies.set(p.id, []);
+    prevBodies.get(p.id).push((p.pieces || []).filter(x => typeof x === 'string').join('') || p.content || '');
+  }
+}
 const bodyOf = p =>
   (p.pieces || []).filter(x => typeof x === 'string').join('') || p.content || '';
 
@@ -112,6 +126,7 @@ const packetFor = id => {
     // Every site, because a repeated id is several distinct binary sites and a
     // verdict taken on the first one can be wrong for the others.
     pristineBodies: entries.map(bodyOf),
+    previousPristineBodies: prevBodies.get(id) || null,
     identifiers: entries[0].identifiers || null,
     identifierMap: entries[0].identifierMap || null,
     // All four target paths, with whatever already exists on disk. An empty
@@ -147,6 +162,7 @@ for (let i = 0; i < ids.length; i += groupSize) {
 }
 
 console.log(`audit packets: ${groups.length} group(s), ${ids.length} id(s), groupSize=${groupSize}`);
+console.log(prevJsonPath ? `previous pristine: ${prevJsonPath}` : 'previous pristine: none (set TWEAKCC_PREV_JSON for realignment diffs)');
 console.log(`active set: ${activeSet}`);
 console.log(`sets: ${allSets.join(', ')}`);
 fs.writeFileSync(path.join(outDir, 'audit-groups.json'), JSON.stringify(groups, null, 1));
