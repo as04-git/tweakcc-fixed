@@ -135,3 +135,28 @@ describe.skipIf(!has('audit-trim-and-verify.workflow.js'))(
     });
   }
 );
+
+
+// A static guard alongside the behavioural ones. The wave loop is easy to
+// reintroduce by habit and produces correct output, so nothing else notices —
+// but it reimposes a barrier per wave, which is what this whole change removed.
+describe('no workflow reintroduces a wave loop', () => {
+  const files = fs.existsSync(WF) ? fs.readdirSync(WF).filter(f => f.endsWith('.workflow.js')) : [];
+
+  it.skipIf(!files.length)('has no `+= batchSize` loop anywhere', () => {
+    const offenders = files.filter(f =>
+      /(?:off|offset|i)\s*\+=\s*batchSize/.test(fs.readFileSync(path.join(WF, f), 'utf8'))
+    );
+    expect(offenders).toEqual([]);
+  });
+
+  it.skipIf(!files.length)('throttles with a sliding-window gate where it throttles at all', () => {
+    // Every workflow that still accepts `batchSize` must implement it as the
+    // sliding-window gate, never as slice-and-await.
+    const bad = files.filter(f => {
+      const src = fs.readFileSync(path.join(WF, f), 'utf8');
+      return src.includes('batchSize') && !src.includes('const gate = ');
+    });
+    expect(bad).toEqual([]);
+  });
+});
