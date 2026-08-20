@@ -12,6 +12,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
+import { packByWeight, packingFloor } from './lib/packByWeight.mjs';
 
 const [jsonPath, idsPath, outDirArg, groupSizeArg] = process.argv.slice(2);
 if (!jsonPath || !idsPath) {
@@ -25,7 +26,12 @@ const outDir = outDirArg || '/tmp';
 // from being harvested as this one's result, so the tool has to be able to
 // create the directory it was pointed at rather than failing at the first write.
 fs.mkdirSync(outDir, { recursive: true });
-const groupSize = Math.max(1, Number(groupSizeArg || 12));
+// 12 was too small. Every stage-1/stage-3 agent is told to search the whole
+// corpus itself — a 6.6 MB prompts JSON plus ~4,400 override files — and that
+// cost is FLAT per agent, not per prompt. Measured on 2.1.237: ~26 s marginal
+// per extra prompt against a fixed setup measured in minutes, so a bigger group
+// amortises the scan and a smaller one just pays it again.
+const groupSize = Math.max(1, Number(groupSizeArg || 30));
 
 const LCC = path.join(os.homedir(), '.tweakcc', 'lobotomized-claude-code');
 // The active set moves; resolve it, never hardcode it.
@@ -149,9 +155,40 @@ const packetFor = id => {
   };
 };
 
+// Balance packets by WORK, not by id count.
+//
+// Contiguous slicing gave every packet the same number of prompts and wildly
+// different amounts of text: measured on the 2.1.237 sets, count was even to
+// within 4% while pristine characters ran 6.45x max/mean (29,681 vs 1,876 in
+// the same run), and realign packets hit 4.70x. Wall clock is the slowest
+// agent, so a fan-out ran at the speed of its unluckiest packet — 27.1 min
+// against a 13.8 min median on the stage-1 run this was measured from.
+//
+// Greedy longest-processing-time: sort by weight descending, drop each id into
+// whichever bin is currently lightest. Classic LPT, within 4/3 of optimal, and
+// the ordering makes it deterministic so reruns produce identical packets.
+const weightOf = id => {
+  const entries = byId.get(id) || [];
+  let w = 0;
+  for (const e of entries) w += bodyOf(e).length;
+  // A prompt with an existing override costs the agent that read too.
+  for (const set of allSets) {
+    const f = path.join(LCC, set, `${id}.md`);
+    if (fs.existsSync(f)) w += fs.statSync(f).size;
+  }
+  // Floor so a tiny prompt still counts as a unit of attention, not zero.
+  return w + 512;
+};
+
+const binCount = Math.max(1, Math.ceil(ids.length / groupSize));
+const bins = packByWeight(ids, binCount, weightOf, id => id);
+
 const groups = [];
-for (let i = 0; i < ids.length; i += groupSize) {
-  const slice = ids.slice(i, i + groupSize);
+for (const bin of bins) {
+  // Restore input order inside a packet so a human reading it sees the familiar
+  // id sequence rather than a weight ranking.
+  const slice = bin.items.slice().sort((a, b) => ids.indexOf(a) - ids.indexOf(b));
+  if (!slice.length) continue;
   const n = String(groups.length).padStart(2, '0');
   const file = path.join(outDir, `audit-packet-${n}.json`);
   fs.writeFileSync(
@@ -161,7 +198,14 @@ for (let i = 0; i < ids.length; i += groupSize) {
   groups.push({ name: `g${n}`, packet: file, ids: slice });
 }
 
-console.log(`audit packets: ${groups.length} group(s), ${ids.length} id(s), groupSize=${groupSize}`);
+const ws = bins.map(b => b.weight);
+const mean = ws.reduce((a, b) => a + b, 0) / (ws.length || 1);
+console.log(
+  `audit packets: ${groups.length} group(s), ${ids.length} id(s), groupSize=${groupSize} ` +
+    `| weight-balanced: max/mean ${(Math.max(...ws) / mean).toFixed(2)}x, ` +
+    `${(Math.max(...ws) / packingFloor(ids, binCount, weightOf)).toFixed(2)}x of the ` +
+    `theoretical floor (heaviest ${Math.max(...ws)} ch, lightest ${Math.min(...ws)} ch)`
+);
 console.log(prevJsonPath ? `previous pristine: ${prevJsonPath}` : 'previous pristine: none (set TWEAKCC_PREV_JSON for realignment diffs)');
 console.log(`active set: ${activeSet}`);
 console.log(`sets: ${allSets.join(', ')}`);
